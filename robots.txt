@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /aman
 
-Sitemap: https://my-me-olive.vercel.app/sitemap.xml
+Sitemap: https://hivecloud.in/sitemap.xml
