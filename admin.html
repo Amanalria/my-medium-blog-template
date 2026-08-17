@@ -183,7 +183,7 @@
                             <input type="file" id="featuredFileInput" accept="image/*" onchange="onFeaturedFileSelected(event)" class="text-xs theme-muted file:mr-3 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-900 dark:file:bg-zinc-100 file:text-white dark:file:text-zinc-900 hover:file:opacity-90 w-full cursor-pointer p-1 rounded-xl border theme-border theme-bg">
                         </div>
 
-                        <!-- Step 2: Convert to WebP (Appears after file selected) -->
+                        <!-- Step 2: Convert + Upload (Appears after file selected) -->
                         <div id="featuredCompressActionBox" class="hidden space-y-2.5 pt-2 border-t theme-border">
                             <div class="text-[11px] font-mono theme-muted flex items-center justify-between">
                                 <span>Selected:</span>
@@ -205,14 +205,13 @@
                                 <button type="button" onclick="syncFeaturedKb(150)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">150</button>
                             </div>
 
+                            <!-- CONVERT BUTTON -->
                             <button type="button" onclick="executeFeaturedCompression()" id="featuredCompressBtn" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
                                 ⚡ Convert to WebP (<span id="featuredCompressTargetLabel">30 KB</span>)
                             </button>
-                        </div>
 
-                        <!-- Step 3: Upload (Appears after conversion complete) -->
-                        <div id="featuredUploadActionBox" class="hidden space-y-3 pt-2 border-t theme-border">
-                            <div class="flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
+                            <!-- WebP Preview (hidden until converted) -->
+                            <div id="featuredPreviewRow" class="hidden flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
                                 <img id="featuredCompressedThumb" src="" alt="WebP Preview" class="w-16 h-12 rounded-lg object-cover border theme-border">
                                 <div class="text-[11px] space-y-0.5 flex-1 font-mono">
                                     <div class="text-emerald-600 font-bold" id="featuredFinalSizeText">--</div>
@@ -220,12 +219,13 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                    🌟 Upload as Cover Image
+                            <!-- UPLOAD BUTTONS (disabled until converted, then enabled) -->
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" disabled class="py-2.5 rounded-xl bg-gray-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all opacity-50 cursor-not-allowed">
+                                    🌟 Upload Cover
                                 </button>
-                                <button type="button" onclick="insertWebpIntoEditorProse()" class="py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                    📝 Insert in Article Body
+                                <button type="button" onclick="insertWebpIntoEditorProse()" id="featuredInsertBtn" disabled class="py-2.5 rounded-xl bg-gray-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all opacity-50 cursor-not-allowed">
+                                    📝 Insert in Body
                                 </button>
                             </div>
                         </div>

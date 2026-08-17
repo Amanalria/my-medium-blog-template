@@ -276,16 +276,31 @@ window.onFeaturedFileSelected = function(e) {
     if (!file) return;
 
     featuredPendingFile = file;
+    featuredCompressedResult = null;
     const origKb = Math.round(file.size / 1024);
     const sizeStr = origKb > 1024 ? `${(origKb / 1024).toFixed(2)} MB` : `${origKb} KB`;
 
     const sizeEl = document.getElementById('featuredOriginalSizeText');
     const compressBox = document.getElementById('featuredCompressActionBox');
-    const uploadBox = document.getElementById('featuredUploadActionBox');
+    const previewRow = document.getElementById('featuredPreviewRow');
+    const uploadBtn = document.getElementById('featuredUploadBtn');
+    const insertBtn = document.getElementById('featuredInsertBtn');
 
     if (sizeEl) sizeEl.textContent = `${file.name} (${sizeStr})`;
     if (compressBox) compressBox.classList.remove('hidden');
-    if (uploadBox) uploadBox.classList.add('hidden');
+    if (previewRow) previewRow.classList.add('hidden');
+
+    // Reset upload buttons to disabled
+    if (uploadBtn) {
+        uploadBtn.disabled = true;
+        uploadBtn.classList.add('bg-gray-400', 'opacity-50', 'cursor-not-allowed');
+        uploadBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+    }
+    if (insertBtn) {
+        insertBtn.disabled = true;
+        insertBtn.classList.add('bg-gray-400', 'opacity-50', 'cursor-not-allowed');
+        insertBtn.classList.remove('bg-zinc-900', 'dark:bg-zinc-100');
+    }
 
     showToast(`✓ Image selected: ${file.name} (${sizeStr})`);
 };
@@ -311,16 +326,28 @@ window.executeFeaturedCompression = async function() {
         const thumb = document.getElementById('featuredCompressedThumb');
         const finalSizeText = document.getElementById('featuredFinalSizeText');
         const savingsText = document.getElementById('featuredSavingsText');
-        const customFileName = document.getElementById('featuredCustomFileName');
-        const uploadBox = document.getElementById('featuredUploadActionBox');
+        const previewRow = document.getElementById('featuredPreviewRow');
+        const uploadBtn = document.getElementById('featuredUploadBtn');
+        const insertBtn = document.getElementById('featuredInsertBtn');
 
         if (thumb) thumb.src = result.dataUrl;
-        if (finalSizeText) finalSizeText.innerHTML = `Final Size: <strong>${result.sizeKb} KB</strong> (Target: ${targetKb} KB)`;
-        if (savingsText) savingsText.textContent = `Original: ${result.originalKb} KB (${result.savingsPct}% saved)`;
-        if (customFileName) customFileName.value = result.defaultName;
-        if (uploadBox) uploadBox.classList.remove('hidden');
+        if (finalSizeText) finalSizeText.innerHTML = `Final: <strong>${result.sizeKb} KB</strong> (Target: ${targetKb} KB)`;
+        if (savingsText) savingsText.textContent = `Original: ${result.originalKb} KB → ${result.savingsPct}% saved`;
+        if (previewRow) previewRow.classList.remove('hidden');
 
-        showToast(`✓ Compressed to ${result.sizeKb} KB WebP! Click below to apply.`);
+        // Enable upload buttons
+        if (uploadBtn) {
+            uploadBtn.disabled = false;
+            uploadBtn.classList.remove('bg-gray-400', 'opacity-50', 'cursor-not-allowed');
+            uploadBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        }
+        if (insertBtn) {
+            insertBtn.disabled = false;
+            insertBtn.classList.remove('bg-gray-400', 'opacity-50', 'cursor-not-allowed');
+            insertBtn.classList.add('bg-zinc-900', 'dark:bg-zinc-100');
+        }
+
+        showToast(`✓ Converted to ${result.sizeKb} KB WebP! Now upload it.`);
     } catch (err) {
         console.error(err);
         alert('WebP compression failed: ' + err.message);
