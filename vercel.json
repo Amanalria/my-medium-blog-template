@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "src": "^/(styles\\.css|app\\.js|post\\.js|admin\\.js|supabase-client\\.js|robots\\.txt|sitemap\\.xml)$",
+      "src": "^/(styles\\.css|app\\.js|post\\.js|admin\\.js|supabase-client\\.js|robots\\.txt|sitemap\\.xml|sitemap\\.xsl)$",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       },
