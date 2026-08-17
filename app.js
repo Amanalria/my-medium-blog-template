@@ -447,9 +447,7 @@ function applyLiveSettings(s) {
     }
 
     // Dynamic Categories Tabs & Pills
-    if (s.categories && s.categories.length > 0) {
-        renderDynamicCategories(s.categories);
-    }
+    renderDynamicCategories(s.categories || []);
 
     // Google AdSense Auto Ads Script Injection
     if (s.monetization?.adsense_enabled && s.monetization?.adsense_client_id) {
@@ -470,18 +468,22 @@ function applyLiveSettings(s) {
 }
 
 function renderDynamicCategories(categories) {
+    const topicBar = document.getElementById('topicFilterBar');
     const pillsContainer = document.getElementById('sidebarCategoryPills');
-    if (pillsContainer) {
-        pillsContainer.innerHTML = `
-            <button onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill active-pill framer-tap px-3 py-1.5 rounded-full text-xs font-medium theme-card border theme-border theme-text hover:border-zinc-400 transition-all">
-                All Topics
-            </button>
-        ` + categories.map(c => `
-            <button onclick="selectCategory('${c.id}')" data-cat-pill="${c.id}" class="cat-pill framer-tap px-3 py-1.5 rounded-full text-xs font-medium theme-card border theme-border theme-text hover:border-zinc-400 transition-all">
-                ${c.label}
-            </button>
-        `).join('');
+
+    let tabsHtml = `<button class="topic-tab ${activeTopic === 'all' ? 'theme-text font-semibold active' : 'hover:theme-text transition-colors'}" data-cat="all" onclick="selectCategory('all')">For you</button>`;
+    let pillsHtml = `<button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${activeTopic === 'all' ? 'active-pill' : ''}">All Topics</button>`;
+
+    if (categories && categories.length > 0) {
+        categories.forEach(c => {
+            const isSel = activeTopic === c.id;
+            tabsHtml += `<button class="topic-tab ${isSel ? 'theme-text font-semibold active' : 'hover:theme-text transition-colors'}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>`;
+            pillsHtml += `<button type="button" onclick="selectCategory('${c.id}')" data-cat-pill="${c.id}" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${isSel ? 'active-pill' : ''}">${c.label}</button>`;
+        });
     }
+
+    if (topicBar) topicBar.innerHTML = tabsHtml;
+    if (pillsContainer) pillsContainer.innerHTML = pillsHtml;
 }
 
 function injectAdSenseScript(clientId) {

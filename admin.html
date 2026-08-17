@@ -324,27 +324,23 @@
                             <button type="button" onclick="switchAdminTab('categoryTab')" class="text-[11px] text-emerald-600 font-bold hover:underline">+ New Topic</button>
                         </div>
                         <select id="editStoryCategory" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
-                            <option value="ai">AI & Agents</option>
-                            <option value="engineering">Software Engineering</option>
-                            <option value="architecture">System Architecture</option>
-                            <option value="databases">Databases</option>
-                            <option value="productivity">Productivity</option>
+                            <option value="general">General</option>
                         </select>
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold theme-text">Tags (Comma Separated)</label>
-                        <input type="text" id="editStoryTags" placeholder="e.g. ai, python, performance, architecture" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                        <input type="text" id="editStoryTags" placeholder="e.g. news, updates, thoughts" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold theme-text">Author Name</label>
-                        <input type="text" id="editStoryAuthor" value="Dr. Kaelen Vance" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                        <input type="text" id="editStoryAuthor" placeholder="Enter author name..." class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold theme-text">Reading Time Estimate</label>
-                        <input type="text" id="editStoryReadTime" value="6 min read" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                        <input type="text" id="editStoryReadTime" value="5 min read" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
                     </div>
 
                     <div class="flex items-center gap-2 pt-2 border-t theme-border">
@@ -368,18 +364,14 @@
             <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
                 <div class="space-y-1.5">
                     <label class="text-xs font-bold uppercase tracking-wider theme-text">Topic or Target Headline</label>
-                    <textarea id="aiPromptInput" rows="3" placeholder="e.g. Building sub-millisecond async Python microservices with io_uring and zero-copy JSON parsers" class="w-full theme-bg border theme-border theme-text text-sm p-3.5 rounded-xl focus:outline-none"></textarea>
+                    <textarea id="aiPromptInput" rows="3" placeholder="e.g. Building high performance modern applications" class="w-full theme-bg border theme-border theme-text text-sm p-3.5 rounded-xl focus:outline-none"></textarea>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold theme-text">Category</label>
                         <select id="aiTopicSelect" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
-                            <option value="ai">AI & Agents</option>
-                            <option value="engineering">Software Engineering</option>
-                            <option value="architecture">System Architecture</option>
-                            <option value="databases">Databases</option>
-                            <option value="productivity">Productivity</option>
+                            <option value="general">General</option>
                         </select>
                     </div>
                     <div class="flex items-end">

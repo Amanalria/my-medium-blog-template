@@ -38,13 +38,7 @@ let globalSettings = {
         custom_head_code: "",
         custom_footer_code: ""
     },
-    categories: [
-        { id: "ai", label: "AI & Agents" },
-        { id: "engineering", label: "Software Engineering" },
-        { id: "architecture", label: "System Architecture" },
-        { id: "databases", label: "Databases" },
-        { id: "productivity", label: "Productivity" }
-    ],
+    categories: [],
     nav_links: [
         { label: "About Us", url: "about.html" },
         { label: "Contact", url: "contact.html" },
@@ -460,8 +454,8 @@ window.resetEditorForm = function() {
     document.getElementById('editStorySlug').value = '';
     document.getElementById('editStorySlug').dataset.touched = "";
     document.getElementById('editStoryTags').value = '';
-    document.getElementById('editStoryAuthor').value = 'Dr. Kaelen Vance';
-    document.getElementById('editStoryImage').value = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop&q=75';
+    document.getElementById('editStoryAuthor').value = '';
+    document.getElementById('editStoryImage').value = '';
     document.getElementById('editStoryImageAlt').value = '';
     document.getElementById('editStoryReadTime').value = '5 min read';
     document.getElementById('editStoryIsMember').checked = false;
@@ -868,7 +862,14 @@ function renderFullCategoriesList(categories) {
 function populateCategoryDropdowns(categories) {
     const catSelect = document.getElementById('editStoryCategory');
     const aiTopicSelect = document.getElementById('aiTopicSelect');
-    if (!categories) return;
+    if (!catSelect && !aiTopicSelect) return;
+
+    if (!categories || categories.length === 0) {
+        const defaultOpt = `<option value="general">General</option>`;
+        if (catSelect) catSelect.innerHTML = defaultOpt;
+        if (aiTopicSelect) aiTopicSelect.innerHTML = defaultOpt;
+        return;
+    }
 
     const opts = categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
     if (catSelect) catSelect.innerHTML = opts;

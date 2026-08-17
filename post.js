@@ -414,6 +414,7 @@ async function loadLiveStory() {
             renderStoryDetails(currentStory);
             injectRelatedStories(mediumStories, currentStory);
             injectTrendingList(mediumStories, currentStory);
+            renderPostCategories(globalSettings.categories || []);
             return;
         } catch(e) {
             console.warn("Supabase fetch failed on post:", e);
@@ -449,6 +450,20 @@ async function loadLiveStory() {
     renderStoryDetails(currentStory);
     injectRelatedStories(mediumStories, currentStory);
     injectTrendingList(mediumStories, currentStory);
+}
+
+function renderPostCategories(categories) {
+    const container = document.getElementById('postBottomCategoryPills');
+    if (!container) return;
+    let html = `<a href="/" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">All Topics</a>`;
+    if (categories && categories.length > 0) {
+        html += categories.map(c => `
+            <a href="/?cat=${c.id}" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
+                ${c.label}
+            </a>
+        `).join('');
+    }
+    container.innerHTML = html;
 }
 
 // Initial Load

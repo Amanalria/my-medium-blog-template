@@ -146,13 +146,8 @@
 
     <!-- 3. Clean Seamless Topic Filter Bar (Zero Scrollbars) -->
     <nav class="w-full border-b theme-border px-4 sm:px-8 py-3.5 overflow-x-auto no-scrollbar" id="feedSection">
-        <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs font-medium theme-muted whitespace-nowrap">
-            <button class="topic-tab theme-text font-semibold active" data-cat="all">For you</button>
-            <button class="topic-tab hover:theme-text transition-colors" data-cat="ai">AI & Agents</button>
-            <button class="topic-tab hover:theme-text transition-colors" data-cat="engineering">Software Engineering</button>
-            <button class="topic-tab hover:theme-text transition-colors" data-cat="architecture">System Architecture</button>
-            <button class="topic-tab hover:theme-text transition-colors" data-cat="databases">Databases</button>
-            <button class="topic-tab hover:theme-text transition-colors" data-cat="productivity">Productivity</button>
+        <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs font-medium theme-muted whitespace-nowrap" id="topicFilterBar">
+            <button class="topic-tab theme-text font-semibold active" data-cat="all" onclick="selectCategory('all')">For you</button>
         </div>
     </nav>
 
@@ -161,7 +156,7 @@
 
         <!-- Left Column: Story Feed (10 Articles) -->
         <main class="w-full lg:flex-1 space-y-8" id="storiesFeed">
-            <!-- Rendered dynamically -->
+            <!-- Rendered dynamically from Supabase database -->
         </main>
 
         <!-- Right Column: Focused Desktop Sidebar (Categories & Latest Posts) -->
@@ -176,21 +171,6 @@
                 <div class="flex flex-wrap gap-2 pt-1" id="sidebarCategoryPills">
                     <button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all active-pill">
                         All Topics
-                    </button>
-                    <button type="button" onclick="selectCategory('ai')" data-cat-pill="ai" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
-                        AI & Agents
-                    </button>
-                    <button type="button" onclick="selectCategory('engineering')" data-cat-pill="engineering" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
-                        Software Engineering
-                    </button>
-                    <button type="button" onclick="selectCategory('architecture')" data-cat-pill="architecture" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
-                        System Architecture
-                    </button>
-                    <button type="button" onclick="selectCategory('databases')" data-cat-pill="databases" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
-                        Databases
-                    </button>
-                    <button type="button" onclick="selectCategory('productivity')" data-cat-pill="productivity" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
-                        Productivity
                     </button>
                 </div>
             </div>
