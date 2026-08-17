@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medium – Story Reader</title>
     <link rel="canonical" id="canonicalTag" href="">
+    <!-- Synchronous Preloaded Articles for 0.000 CLS Instant First Paint -->
+    <script src="/articles-preload.js"></script>
     <script>
         (function() {
             try {
@@ -174,11 +176,9 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
     <!-- 2. Medium Main Article Container -->
     <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 flex-1 w-full">
 
-        <!-- Story Title & Subtitle -->
+        <!-- Story Title & Subtitle (Pre-hydrated synchronously before First Paint) -->
         <header class="space-y-4">
-            <h1 id="storyTitle" class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold theme-text leading-[1.15] tracking-tight">
-                Loading story...
-            </h1>
+            <h1 id="storyTitle" class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold theme-text leading-[1.15] tracking-tight"></h1>
             <p id="storySubtitle" class="text-lg sm:text-xl theme-muted font-sans font-normal leading-relaxed"></p>
         </header>
 
@@ -235,6 +235,70 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                 <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-5/6"></div>
             </div>
         </article>
+
+        <!-- 0ms Zero-CLS Synchronous Hydration: Renders Title, Subtitle, Author, and Prose Before First Paint -->
+        <script>
+            (function() {
+                try {
+                    const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
+                    let slug = (rawPath && !rawPath.includes('.') && rawPath !== 'post') ? rawPath : '';
+                    if (!slug) {
+                        const params = new URLSearchParams(window.location.search);
+                        slug = params.get('slug') || params.get('id') || '';
+                    }
+                    let list = window.__PRELOADED_ARTICLES__;
+                    if (!list) {
+                        const raw = localStorage.getItem('cached_articles');
+                        if (raw) list = JSON.parse(raw);
+                    }
+                    if (list && list.length > 0) {
+                        let s = list.find(x => x.slug === slug);
+                        if (!s && slug) {
+                            s = list.find(x => x.slug.startsWith(slug) || slug.startsWith(x.slug));
+                        }
+                        if (!s) s = list[0];
+                        if (s) {
+                            document.title = `${s.title} – Medium`;
+                            const cTag = document.getElementById('canonicalTag');
+                            if (cTag) cTag.href = `https://hivecloud.in/${s.slug}`;
+                            const t = document.getElementById('storyTitle');
+                            if (t) t.textContent = s.title;
+                            const sub = document.getElementById('storySubtitle');
+                            if (sub) sub.textContent = s.subtitle || '';
+                            const aut = document.getElementById('storyAuthor');
+                            if (aut) aut.textContent = s.author;
+                            const initials = s.author ? s.author.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : 'AU';
+                            const av = document.getElementById('storyAuthorAvatar');
+                            if (av) av.textContent = initials;
+                            const avCard = document.getElementById('authorCardAvatar');
+                            if (avCard) avCard.textContent = initials;
+                            const cardName = document.getElementById('authorCardName');
+                            if (cardName) cardName.textContent = `Written by ${s.author}`;
+                            const d = document.getElementById('storyDate');
+                            if (d) d.textContent = s.date || 'Aug 17, 2026';
+                            const rt = document.getElementById('storyReadTime');
+                            if (rt) rt.textContent = s.readTime || '5 min read';
+                            const prose = document.querySelector('.medium-prose');
+                            if (prose && (s.content || s.bodyHtml)) {
+                                prose.innerHTML = s.content || s.bodyHtml;
+                            }
+                            if (s.tags) {
+                                const tagContainer = document.getElementById('storyTagsContainer');
+                                if (tagContainer) {
+                                    const tags = s.tags.split(',').map(x => x.trim()).filter(Boolean);
+                                    tagContainer.innerHTML = tags.map(tag => `
+                                        <a href="/?cat=${encodeURIComponent(tag)}" class="framer-tap px-3 py-1.5 rounded-full theme-search-bg theme-border border text-[11px] font-sans font-medium theme-text hover:border-zinc-400 transition-colors">
+                                            ${tag}
+                                        </a>
+                                    `).join('');
+                                }
+                            }
+                            window.__LAST_RENDERED_STORY_ID__ = (s.id || s.slug || '') + '_' + (s.title || '');
+                        }
+                    }
+                } catch(e){}
+            })();
+        </script>
 
         <!-- Article Tags Container -->
         <div id="storyTagsContainer" class="flex flex-wrap items-center gap-2 pt-6"></div>

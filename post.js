@@ -56,7 +56,7 @@ const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').p
 const cleanPathSlug = (pathSlug && !pathSlug.includes('.') && pathSlug !== 'post') ? pathSlug : null;
 const currentSlug = urlParams.get('slug') || cleanPathSlug || "";
 
-let lastRenderedStoryId = '';
+let lastRenderedStoryId = window.__LAST_RENDERED_STORY_ID__ || '';
 
 // 5. Render Story Details
 function renderStoryDetails(story) {
