@@ -368,9 +368,18 @@ window.executeFeaturedUpload = function() {
     const imgInput = document.getElementById('editStoryImage');
     if (imgInput) {
         imgInput.value = featuredCompressedResult.dataUrl;
+        imgInput.dispatchEvent(new Event('input'));
         window.updateCoverPreview(featuredCompressedResult.dataUrl);
-        showToast(`✓ WebP Image (${featuredCompressedResult.sizeKb} KB) attached as cover!`);
     }
+
+    // Visual feedback on button
+    const btn = document.getElementById('featuredUploadBtn');
+    if (btn) {
+        btn.innerHTML = '✅ Cover Set!';
+        setTimeout(() => { btn.innerHTML = '🌟 Upload Cover'; }, 2000);
+    }
+
+    showToast(`✓ WebP (${featuredCompressedResult.sizeKb} KB) set as cover image!`);
 };
 
 window.insertWebpIntoEditorProse = function() {
@@ -394,6 +403,117 @@ window.insertWebpIntoEditorProse = function() {
 };
 
 // Standalone WebP Studio Handlers
+
+// ================================================================
+// 8. EDITOR IMAGE UPLOAD SYSTEM (Separate from Cover Image)
+// ================================================================
+let editorPendingFile = null;
+let editorCompressedResult = null;
+
+window.toggleEditorImageUpload = function() {
+    const panel = document.getElementById('editorImageUploadPanel');
+    if (panel) panel.classList.toggle('hidden');
+};
+
+window.syncEditorKb = function(val) {
+    const num = parseInt(val, 10) || 40;
+    const slider = document.getElementById('editorKbSlider');
+    const input = document.getElementById('editorKbInput');
+    const label = document.getElementById('editorConvertTargetLabel');
+    if (slider) slider.value = num;
+    if (input) input.value = num;
+    if (label) label.textContent = `${num} KB`;
+};
+
+window.onEditorImageSelected = function(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    editorPendingFile = file;
+    editorCompressedResult = null;
+    const origKb = Math.round(file.size / 1024);
+    const sizeStr = origKb > 1024 ? `${(origKb / 1024).toFixed(2)} MB` : `${origKb} KB`;
+
+    const nameEl = document.getElementById('editorSelectedFileName');
+    const convertSection = document.getElementById('editorConvertSection');
+    const previewSection = document.getElementById('editorConvertedPreview');
+
+    if (nameEl) nameEl.textContent = `${file.name} (${sizeStr})`;
+    if (convertSection) convertSection.classList.remove('hidden');
+    if (previewSection) previewSection.classList.add('hidden');
+
+    showToast(`✓ Editor image selected: ${file.name}`);
+};
+
+window.executeEditorImageConvert = async function() {
+    if (!editorPendingFile) {
+        alert('Select an image first.');
+        return;
+    }
+
+    const btn = document.getElementById('editorConvertBtn');
+    const targetKb = parseInt(document.getElementById('editorKbInput')?.value || '40', 10);
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `⏳ Converting (${targetKb} KB)...`;
+    }
+
+    try {
+        const result = await compressImageToWebpPrecise(editorPendingFile, targetKb);
+        editorCompressedResult = result;
+
+        const thumb = document.getElementById('editorConvertedThumb');
+        const sizeEl = document.getElementById('editorConvertedSize');
+        const savingsEl = document.getElementById('editorConvertedSavings');
+        const previewSection = document.getElementById('editorConvertedPreview');
+
+        if (thumb) thumb.src = result.dataUrl;
+        if (sizeEl) sizeEl.innerHTML = `Final: <strong>${result.sizeKb} KB</strong>`;
+        if (savingsEl) savingsEl.textContent = `${result.originalKb} KB → ${result.savingsPct}% saved`;
+        if (previewSection) previewSection.classList.remove('hidden');
+
+        showToast(`✓ Converted to ${result.sizeKb} KB WebP!`);
+    } catch (err) {
+        console.error(err);
+        alert('Conversion failed: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `⚡ Convert to WebP (<span id="editorConvertTargetLabel">${targetKb} KB</span>)`;
+        }
+    }
+};
+
+window.executeEditorImageInsert = function() {
+    if (!editorCompressedResult) {
+        alert('Convert the image first.');
+        return;
+    }
+
+    const imgHtml = `<figure class="my-6 space-y-2"><img src="${editorCompressedResult.dataUrl}" alt="${editorCompressedResult.defaultName}" class="w-full rounded-xl border theme-border object-cover shadow-sm"><figcaption class="text-center text-xs theme-muted">${editorCompressedResult.defaultName}</figcaption></figure><p></p>`;
+
+    if (isHtmlMode) {
+        const raw = document.getElementById('rawHtmlEditor');
+        if (raw) raw.value += imgHtml;
+    } else {
+        const editor = document.getElementById('wysiwygEditor');
+        if (editor) {
+            editor.focus();
+            document.execCommand('insertHTML', false, imgHtml);
+        }
+    }
+    updateWordAndCharCount();
+
+    // Visual feedback
+    const btn = document.getElementById('editorInsertBtn');
+    if (btn) {
+        btn.innerHTML = '✅ Inserted!';
+        setTimeout(() => { btn.innerHTML = '📝 Insert WebP into Article'; }, 2000);
+    }
+
+    showToast(`✓ WebP (${editorCompressedResult.sizeKb} KB) inserted into article!`);
+};
 window.setStandaloneTargetKb = function(kb) {
     const input = document.getElementById('standaloneCustomKbInput');
     if (input) {
