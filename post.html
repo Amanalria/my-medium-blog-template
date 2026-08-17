@@ -2,21 +2,24 @@
 <html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medium – Story Reader</title>
     <meta name="description" content="Discover stories, thinking, and expertise.">
-    <link rel="canonical" href="/">
+    <link rel="canonical" id="canonicalTag" href="https://my-me-olive.vercel.app/">
 
     <!-- DNS Prefetch & Preconnect for Super Fast Network Handshakes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://okpyphrqudeeoboesdzz.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://okpyphrqudeeoboesdzz.supabase.co">
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
-    <!-- Non-blocking Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    <!-- Non-blocking Google Fonts (Swap) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" media="print" onload="this.media='all'" crossorigin>
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    </noscript>
 
     <!-- 0ms Zero-CLS Instant Synchronous Settings & Theme Hydration -->
     <script>
@@ -58,22 +61,7 @@
         })();
     </script>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brandGreen: '#1a8917',
-                        darkGreen: '#156d12'
-                    }
-                }
-            }
-        }
-    </script>
-
+    <!-- Pristine Zero-Dependency High Speed CSS -->
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="theme-bg theme-text font-sans antialiased overflow-x-hidden w-full min-h-screen transition-colors duration-200 flex flex-col justify-between">
@@ -353,13 +341,11 @@
         </div>
     </footer>
 
-    <!-- 9. Mobile Navigation Drawer -->
-    <div id="mobileDrawer" style="display: none;" class="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-md flex justify-end font-sans">
-        <div class="drawer-content-animate theme-card border-l theme-border w-full max-w-xs h-full p-6 space-y-6 flex flex-col justify-between shadow-2xl overflow-y-auto" onclick="event.stopPropagation()">
+            <!-- Drawer Close Button -->
             <div class="space-y-6">
                 <div class="flex items-center justify-between border-b theme-border pb-4">
                     <span class="font-serif font-black text-2xl tracking-tighter theme-text site-logo-text">Medium</span>
-                    <button type="button" onclick="window.closeMobileDrawer()" class="framer-tap p-1.5 text-zinc-400 hover:theme-text cursor-pointer">
+                    <button type="button" onclick="window.closeMobileDrawer()" aria-label="Close navigation menu" class="framer-tap p-1.5 text-zinc-400 hover:theme-text cursor-pointer">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -368,7 +354,7 @@
                 </div>
                 <div class="space-y-2">
                     <label class="text-[11px] font-mono uppercase tracking-wider theme-muted">Appearance</label>
-                    <button type="button" onclick="window.toggleTheme()" class="w-full flex items-center justify-between p-3 rounded-xl theme-bg border theme-border hover:border-zinc-400 transition-colors cursor-pointer text-xs font-semibold theme-text">
+                    <button type="button" onclick="window.toggleTheme()" aria-label="Toggle Theme" class="w-full flex items-center justify-between p-3 rounded-xl theme-bg border theme-border hover:border-zinc-400 transition-colors cursor-pointer text-xs font-semibold theme-text">
                         <span>Toggle Theme</span>
                         <span class="text-[11px] font-mono text-emerald-500 uppercase" id="currentThemeBadge">Light</span>
                     </button>
@@ -394,10 +380,10 @@
         </div>
     </div>
 
-    <!-- Supabase JS Client & Config -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/supabase-client.js"></script>
-    <!-- Story Reader Script -->
-    <script src="/post.js"></script>
+    <!-- Deferred Supabase JS Client & Config (Non-Render Blocking) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="/supabase-client.js"></script>
+    <!-- Deferred Story Reader Script -->
+    <script defer src="/post.js"></script>
 </body>
 </html>

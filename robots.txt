@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: /sitemap.xml
+Disallow: /aman
+
+Sitemap: https://my-me-olive.vercel.app/sitemap.xml

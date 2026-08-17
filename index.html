@@ -2,21 +2,24 @@
 <html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medium – Where good ideas find you.</title>
-    <meta name="description" content="Discover stories, thinking, and expertise from writers.">
-    <link rel="canonical" href="/">
+    <meta name="description" content="Discover stories, thinking, and expertise from writers across AI, tech, design, and software engineering.">
+    <link rel="canonical" href="https://my-me-olive.vercel.app/">
 
-    <!-- DNS Prefetch & Preconnect for Super Fast Network Handshakes -->
+    <!-- DNS Prefetch & Preconnect for Super Fast Handshakes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://okpyphrqudeeoboesdzz.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://okpyphrqudeeoboesdzz.supabase.co">
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
-    <!-- Non-blocking Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    <!-- Non-blocking Google Fonts (Swap) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" media="print" onload="this.media='all'" crossorigin>
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    </noscript>
 
     <!-- 0ms Zero-CLS Instant Synchronous Settings & Theme Hydration -->
     <script>
@@ -63,22 +66,7 @@
         })();
     </script>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brandGreen: '#1a8917',
-                        darkGreen: '#156d12'
-                    }
-                }
-            }
-        }
-    </script>
-
+    <!-- Pristine Zero-Dependency High Speed CSS -->
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="theme-bg theme-text font-sans antialiased overflow-x-hidden w-full min-h-screen transition-colors duration-200 flex flex-col justify-between">
@@ -92,7 +80,7 @@
             
             <!-- Left: Wordmark Logo + Search Input (Zero-CLS) -->
             <div class="flex items-center gap-6">
-                <a href="/" class="flex items-center gap-2 group shrink-0">
+                <a href="/" class="flex items-center gap-2 group shrink-0" aria-label="Homepage">
                     <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Medium':'Medium');}catch(e){document.write('Medium');}})();</script></span>
                 </a>
 
@@ -102,7 +90,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" onclick="window.openSearch()" onfocus="window.openSearch()" placeholder="Search stories..." class="pl-9 pr-4 py-2 rounded-full theme-search-bg text-xs theme-text border theme-border focus:border-zinc-400 outline-none w-48 lg:w-64 cursor-pointer transition-all">
+                    <input type="text" onclick="window.openSearch()" onfocus="window.openSearch()" placeholder="Search stories..." aria-label="Search stories" class="pl-9 pr-4 py-2 rounded-full theme-search-bg text-xs theme-text border theme-border focus:border-zinc-400 outline-none w-48 lg:w-64 cursor-pointer transition-all">
                 </div>
             </div>
 
@@ -116,7 +104,7 @@
                 </nav>
 
                 <!-- Light / Dark Theme Toggle -->
-                <button type="button" onclick="window.toggleTheme()" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer" title="Toggle Light/Dark Theme">
+                <button type="button" onclick="window.toggleTheme()" aria-label="Toggle Light and Dark Theme" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer">
                     <svg class="themeSunSvg w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -134,7 +122,7 @@
                 </button>
 
                 <!-- Search button on Mobile -->
-                <button type="button" onclick="window.openSearch()" class="flex sm:hidden framer-tap p-2 rounded-lg theme-muted hover:theme-text">
+                <button type="button" onclick="window.openSearch()" aria-label="Search stories" class="flex sm:hidden framer-tap p-2 rounded-lg theme-muted hover:theme-text">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -187,20 +175,154 @@
     <nav class="w-full border-b theme-border px-4 sm:px-8 overflow-x-auto no-scrollbar sticky top-[57px] z-30 theme-bg/95 backdrop-blur-md" id="feedSection">
         <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs whitespace-nowrap" id="topicFilterBar">
             <button class="topic-tab active" data-cat="all" onclick="selectCategory('all')">For you</button>
+            <button class="topic-tab" data-cat="ai-architecture" onclick="selectCategory('ai-architecture')">AI Architecture</button>
+            <button class="topic-tab" data-cat="machine-learning" onclick="selectCategory('machine-learning')">Machine Learning</button>
+            <button class="topic-tab" data-cat="production-ai" onclick="selectCategory('production-ai')">Production AI</button>
+            <button class="topic-tab" data-cat="agent-swarms" onclick="selectCategory('agent-swarms')">Agent Swarms</button>
         </div>
     </nav>
 
-    <!-- 4. Medium 2-Column Main Feed Layout -->
+    <!-- 4. Medium 2-Column Main Feed Layout (0ms CLS Pre-rendered) -->
     <div class="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col lg:flex-row gap-12 items-start flex-1 w-full">
 
         <!-- Left Column: Story Feed -->
-        <main class="w-full lg:flex-1 space-y-6" id="storiesFeed">
-            <!-- Dynamic Feed rendered by app.js -->
-            <div class="space-y-6 animate-pulse">
-                <div class="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3"></div>
-                <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3"></div>
-                <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-1/2"></div>
-            </div>
+        <main class="w-full lg:flex-1 space-y-6 min-h-[600px]" id="storiesFeed">
+            
+            <article class="border-b theme-border py-6 first:pt-0">
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">A</div>
+                    <span class="text-xs font-semibold theme-text">Aman Alria</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">Aug 17, 2026</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">AI Architecture</span>
+                </div>
+                <a href="/the-rise-of-agentic-coding-in-2026-why-autonomous-multi-agent-workflows-are-replacing-copilots" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                            The Rise of Agentic Coding in 2026: Why Autonomous Multi-Agent Workflows Are Replacing Copilots
+                        </h2>
+                        <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                            Explore how self-orchestrating multi-agent systems and Model Context Protocol transformed software development from prompt-and-pray to deterministic engineering.
+                        </p>
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">AI Architecture</span>
+                            <span>8 min read</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+
+            <article class="border-b theme-border py-6">
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">A</div>
+                    <span class="text-xs font-semibold theme-text">Aman Alria</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">Aug 17, 2026</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">Machine Learning</span>
+                </div>
+                <a href="/inside-the-august-2026-ai-reasoning-leap-how-test-time-compute-and-open-weight-models-changed-everything" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                            Inside the August 2026 AI Reasoning Leap: How Test-Time Compute and Open-Weight Models Changed Everything
+                        </h2>
+                        <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                            A deep dive into Monte Carlo Tree Search, test-time scaling laws, and the sudden parity between local open weights and closed frontier models.
+                        </p>
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">Machine Learning</span>
+                            <span>9 min read</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+
+            <article class="border-b theme-border py-6">
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">A</div>
+                    <span class="text-xs font-semibold theme-text">Aman Alria</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">Aug 17, 2026</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">Production AI</span>
+                </div>
+                <a href="/autonomous-ai-agents-in-production-the-ultimate-architectural-blueprint-for-real-world-reliability" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                            Autonomous AI Agents in Production: The Ultimate Architectural Blueprint for Real-World Reliability
+                        </h2>
+                        <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                            Discover the battle-tested engineering design patterns required to take autonomous agents from playground demos into enterprise mission-critical environments.
+                        </p>
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">Production AI</span>
+                            <span>8 min read</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+
+            <article class="border-b theme-border py-6">
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">A</div>
+                    <span class="text-xs font-semibold theme-text">Aman Alria</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">Aug 17, 2026</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">Agent Swarms</span>
+                </div>
+                <a href="/the-multi-agent-orchestration-revolution-how-swarm-architectures-and-mcp-are-standardizing-ai-tooling" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                            The Multi-Agent Orchestration Revolution: How Swarm Architectures and MCP Are Standardizing AI Tooling
+                        </h2>
+                        <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                            How standardized protocols and hierarchical multi-agent pipelines replaced fragile custom glue code across global engineering teams.
+                        </p>
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">Agent Swarms</span>
+                            <span>9 min read</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+
+            <article class="border-b theme-border py-6">
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">A</div>
+                    <span class="text-xs font-semibold theme-text">Aman Alria</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">Aug 17, 2026</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">Context Engineering</span>
+                </div>
+                <a href="/beyond-prompts-how-context-engineering-and-dynamic-memory-are-powering-next-gen-ai-workspaces" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+                            Beyond Prompts: How Context Engineering and Dynamic Memory Are Powering Next-Gen AI Workspaces
+                        </h2>
+                        <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                            Prompt engineering was only the beginning. Discover how modern AI workspaces use AST symbol indexing, session hydration, and episodic memory.
+                        </p>
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">Context Engineering</span>
+                            <span>8 min read</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+
         </main>
 
         <!-- Right Column: Sidebar (Staff Picks, Topics, Who to Follow) -->
@@ -215,7 +337,20 @@
                     </h3>
                 </div>
                 <div class="space-y-4 text-xs" id="sidebarLatestPosts">
-                    <p class="text-xs theme-muted">Loading picks...</p>
+                    <a href="/the-rise-of-agentic-coding-in-2026-why-autonomous-multi-agent-workflows-are-replacing-copilots" class="block space-y-1 group">
+                        <div class="flex items-center gap-2 text-xs theme-muted">
+                            <span class="w-4 h-4 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 text-[9px] font-bold flex items-center justify-center">A</span>
+                            <span class="font-semibold theme-text text-[11px]">Aman Alria</span>
+                        </div>
+                        <h4 class="font-bold text-xs sm:text-sm theme-text group-hover:underline leading-snug font-serif line-clamp-2">The Rise of Agentic Coding in 2026: Why Autonomous Multi-Agent Workflows Are Replacing Copilots</h4>
+                    </a>
+                    <a href="/inside-the-august-2026-ai-reasoning-leap-how-test-time-compute-and-open-weight-models-changed-everything" class="block space-y-1 group">
+                        <div class="flex items-center gap-2 text-xs theme-muted">
+                            <span class="w-4 h-4 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 text-[9px] font-bold flex items-center justify-center">A</span>
+                            <span class="font-semibold theme-text text-[11px]">Aman Alria</span>
+                        </div>
+                        <h4 class="font-bold text-xs sm:text-sm theme-text group-hover:underline leading-snug font-serif line-clamp-2">Inside the August 2026 AI Reasoning Leap: How Test-Time Compute and Open-Weight Models Changed Everything</h4>
+                    </a>
                 </div>
             </div>
 
@@ -228,6 +363,12 @@
                     <button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all active-pill">
                         All Topics
                     </button>
+                    <button type="button" onclick="selectCategory('ai-architecture')" data-cat-pill="ai-architecture" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
+                        AI Architecture
+                    </button>
+                    <button type="button" onclick="selectCategory('machine-learning')" data-cat-pill="machine-learning" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
+                        Machine Learning
+                    </button>
                 </div>
             </div>
 
@@ -239,10 +380,10 @@
                 <div class="space-y-3 text-xs" id="whoToFollowList">
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">M</div>
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">A</div>
                             <div>
-                                <h4 class="font-bold theme-text">Medium Editorial</h4>
-                                <p class="text-[11px] theme-muted">Curated insights & stories</p>
+                                <h4 class="font-bold theme-text">Aman Alria</h4>
+                                <p class="text-[11px] theme-muted">AI Research & Engineering</p>
                             </div>
                         </div>
                         <button type="button" class="px-3 py-1 rounded-full border theme-border theme-text text-xs font-medium hover:border-zinc-400 transition-all">Follow</button>
@@ -377,7 +518,7 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="modalSearchInput" oninput="window.onSearchInput(this.value)" placeholder="Search published stories, topics, authors..." class="w-full theme-bg border theme-border theme-text text-sm sm:text-base pl-11 pr-10 py-3 rounded-xl focus:outline-none focus:border-zinc-400 transition-colors">
-                <button type="button" onclick="window.closeSearch()" class="framer-tap p-1.5 text-zinc-400 hover:theme-text absolute right-2.5 flex items-center justify-center cursor-pointer" title="Close (Esc)">
+                <button type="button" onclick="window.closeSearch()" class="framer-tap p-1.5 text-zinc-400 hover:theme-text absolute right-2.5 flex items-center justify-center cursor-pointer" aria-label="Close Search Dialog" title="Close (Esc)">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -392,10 +533,10 @@
         </div>
     </div>
 
-    <!-- Supabase JS Client & Config -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/supabase-client.js"></script>
-    <!-- Core App Logic -->
-    <script src="/app.js"></script>
+    <!-- Deferred Supabase JS Client & Config (Non-Render Blocking) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="/supabase-client.js"></script>
+    <!-- Deferred Core App Logic -->
+    <script defer src="/app.js"></script>
 </body>
 </html>
