@@ -638,7 +638,7 @@ function renderManageTable(list) {
     tbody.innerHTML = list.map(s => `
         <tr class="hover:theme-search-bg transition-colors">
             <td class="p-3.5 space-y-0.5">
-                <a href="${s.slug}" target="_blank" class="font-bold theme-text hover:underline text-xs sm:text-sm line-clamp-1">${s.title}</a>
+                <a href="/${s.slug}" target="_blank" class="font-bold theme-text hover:underline text-xs sm:text-sm line-clamp-1">${s.title}</a>
                 <div class="text-[11px] theme-muted font-mono">${s.author} • /${s.slug}</div>
             </td>
             <td class="p-3.5">
@@ -652,7 +652,7 @@ function renderManageTable(list) {
             </td>
             <td class="p-3.5 text-right space-x-2">
                 <button type="button" onclick="editStoryFromTable('${s.id}')" class="px-2.5 py-1 rounded-lg theme-card border theme-border hover:border-zinc-400 font-semibold text-xs">Edit</button>
-                <a href="${s.slug}" target="_blank" class="px-2.5 py-1 rounded-lg theme-card border theme-border hover:border-zinc-400 font-semibold text-xs inline-block">View</a>
+                <a href="/${s.slug}" target="_blank" class="px-2.5 py-1 rounded-lg theme-card border theme-border hover:border-zinc-400 font-semibold text-xs inline-block">View</a>
                 <button type="button" onclick="deleteStoryFromTable('${s.id}')" class="px-2.5 py-1 rounded-lg text-red-500 hover:bg-red-500/10 font-semibold text-xs">Delete</button>
             </td>
         </tr>

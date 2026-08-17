@@ -35,39 +35,8 @@ try {
     }
 } catch(e) {}
 
-// 3. Fallback Initial Stories Data
-let mediumStories = [
-    {
-        id: "1",
-        slug: "parallel-multi-agent-dag-architectures",
-        title: "Parallel Multi-Agent DAG Architectures & Zero-Latency Execution",
-        subtitle: "Why serial chain-of-thought is giving way to directed acyclic graphs of specialized reasoning agents in autonomous coding engines.",
-        author: "Dr. Kaelen Vance",
-        publication: "Autonomous AI Lab",
-        authorInitials: "KV",
-        date: "Aug 17",
-        readTime: "7 min read",
-        category: "ai",
-        isMember: true,
-        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=75",
-        imageAlt: "Parallel Multi Agent DAG Architecture"
-    },
-    {
-        id: "2",
-        slug: "zero-copy-sqlite-wal-optimization",
-        title: "Tuning SQLite for 100k Queries/sec with Write-Ahead Logging & Memory Mapping",
-        subtitle: "Practical configuration and memory mapping strategies to squeeze distributed performance out of single-node embedded storage.",
-        author: "Marcus Vance",
-        publication: "Distributed Storage Journal",
-        authorInitials: "MV",
-        date: "Aug 14",
-        readTime: "5 min read",
-        category: "databases",
-        isMember: false,
-        image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&auto=format&fit=crop&q=75",
-        imageAlt: "SQLite WAL optimization"
-    }
-];
+// 3. Dynamic Stories Data Store (Loaded from Supabase)
+let mediumStories = [];
 
 // 4. Render Stories Feed Function with In-Feed AdSense Insertion & Native Lazy Loading
 const storiesFeed = document.getElementById('storiesFeed');
@@ -75,11 +44,12 @@ const storiesFeed = document.getElementById('storiesFeed');
 function renderStoriesFeed(list) {
     if (!storiesFeed) return;
 
-    if (list.length === 0) {
+    if (!list || list.length === 0) {
         storiesFeed.innerHTML = `
-            <div class="py-16 text-center text-xs theme-muted">
-                <p>No stories found matching your filter criteria.</p>
-                <button onclick="selectCategory('all')" class="mt-3 px-4 py-1.5 rounded-full bg-emerald-600 text-white font-semibold">View All Topics</button>
+            <div class="py-16 text-center text-xs theme-muted space-y-3">
+                <p class="text-sm font-medium theme-text">No stories found.</p>
+                <p class="text-xs">Write and publish articles directly from the Admin Studio.</p>
+                <a href="/admin" class="inline-block mt-2 px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold text-xs">Open Admin Studio</a>
             </div>
         `;
         return;
@@ -289,7 +259,7 @@ window.onSearchInput = function(query) {
     }
 
     list.innerHTML = matches.map(s => `
-        <a href="post.html?slug=${s.slug}" class="block p-3 rounded-xl hover:theme-search-bg transition-colors border theme-border space-y-1">
+        <a href="/${s.slug}" class="block p-3 rounded-xl hover:theme-search-bg transition-colors border theme-border space-y-1">
             <div class="flex items-center gap-2 text-[11px] font-mono theme-muted">
                 <span>${s.author}</span>
                 <span>•</span>
