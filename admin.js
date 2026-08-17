@@ -327,7 +327,7 @@ window.executeFeaturedCompression = async function() {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span>⚡ Convert to WebP & Compress (<span id="featuredCompressTargetLabel">${targetKb} KB</span>)</span>`;
+            btn.innerHTML = `⚡ Convert to WebP (<span id="featuredCompressTargetLabel">${targetKb} KB</span>)`;
         }
     }
 };

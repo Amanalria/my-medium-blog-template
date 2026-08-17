@@ -177,64 +177,55 @@
                         </div>
 
                         <!-- Step 1: Custom KB Selector (Slider, Number Input, Presets) -->
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-semibold theme-text">1. Set Target File Size:</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="range" id="featuredKbSlider" min="5" max="300" step="5" value="30" oninput="syncFeaturedKb(this.value)" class="flex-1 accent-emerald-600 cursor-pointer">
-                                <input type="number" id="featuredKbInput" min="5" max="500" value="30" oninput="syncFeaturedKb(this.value)" class="w-16 theme-bg border theme-border theme-text text-xs p-1.5 rounded-lg font-mono text-center focus:outline-none">
-                                <span class="text-xs font-mono theme-muted">KB</span>
-                            </div>
-
-                            <!-- Quick Preset Buttons -->
-                            <div class="flex flex-wrap gap-1.5 pt-0.5">
-                                <button type="button" onclick="syncFeaturedKb(10)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">10 KB</button>
-                                <button type="button" onclick="syncFeaturedKb(25)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">25 KB</button>
-                                <button type="button" onclick="syncFeaturedKb(40)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">40 KB</button>
-                                <button type="button" onclick="syncFeaturedKb(80)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">80 KB</button>
-                                <button type="button" onclick="syncFeaturedKb(150)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">150 KB</button>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: File Picker -->
-                        <div class="space-y-1 pt-1">
-                            <label class="text-[11px] font-semibold theme-text block">2. Select Image File:</label>
+                        <!-- Step 1: Select Image File -->
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-semibold theme-text block">📁 Select Image:</label>
                             <input type="file" id="featuredFileInput" accept="image/*" onchange="onFeaturedFileSelected(event)" class="text-xs theme-muted file:mr-3 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-900 dark:file:bg-zinc-100 file:text-white dark:file:text-zinc-900 hover:file:opacity-90 w-full cursor-pointer p-1 rounded-xl border theme-border theme-bg">
                         </div>
 
-                        <!-- Step 3: Compress Button (Appears once file is picked) -->
-                        <div id="featuredCompressActionBox" class="hidden space-y-2 pt-2 border-t theme-border">
+                        <!-- Step 2: Convert to WebP (Appears after file selected) -->
+                        <div id="featuredCompressActionBox" class="hidden space-y-2.5 pt-2 border-t theme-border">
                             <div class="text-[11px] font-mono theme-muted flex items-center justify-between">
-                                <span>Original File Size:</span>
+                                <span>Selected:</span>
                                 <strong id="featuredOriginalSizeText" class="theme-text text-xs">--</strong>
                             </div>
-                            <button type="button" onclick="executeFeaturedCompression()" id="featuredCompressBtn" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                <span>⚡ Convert to WebP & Compress (<span id="featuredCompressTargetLabel">30 KB</span>)</span>
+
+                            <!-- Target KB inline -->
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-semibold theme-text whitespace-nowrap">Target:</span>
+                                <input type="range" id="featuredKbSlider" min="5" max="300" step="5" value="30" oninput="syncFeaturedKb(this.value)" class="flex-1 accent-emerald-600 cursor-pointer">
+                                <input type="number" id="featuredKbInput" min="5" max="500" value="30" oninput="syncFeaturedKb(this.value)" class="w-14 theme-bg border theme-border theme-text text-xs p-1 rounded-lg font-mono text-center focus:outline-none">
+                                <span class="text-[10px] font-mono theme-muted">KB</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <button type="button" onclick="syncFeaturedKb(10)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">10</button>
+                                <button type="button" onclick="syncFeaturedKb(25)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">25</button>
+                                <button type="button" onclick="syncFeaturedKb(40)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">40</button>
+                                <button type="button" onclick="syncFeaturedKb(80)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">80</button>
+                                <button type="button" onclick="syncFeaturedKb(150)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">150</button>
+                            </div>
+
+                            <button type="button" onclick="executeFeaturedCompression()" id="featuredCompressBtn" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                ⚡ Convert to WebP (<span id="featuredCompressTargetLabel">30 KB</span>)
                             </button>
                         </div>
 
-                        <!-- Step 4: Preview, Rename & Final Upload / Insert Box -->
+                        <!-- Step 3: Upload (Appears after conversion complete) -->
                         <div id="featuredUploadActionBox" class="hidden space-y-3 pt-2 border-t theme-border">
                             <div class="flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
-                                <img id="featuredCompressedThumb" src="" alt="Compressed WebP Preview" class="w-16 h-12 rounded-lg object-cover border theme-border">
+                                <img id="featuredCompressedThumb" src="" alt="WebP Preview" class="w-16 h-12 rounded-lg object-cover border theme-border">
                                 <div class="text-[11px] space-y-0.5 flex-1 font-mono">
                                     <div class="text-emerald-600 font-bold" id="featuredFinalSizeText">--</div>
                                     <div class="text-zinc-500 text-[10px]" id="featuredSavingsText">--</div>
                                 </div>
                             </div>
 
-                            <div class="space-y-1">
-                                <label class="text-[11px] font-semibold theme-text">Custom WebP File Name:</label>
-                                <input type="text" id="featuredCustomFileName" placeholder="my-story-image.webp" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
-                            </div>
-
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                    <span>🌟 Set as Cover Image</span>
+                                <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                    🌟 Upload as Cover Image
                                 </button>
-                                <button type="button" onclick="insertWebpIntoEditorProse()" class="py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                    <span>📝 Insert in Article Body</span>
+                                <button type="button" onclick="insertWebpIntoEditorProse()" class="py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                    📝 Insert in Article Body
                                 </button>
                             </div>
                         </div>
