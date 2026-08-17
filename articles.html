@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ August 2026 AI Articles Vault — 1-Click Copy & Publishing Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        serif: ['"Lora"', 'Georgia', 'serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .theme-bg { background-color: var(--bg); }
+        .theme-card { background-color: var(--card); }
+        .theme-text { color: var(--text); }
+        .theme-muted { color: var(--muted); }
+        .theme-border { border-color: var(--border); }
+
+        :root.light {
+            --bg: #fbfbfb;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
+        :root.dark {
+            --bg: #0d0f12;
+            --card: #14171d;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --border: #232730;
+        }
+
+        .article-content h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 0.85rem;
+            line-height: 1.35;
+        }
+        .article-content h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+        .article-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-content p {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        .article-content ul, .article-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+        }
+        .article-content ul { list-style-type: disc; }
+        .article-content ol { list-style-type: decimal; }
+        .article-content li { margin-bottom: 0.5rem; }
+        .article-content blockquote {
+            border-left: 4px solid #10b981;
+            padding-left: 1.25rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+        }
+        .article-content pre {
+            background-color: #1a1d24;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+        .article-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            padding: 0.15rem 0.35rem;
+            border-radius: 0.35rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+        .dark .article-content code {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .article-content th, .article-content td {
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+        }
+        .article-content th {
+            background-color: rgba(0, 0, 0, 0.03);
+            font-weight: 700;
+        }
+        .dark .article-content th {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .toast {
+            animation: slideUp 0.25s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="theme-bg theme-text min-h-screen transition-colors duration-200">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-40 theme-card border-b theme-border px-4 py-3 shadow-xs">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center font-bold text-lg shadow-sm">⚡</span>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight flex items-center gap-2">
+                        August 2026 AI Articles Vault
+                        <span class="px-2 py-0.5 text-[10px] font-mono bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded-full font-bold">1500+ Words SEO</span>
+                    </h1>
+                    <p class="text-xs theme-muted">100% Human Tone · AdSense & Google E-E-A-T Ready · 1-Click Code Copy</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <a href="https://my-me-olive.vercel.app/aman" target="_blank" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>🚀 Open Admin (/aman)</span>
+                </a>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg border theme-border theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+        <!-- Article Tab Selector -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 border-b theme-border scrollbar-none" id="articleTabs">
+            <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Active Article Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left Column: Article Metadata & Copy Actions -->
+            <div class="lg:col-span-1 space-y-4">
+                
+                <!-- Quick Copy Master Box -->
+                <div class="theme-card border theme-border rounded-2xl p-5 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">⚡ Master Action</span>
+                        <span id="badgeWordCount" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                            1550 words
+                        </span>
+                    </div>
+
+                    <button onclick="copyCurrentHtml()" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <span>📋 1-Click Copy HTML Code</span>
+                    </button>
+                    <p class="text-[11px] theme-muted text-center">Ready to paste directly into Admin Panel's <b>HTML Code Mode</b></p>
+                </div>
+
+                <!-- Field-by-field Metadata Card -->
+                <div class="theme-card border theme-border rounded-2xl p-5 shadow-xs space-y-4">
+                    <h3 class="font-bold text-xs uppercase tracking-wider font-mono text-zinc-500">Article Publishing Fields</h3>
+
+                    <!-- Title -->
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold theme-muted">Headline Title</span>
+                            <button onclick="copyField('title')" class="text-emerald-600 hover:underline text-[11px] font-bold">Copy</button>
+                        </div>
+                        <div id="metaTitle" class="text-xs font-semibold theme-text p-2.5 rounded-lg border theme-border theme-bg leading-snug"></div>
+                    </div>
+
+                    <!-- Slug -->
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold theme-muted">Custom Slug (URL)</span>
+                            <button onclick="copyField('slug')" class="text-emerald-600 hover:underline text-[11px] font-bold">Copy</button>
+                        </div>
+                        <div id="metaSlug" class="text-xs font-mono text-emerald-600 dark:text-emerald-400 p-2.5 rounded-lg border theme-border theme-bg truncate"></div>
+                    </div>
+
+                    <!-- Subtitle -->
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold theme-muted">Subtitle / Excerpt</span>
+                            <button onclick="copyField('subtitle')" class="text-emerald-600 hover:underline text-[11px] font-bold">Copy</button>
+                        </div>
+                        <div id="metaSubtitle" class="text-xs theme-muted p-2.5 rounded-lg border theme-border theme-bg leading-relaxed"></div>
+                    </div>
+
+                    <!-- Category & Tags -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold theme-muted">Category</span>
+                                <button onclick="copyField('category')" class="text-emerald-600 hover:underline text-[11px] font-bold">Copy</button>
+                            </div>
+                            <div id="metaCategory" class="text-xs font-bold theme-text p-2 rounded-lg border theme-border theme-bg truncate"></div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold theme-muted">Read Time</span>
+                            </div>
+                            <div id="metaReadTime" class="text-xs theme-muted p-2 rounded-lg border theme-border theme-bg truncate"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold theme-muted">SEO Tags</span>
+                            <button onclick="copyField('tags')" class="text-emerald-600 hover:underline text-[11px] font-bold">Copy</button>
+                        </div>
+                        <div id="metaTags" class="text-xs font-mono theme-muted p-2.5 rounded-lg border theme-border theme-bg truncate"></div>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Publishing Guide -->
+                <div class="theme-card border theme-border rounded-2xl p-5 shadow-xs text-xs space-y-3">
+                    <h3 class="font-bold text-xs uppercase tracking-wider font-mono text-zinc-500">🚀 How to Publish in 30 Seconds</h3>
+                    <ol class="space-y-2.5 list-decimal list-inside theme-muted leading-relaxed">
+                        <li>Open <a href="https://my-me-olive.vercel.app/aman" target="_blank" class="text-emerald-600 font-bold underline">Admin Studio (/aman)</a>.</li>
+                        <li>Click <b>"📋 1-Click Copy HTML Code"</b> above.</li>
+                        <li>In the editor toolbar, click <b>"&lt;/&gt; HTML Code"</b> mode.</li>
+                        <li>Paste code into the black box, then click <b>"✨ Visual Mode"</b>.</li>
+                        <li>Copy Title & Slug from above, pick your cover image, and hit <b>"Publish Story"</b>!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Formatted Preview & Raw HTML Tab -->
+            <div class="lg:col-span-2 space-y-4">
+                
+                <!-- View Mode Switcher -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 p-1 rounded-xl border theme-border theme-card">
+                        <button id="btnPreviewMode" onclick="setViewMode('preview')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs transition-all">
+                            👁️ Visual Article Preview
+                        </button>
+                        <button id="btnCodeMode" onclick="setViewMode('code')" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-muted hover:theme-text transition-all">
+                            &lt;/&gt; Raw HTML Source
+                        </button>
+                    </div>
+
+                    <button onclick="copyCurrentHtml()" class="px-3 py-1.5 rounded-lg border theme-border theme-text text-xs font-medium hover:border-emerald-500 transition-all flex items-center gap-1.5">
+                        <span>📋 Copy Code</span>
+                    </button>
+                </div>
+
+                <!-- Visual Preview View -->
+                <div id="viewPreview" class="theme-card border theme-border rounded-2xl p-6 sm:p-10 shadow-sm">
+                    <div class="mb-8 pb-6 border-b theme-border space-y-3">
+                        <span id="previewCategoryBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase tracking-wider border border-emerald-200 dark:border-emerald-800"></span>
+                        <h1 id="previewTitle" class="text-2xl sm:text-4xl font-serif font-bold theme-text leading-tight"></h1>
+                        <p id="previewSubtitle" class="text-sm sm:text-base theme-muted font-sans leading-relaxed"></p>
+                        <div class="flex items-center gap-3 text-xs theme-muted font-sans pt-2">
+                            <span class="font-bold theme-text">Aman Alria</span>
+                            <span>·</span>
+                            <span>August 2026</span>
+                            <span>·</span>
+                            <span id="previewReadTime"></span>
+                            <span>·</span>
+                            <span id="previewWordCountBadge" class="text-emerald-600 font-semibold"></span>
+                        </div>
+                    </div>
+
+                    <!-- Article Body -->
+                    <div id="previewBody" class="article-content font-serif theme-text"></div>
+                </div>
+
+                <!-- Raw Code View (Hidden by default) -->
+                <div id="viewCode" class="hidden theme-card border theme-border rounded-2xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono text-zinc-400">raw_article_content.html</span>
+                        <button onclick="copyCurrentHtml()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-bold">Copy Raw Code</button>
+                    </div>
+                    <textarea id="rawHtmlArea" readonly class="w-full h-[650px] p-4 rounded-xl bg-zinc-950 text-emerald-400 font-mono text-xs leading-relaxed border border-zinc-800 focus:outline-none resize-none"></textarea>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+        <div class="toast px-4 py-3 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold text-xs shadow-2xl flex items-center gap-2 border border-emerald-500">
+            <span class="text-emerald-400 dark:text-emerald-600 text-base">✓</span>
+            <span id="toastMsg">Copied to clipboard!</span>
+        </div>
+    </div>
+
+    <script>
+        let articles = [];
+        let activeIndex = 0;
+        let viewMode = 'preview';
+
+        async function init() {
+            try {
+                const res = await fetch('articles_data.json');
+                articles = await res.json();
+                renderTabs();
+                loadArticle(0);
+            } catch (err) {
+                console.error("Failed to load articles data:", err);
+            }
+        }
+
+        function renderTabs() {
+            const container = document.getElementById('articleTabs');
+            container.innerHTML = articles.map((art, idx) => `
+                <button onclick="loadArticle(${idx})" class="tab-btn shrink-0 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-2 ${idx === activeIndex ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'theme-card theme-border theme-muted hover:theme-text'}">
+                    <span>Post ${art.id}: ${art.title.slice(0, 24)}...</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-mono ${idx === activeIndex ? 'bg-white/20 text-white' : 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400'}">${art.wordCount} words</span>
+                </button>
+            `).join('');
+        }
+
+        function loadArticle(idx) {
+            activeIndex = idx;
+            renderTabs();
+            const art = articles[idx];
+
+            document.getElementById('badgeWordCount').textContent = `${art.wordCount} words`;
+            document.getElementById('metaTitle').textContent = art.title;
+            document.getElementById('metaSlug').textContent = art.slug;
+            document.getElementById('metaSubtitle').textContent = art.subtitle;
+            document.getElementById('metaCategory').textContent = art.category;
+            document.getElementById('metaReadTime').textContent = art.readTime;
+            document.getElementById('metaTags').textContent = art.tags;
+
+            document.getElementById('previewCategoryBadge').textContent = art.category;
+            document.getElementById('previewTitle').textContent = art.title;
+            document.getElementById('previewSubtitle').textContent = art.subtitle;
+            document.getElementById('previewReadTime').textContent = art.readTime;
+            document.getElementById('previewWordCountBadge').textContent = `⚡ ${art.wordCount} words`;
+            document.getElementById('previewBody').innerHTML = art.content;
+
+            document.getElementById('rawHtmlArea').value = art.content.trim();
+        }
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            const btnPreview = document.getElementById('btnPreviewMode');
+            const btnCode = document.getElementById('btnCodeMode');
+            const viewPreview = document.getElementById('viewPreview');
+            const viewCode = document.getElementById('viewCode');
+
+            if (mode === 'preview') {
+                btnPreview.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs transition-all';
+                btnCode.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold theme-muted hover:theme-text transition-all';
+                viewPreview.classList.remove('hidden');
+                viewCode.classList.add('hidden');
+            } else {
+                btnCode.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs transition-all';
+                btnPreview.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold theme-muted hover:theme-text transition-all';
+                viewCode.classList.remove('hidden');
+                viewPreview.classList.add('hidden');
+            }
+        }
+
+        function copyCurrentHtml() {
+            const art = articles[activeIndex];
+            if (!art) return;
+            navigator.clipboard.writeText(art.content.trim()).then(() => {
+                showToast(`✓ HTML Code for Post ${art.id} copied! (${art.wordCount} words)`);
+            });
+        }
+
+        function copyField(fieldName) {
+            const art = articles[activeIndex];
+            if (!art) return;
+            const val = art[fieldName];
+            navigator.clipboard.writeText(val).then(() => {
+                showToast(`✓ Copied ${fieldName}: "${val.slice(0, 30)}..."`);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            if (isDark) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                document.getElementById('themeIcon').textContent = '🌙';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -68,14 +68,14 @@
       "headers": {
         "Cache-Control": "no-cache, no-store, must-revalidate"
       },
-      "dest": "/articles/index.html"
+      "dest": "/articles.html"
     },
     {
-      "src": "^/articles/articles_data.json$",
+      "src": "^/articles_data\\.json$",
       "headers": {
         "Cache-Control": "public, max-age=60"
       },
-      "dest": "/articles/articles_data.json"
+      "dest": "/articles_data.json"
     },
     {
       "src": "^/([a-zA-Z0-9_-]+)/?$",
