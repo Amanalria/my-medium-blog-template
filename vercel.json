@@ -17,6 +17,6 @@
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/disclaimer", "destination": "/disclaimer.html" },
-    { "source": "/:slug((?!admin|about|contact|privacy|terms|disclaimer|styles|app|post|supabase-client|assets|favicon|.*\\..*).*)", "destination": "/post.html" }
+    { "source": "/:slug", "destination": "/post.html" }
   ]
 }
