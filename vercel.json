@@ -78,6 +78,14 @@
       "dest": "/articles_data.json"
     },
     {
+      "src": "^/e0f7a934bd824d5598ba9622d715ac90\\.txt$",
+      "dest": "/e0f7a934bd824d5598ba9622d715ac90.txt"
+    },
+    {
+      "src": "^/api/(.*)$",
+      "dest": "/api/$1"
+    },
+    {
       "src": "^/([a-zA-Z0-9_-]+)/?$",
       "headers": {
         "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=86400"

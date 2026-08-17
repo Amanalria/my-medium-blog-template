@@ -9,6 +9,17 @@ let currentCompressedFile = null;
 let currentStandaloneDataUrl = null;
 let currentStandaloneFile = null;
 
+const defaultGoogleServiceAccount = {
+  "type": "service_account",
+  "project_id": "yt-music-505216",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "aman-249@yt-music-505216.iam.gserviceaccount.com",
+  "client_id": "115525574626613689822",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token"
+};
+
 let globalSettings = {
     site_name: "Medium",
     site_tagline: "Where good ideas find you.",
@@ -18,8 +29,20 @@ let globalSettings = {
     seo: {
         meta_title: "Medium – Where good ideas find you.",
         meta_description: "Discover stories, thinking, and expertise.",
-        canonical_url: window.location.origin + "/"
+        canonical_url: "https://hivecloud.in/"
     },
+    indexing: {
+        service_account_json: JSON.stringify(defaultGoogleServiceAccount, null, 2),
+        auto_index_on_publish: true,
+        indexnow_key: "e0f7a934bd824d5598ba9622d715ac90"
+    },
+    plugins: {
+        ga_measurement_id: "",
+        gsc_verification: "",
+        custom_head_code: "",
+        custom_footer_code: ""
+    },
+    social: {},
     monetization: {
         adsense_client_id: "",
         ads_txt: ""
@@ -42,7 +65,7 @@ function showToast(msg) {
 
 // 2. Tab Navigation
 window.switchAdminTab = function(tabId) {
-    const tabs = ['editorTab', 'imageStudioTab', 'storiesTab', 'categoryTab', 'supabaseTab', 'siteTab', 'seoTab', 'adsTab'];
+    const tabs = ['editorTab', 'imageStudioTab', 'storiesTab', 'categoryTab', 'supabaseTab', 'siteTab', 'seoTab', 'socialTab', 'pluginsTab', 'indexingTab', 'adsTab'];
     
     tabs.forEach(t => {
         const el = document.getElementById(t);
@@ -703,6 +726,9 @@ window.saveStory = async function(status = 'published') {
             }
             showToast(`✓ Story successfully ${status === 'published' ? 'published' : 'saved as draft'}!`);
             document.getElementById('editStoryId').value = id;
+            if (status === 'published' && (!globalSettings.indexing || globalSettings.indexing.auto_index_on_publish !== false)) {
+                triggerAutoIndex(`https://hivecloud.in/${slug}`);
+            }
             return;
         } catch (e) {
             console.error("Save Exception:", e);
@@ -1016,6 +1042,228 @@ window.savePluginsSettings = function() {
     pushSettingsToServer(globalSettings);
 };
 
+window.saveIndexingSettings = function() {
+    if (!globalSettings.indexing) globalSettings.indexing = {};
+    const saText = document.getElementById('indexingServiceAccountJson').value.trim();
+    if (saText) {
+        try {
+            JSON.parse(saText);
+            globalSettings.indexing.service_account_json = saText;
+        } catch (e) {
+            alert('Invalid JSON format in Service Account Key box.');
+            return;
+        }
+    }
+    globalSettings.indexing.auto_index_on_publish = document.getElementById('autoIndexOnPublishToggle').checked;
+    globalSettings.indexing.indexnow_key = document.getElementById('indexingIndexNowKey').value.trim() || 'e0f7a934bd824d5598ba9622d715ac90';
+    pushSettingsToServer(globalSettings);
+    appendIndexingLog('SETTINGS', 'Local Config', 'Indexing settings saved successfully.', 'System');
+};
+
+window.copyServiceAccountEmail = function() {
+    let email = 'aman-249@yt-music-505216.iam.gserviceaccount.com';
+    try {
+        if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
+            const parsed = JSON.parse(globalSettings.indexing.service_account_json);
+            if (parsed.client_email) email = parsed.client_email;
+        }
+    } catch(e) {}
+    navigator.clipboard.writeText(email).then(() => {
+        showToast('✓ Service Account email copied to clipboard!');
+    });
+};
+
+window.clearIndexingLog = function() {
+    const container = document.getElementById('indexingLogContainer');
+    if (container) container.innerHTML = `<p class="text-zinc-500">// Log cleared. Ready for next indexing push...</p>`;
+};
+
+function appendIndexingLog(status, url, message, engine = 'Google') {
+    const container = document.getElementById('indexingLogContainer');
+    if (!container) return;
+
+    const time = new Date().toLocaleTimeString();
+    let statusClass = 'text-emerald-400 border-emerald-800 bg-emerald-950/40';
+    if (status === 403 || status === 'PERMISSION_DENIED') statusClass = 'text-amber-400 border-amber-800 bg-amber-950/40';
+    if (status === 500 || status === 'ERROR') statusClass = 'text-red-400 border-red-800 bg-red-950/40';
+    if (status === 'SETTINGS') statusClass = 'text-blue-400 border-blue-800 bg-blue-950/40';
+
+    const card = document.createElement('div');
+    card.className = `p-3 rounded-lg border text-xs space-y-1 mb-2 ${statusClass}`;
+    card.innerHTML = `
+        <div class="flex items-center justify-between flex-wrap gap-2">
+            <span class="font-bold font-mono">[${engine}] ${status}</span>
+            <span class="text-[10px] text-zinc-400 font-mono">${time}</span>
+        </div>
+        <div class="text-[11px] font-mono break-all text-zinc-200">${url}</div>
+        <div class="text-[11px] text-zinc-400 font-sans leading-relaxed">${message}</div>
+    `;
+
+    if (container.children.length === 1 && container.children[0].tagName === 'P') {
+        container.innerHTML = '';
+    }
+    container.prepend(card);
+}
+
+window.submitSingleUrlIndexing = async function() {
+    const urlInput = document.getElementById('manualIndexUrlInput');
+    const targetUrl = (urlInput ? urlInput.value.trim() : '') || 'https://hivecloud.in/agentic-ai-coding-guide-2026';
+    const actionType = document.getElementById('manualIndexActionType').value || 'URL_UPDATED';
+    const engine = document.getElementById('manualIndexEngine').value || 'both';
+    const btn = document.getElementById('btnSingleIndex');
+
+    if (!targetUrl.startsWith('http')) {
+        alert('Please enter a valid absolute URL (e.g. https://hivecloud.in/...)');
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="animate-spin">⏳</span> Pushing to Googlebot...`;
+    }
+
+    try {
+        let saJson = null;
+        if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
+            saJson = globalSettings.indexing.service_account_json;
+        } else {
+            saJson = JSON.stringify(defaultGoogleServiceAccount);
+        }
+
+        const res = await fetch('/api/index-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                url: targetUrl,
+                type: actionType,
+                engine: engine,
+                serviceAccount: saJson
+            })
+        });
+
+        const data = await res.json();
+        if (data.success && data.results) {
+            if (data.results.google && data.results.google.length > 0) {
+                data.results.google.forEach(g => {
+                    if (g.status === 200) {
+                        appendIndexingLog('200 OK', g.url, '✓ Googlebot notified successfully. Crawler dispatched.', 'Google');
+                        showToast(`✓ Googlebot successfully notified for ${targetUrl.slice(0, 35)}...`);
+                    } else if (g.status === 403) {
+                        appendIndexingLog('403 PERMISSION_DENIED', g.url, '⚠️ Add aman-249@yt-music-505216.iam.gserviceaccount.com as Owner in Search Console -> Settings -> Users.', 'Google');
+                        showToast('⚠️ Google 403: Add service account email as Owner in Search Console.');
+                    } else {
+                        appendIndexingLog(g.status || 'ERROR', g.url, JSON.stringify(g.response || g.error), 'Google');
+                    }
+                });
+            }
+            if (data.results.indexNow) {
+                appendIndexingLog(data.results.indexNow.status || '200', targetUrl, data.results.indexNow.message || 'Submitted to Bing & Yandex', 'IndexNow');
+            }
+        } else {
+            appendIndexingLog('ERROR', targetUrl, data.error || 'Server error', 'API');
+            alert('Indexing Error: ' + (data.error || 'Check log terminal below'));
+        }
+    } catch (err) {
+        appendIndexingLog('EXCEPTION', targetUrl, err.message, 'Network');
+        alert('Network Error: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>🚀 Push to Googlebot Now</span>`;
+        }
+    }
+};
+
+window.submitBatchIndexing = async function() {
+    const btn = document.getElementById('btnBatchIndex');
+    const urlsToSubmit = [
+        'https://hivecloud.in/agentic-ai-coding-guide-2026',
+        'https://hivecloud.in/ai-reasoning-test-time-compute',
+        'https://hivecloud.in/autonomous-ai-agents-production-guide',
+        'https://hivecloud.in/multi-agent-orchestration-mcp-guide',
+        'https://hivecloud.in/context-engineering-dynamic-memory-guide'
+    ];
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="animate-spin">⏳</span> Submitting 5 URLs...`;
+    }
+
+    try {
+        let saJson = null;
+        if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
+            saJson = globalSettings.indexing.service_account_json;
+        } else {
+            saJson = JSON.stringify(defaultGoogleServiceAccount);
+        }
+
+        const res = await fetch('/api/index-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                urls: urlsToSubmit,
+                type: 'URL_UPDATED',
+                engine: 'both',
+                serviceAccount: saJson
+            })
+        });
+
+        const data = await res.json();
+        if (data.success && data.results) {
+            if (data.results.google && data.results.google.length > 0) {
+                data.results.google.forEach(g => {
+                    if (g.status === 200) {
+                        appendIndexingLog('200 OK', g.url, '✓ Googlebot notified successfully.', 'Google');
+                    } else if (g.status === 403) {
+                        appendIndexingLog('403 PERMISSION_DENIED', g.url, '⚠️ Add aman-249@yt-music-505216.iam.gserviceaccount.com as Owner in Search Console.', 'Google');
+                    } else {
+                        appendIndexingLog(g.status || 'ERROR', g.url, JSON.stringify(g.response || g.error), 'Google');
+                    }
+                });
+            }
+            if (data.results.indexNow) {
+                appendIndexingLog(data.results.indexNow.status || '200', 'Batch (5 URLs)', data.results.indexNow.message || 'Batch submitted to Bing/Yandex', 'IndexNow');
+            }
+            showToast(`✓ Processed batch indexing for ${urlsToSubmit.length} URLs!`);
+        } else {
+            appendIndexingLog('ERROR', 'Batch', data.error || 'Server error', 'API');
+        }
+    } catch (err) {
+        appendIndexingLog('EXCEPTION', 'Batch', err.message, 'Network');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>⚡ Index All 5 Stories Now</span>`;
+        }
+    }
+};
+
+async function triggerAutoIndex(url) {
+    try {
+        let saJson = null;
+        if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
+            saJson = globalSettings.indexing.service_account_json;
+        } else {
+            saJson = JSON.stringify(defaultGoogleServiceAccount);
+        }
+
+        fetch('/api/index-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                url: url,
+                type: 'URL_UPDATED',
+                engine: 'both',
+                serviceAccount: saJson
+            })
+        }).then(r => r.json()).then(d => {
+            if (d.success) {
+                showToast(`🚀 Google & Bing notified for new story: ${url.slice(0, 30)}...`);
+            }
+        }).catch(e => {});
+    } catch(e) {}
+}
+
 window.saveAdsSettings = function() {
     if (!globalSettings.monetization) globalSettings.monetization = {};
     globalSettings.monetization.adsense_client_id = document.getElementById('adsenseClientIdInput').value.trim();
@@ -1125,6 +1373,23 @@ function populateSettingsToUI() {
         if (document.getElementById('pluginCustomFooterInput')) document.getElementById('pluginCustomFooterInput').value = globalSettings.plugins.custom_footer_code || '';
     }
 
+    // Indexing Plugin
+    if (globalSettings.indexing) {
+        if (document.getElementById('indexingServiceAccountJson')) {
+            document.getElementById('indexingServiceAccountJson').value = globalSettings.indexing.service_account_json || JSON.stringify(defaultGoogleServiceAccount, null, 2);
+        }
+        if (document.getElementById('autoIndexOnPublishToggle')) {
+            document.getElementById('autoIndexOnPublishToggle').checked = globalSettings.indexing.auto_index_on_publish !== false;
+        }
+        if (document.getElementById('indexingIndexNowKey')) {
+            document.getElementById('indexingIndexNowKey').value = globalSettings.indexing.indexnow_key || 'e0f7a934bd824d5598ba9622d715ac90';
+        }
+    } else {
+        if (document.getElementById('indexingServiceAccountJson')) {
+            document.getElementById('indexingServiceAccountJson').value = JSON.stringify(defaultGoogleServiceAccount, null, 2);
+        }
+    }
+
     // Monetization
     if (globalSettings.monetization) {
         if (document.getElementById('adsenseClientIdInput')) document.getElementById('adsenseClientIdInput').value = globalSettings.monetization.adsense_client_id || '';
@@ -1139,3 +1404,4 @@ function populateSettingsToUI() {
 loadGlobalSettings();
 loadManageStories();
 window.switchAdminTab('editorTab');
+

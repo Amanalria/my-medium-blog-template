@@ -117,6 +117,9 @@
             <button type="button" onclick="switchAdminTab('pluginsTab')" id="tabBtn_pluginsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>🔌 Plugins & Analytics</span>
             </button>
+            <button type="button" onclick="switchAdminTab('indexingTab')" id="tabBtn_indexingTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🚀 Instant Indexing</span>
+            </button>
             <button type="button" onclick="switchAdminTab('adsTab')" id="tabBtn_adsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>💰 Monetization</span>
             </button>
@@ -818,7 +821,130 @@
         </section>
 
         <!-- ============================================================= -->
-        <!-- TAB 10: Monetization Settings -->
+        <!-- TAB 10: Google Instant Indexing & IndexNow Plugin -->
+        <!-- ============================================================= -->
+        <section id="indexingTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight flex items-center gap-2">
+                        🚀 Google Instant Indexing & IndexNow Plugin
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">API v3 Ready</span>
+                    </h2>
+                    <p class="text-xs theme-muted">Push new and updated URLs directly into Googlebot and Bing/Yandex crawl queues in real time.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="submitBatchIndexing()" id="btnBatchIndex" class="framer-tap px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <span>⚡ Index All 5 Stories Now</span>
+                    </button>
+                    <button type="button" onclick="saveIndexingSettings()" class="framer-tap px-4 py-2 rounded-xl border theme-border theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 font-semibold text-xs transition-all">
+                        💾 Save Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1. Google Service Account Status & GSC Setup Notice -->
+            <div class="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-4">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Google Service Account Connected</h3>
+                        </div>
+                        <p class="text-xs font-mono font-semibold theme-text flex items-center gap-2 select-all" id="displayServiceEmail">
+                            aman-249@yt-music-505216.iam.gserviceaccount.com
+                        </p>
+                    </div>
+                    <button type="button" onclick="copyServiceAccountEmail()" class="framer-tap px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1 shadow-xs">
+                        📋 Copy Email for Search Console
+                    </button>
+                </div>
+
+                <div class="border-t border-emerald-500/20 pt-3 text-xs theme-muted space-y-2">
+                    <p class="font-semibold theme-text text-xs">⚠️ Final 30-Second Google Search Console Step:</p>
+                    <ol class="list-decimal list-inside space-y-1 pl-1 text-[11px] leading-relaxed">
+                        <li>Open <a href="https://search.google.com/search-console" target="_blank" class="text-emerald-600 font-bold underline">Google Search Console</a> and select property <b>hivecloud.in</b> (or <code>https://hivecloud.in</code>).</li>
+                        <li>Click <b>Settings (⚙️)</b> ➔ <b>Users and permissions</b> ➔ <b>Add user</b>.</li>
+                        <li>Paste email: <code class="bg-zinc-200 dark:bg-zinc-800 px-1 py-0.5 rounded font-bold theme-text">aman-249@yt-music-505216.iam.gserviceaccount.com</code> and set Permission to <b>Owner</b>.</li>
+                        <li>Click <b>Add</b>. Once added, all indexing requests will return <span class="text-emerald-600 font-bold">200 OK (Googlebot Notified)</span>!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 2. Manual URL Instant Indexer Box -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div class="lg:col-span-2 space-y-4 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3 flex items-center gap-2">
+                        <span>🔗 Instant URL Push Console</span>
+                    </h3>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Target URL to Index / Refresh</label>
+                        <input type="url" id="manualIndexUrlInput" placeholder="https://hivecloud.in/agentic-ai-coding-guide-2026" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold theme-text">Action Type</label>
+                            <select id="manualIndexActionType" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                                <option value="URL_UPDATED">URL_UPDATED (Publish / Update Page)</option>
+                                <option value="URL_DELETED">URL_DELETED (Remove Deleted URL from Index)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold theme-text">Target Search Engines</label>
+                            <select id="manualIndexEngine" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                                <option value="both">Google Indexing API + IndexNow (Both)</option>
+                                <option value="google">Google Indexing API Only</option>
+                                <option value="indexnow">IndexNow (Bing / Yandex / Seznam) Only</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-between gap-4 flex-wrap">
+                        <label class="flex items-center gap-2 text-xs theme-text font-medium cursor-pointer">
+                            <input type="checkbox" id="autoIndexOnPublishToggle" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span>⚡ Auto-Index whenever I publish a story</span>
+                        </label>
+
+                        <button type="button" onclick="submitSingleUrlIndexing()" id="btnSingleIndex" class="framer-tap px-6 py-2.5 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                            <span>🚀 Push to Googlebot Now</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Key Manager & IndexNow Settings -->
+                <div class="space-y-4 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">Service Key Config</h3>
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Google Service Account JSON</label>
+                        <textarea id="indexingServiceAccountJson" rows="6" placeholder="Paste full Google Service Account JSON here" class="w-full theme-bg border theme-border theme-text text-[11px] p-2.5 rounded-xl font-mono focus:outline-none leading-tight"></textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">IndexNow Verification Key</label>
+                        <input type="text" id="indexingIndexNowKey" value="e0f7a934bd824d5598ba9622d715ac90" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
+                        <p class="text-[10px] theme-muted">Key file live at: <code>/e0f7a934bd824d5598ba9622d715ac90.txt</code></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Live Activity Log Terminal -->
+            <div class="p-6 rounded-2xl theme-card border theme-border space-y-3">
+                <div class="flex items-center justify-between border-b theme-border pb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text flex items-center gap-2">
+                        <span>📊 Real-Time Indexing Execution Log</span>
+                    </h3>
+                    <button type="button" onclick="clearIndexingLog()" class="text-xs theme-muted hover:theme-text">Clear Log</button>
+                </div>
+                <div id="indexingLogContainer" class="max-h-72 overflow-y-auto space-y-2 font-mono text-xs p-3 rounded-xl bg-zinc-950 text-zinc-300 border border-zinc-800">
+                    <p class="text-zinc-500">// Ready. Push any URL above or click 'Index All 5 Stories Now'...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 11: Monetization Settings -->
         <!-- ============================================================= -->
         <section id="adsTab" class="space-y-6" style="display: none;">
             <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
