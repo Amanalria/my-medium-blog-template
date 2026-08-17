@@ -137,38 +137,63 @@ function renderStoriesFeed(list) {
         return;
     }
 
-    feed.innerHTML = list.map(s => `
-        <article class="border-b theme-border pb-8 space-y-3">
-            <div class="flex items-center gap-2 text-xs theme-muted font-mono">
-                <span class="font-bold theme-text">${s.author}</span>
-                <span>•</span>
-                <span>${s.date || 'Recently'}</span>
-                <span>•</span>
-                <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border uppercase text-[10px]">${s.category || 'General'}</span>
-            </div>
+    feed.innerHTML = list.map(s => {
+        const authorInitial = (s.author || 'M').trim().charAt(0).toUpperCase();
+        const readTime = s.readTime || '5 min read';
+        const category = s.category || 'General';
+        const date = s.date || 'Recently';
+        const subtitle = s.subtitle || '';
+        
+        return `
+            <article class="border-b theme-border py-6 first:pt-0">
+                <!-- Author Meta Row -->
+                <div class="flex items-center gap-2 mb-2.5">
+                    <div class="w-5 h-5 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-[10px] flex items-center justify-center font-sans shrink-0">
+                        ${authorInitial}
+                    </div>
+                    <span class="text-xs font-semibold theme-text">${s.author}</span>
+                    <span class="text-xs theme-muted">·</span>
+                    <span class="text-xs theme-muted font-sans">${date}</span>
+                    <span class="text-xs theme-muted hidden sm:inline">·</span>
+                    <span class="text-xs font-medium text-emerald-600 hidden sm:inline">${category}</span>
+                </div>
 
-            <div class="flex flex-col sm:flex-row gap-6 justify-between items-start">
-                <div class="space-y-2 flex-1">
-                    <a href="/${s.slug}" class="block group">
-                        <h2 class="text-xl sm:text-2xl font-serif font-bold theme-text group-hover:text-emerald-600 transition-colors leading-snug">
+                <!-- Main Content & Image Row (Always Side-by-Side like Medium) -->
+                <a href="/${s.slug}" class="flex items-start justify-between gap-4 sm:gap-8 group">
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                        <h2 class="text-base sm:text-xl font-bold font-serif theme-text group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
                             ${s.title}
                         </h2>
-                        ${s.subtitle ? `<p class="text-xs sm:text-sm theme-muted pt-1 line-clamp-2 leading-relaxed">${s.subtitle}</p>` : ''}
-                    </a>
-                </div>
-                ${s.image ? `
-                    <a href="/${s.slug}" class="w-full sm:w-36 h-28 shrink-0 rounded-xl overflow-hidden border theme-border">
-                        <img src="${s.image}" alt="${s.imageAlt || s.title}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                    </a>
-                ` : ''}
-            </div>
+                        ${subtitle ? `
+                            <p class="text-xs sm:text-sm theme-muted font-sans font-normal leading-relaxed line-clamp-2">
+                                ${subtitle}
+                            </p>
+                        ` : ''}
 
-            <div class="flex items-center justify-between text-xs theme-muted pt-2">
-                <span class="font-mono text-[11px]">${s.readTime || '5 min read'}</span>
-                <a href="/${s.slug}" class="text-emerald-600 font-semibold hover:underline">Read Story →</a>
-            </div>
-        </article>
-    `).join('');
+                        <!-- Bottom Meta Info -->
+                        <div class="flex items-center gap-3 pt-2 text-[11px] theme-muted font-sans">
+                            <span class="px-2 py-0.5 rounded-full theme-search-bg border theme-border font-medium text-[10px] uppercase tracking-wider">${category}</span>
+                            <span>${readTime}</span>
+                            <span class="text-zinc-400 hidden sm:inline">·</span>
+                            <span class="text-emerald-600 font-medium hidden sm:inline">Selected for you</span>
+                            
+                            <div class="ml-auto flex items-center gap-2 text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${s.image ? `
+                        <div class="w-24 h-20 sm:w-36 sm:h-28 shrink-0 rounded-lg overflow-hidden border theme-border bg-zinc-100 dark:bg-zinc-800 shadow-xs">
+                            <img src="${s.image}" alt="${s.imageAlt || s.title}" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                        </div>
+                    ` : ''}
+                </a>
+            </article>
+        `;
+    }).join('');
 
     renderSidebarLatestPosts(mediumStories);
 }

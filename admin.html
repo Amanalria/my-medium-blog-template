@@ -167,66 +167,63 @@
                         <input type="text" id="editStorySubtitle" placeholder="Brief summary or hook..." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none focus:border-zinc-400">
                     </div>
 
-                    <!-- ⚡ 5-Step Custom KB WebP Studio -->
+                    <!-- 🌟 Featured Cover Image Studio (Custom WebP) -->
                     <div class="space-y-3 p-5 rounded-2xl theme-search-bg border theme-border shadow-sm">
                         <div class="flex items-center justify-between border-b theme-border pb-2.5">
                             <label class="text-xs font-bold text-emerald-600 flex items-center gap-1.5">
-                                <span>⚡ 5-Step Custom KB WebP Studio</span>
+                                <span>🌟 Featured Cover Image (WebP Studio)</span>
                             </label>
                             <span class="text-[11px] font-mono theme-muted">Target Size: <strong id="featuredKbDisplay" class="text-emerald-600 font-bold">30 KB</strong></span>
                         </div>
 
-                        <!-- Step 1: Custom KB Selector (Slider, Number Input, Presets) -->
-                        <!-- Step 1: Select Image File -->
-                        <div class="space-y-1">
-                            <label class="text-[11px] font-semibold theme-text block">📁 Select Image:</label>
+                        <!-- Step 1: File Input -->
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-semibold theme-text block">1. Select Cover Image:</label>
                             <input type="file" id="featuredFileInput" accept="image/*" onchange="onFeaturedFileSelected(event)" class="text-xs theme-muted file:mr-3 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-900 dark:file:bg-zinc-100 file:text-white dark:file:text-zinc-900 hover:file:opacity-90 w-full cursor-pointer p-1 rounded-xl border theme-border theme-bg">
                         </div>
 
-                        <!-- Step 2: Convert + Upload (Appears after file selected) -->
-                        <div id="featuredCompressActionBox" class="hidden space-y-2.5 pt-2 border-t theme-border">
-                            <div class="text-[11px] font-mono theme-muted flex items-center justify-between">
-                                <span>Selected:</span>
-                                <strong id="featuredOriginalSizeText" class="theme-text text-xs">--</strong>
+                        <!-- Step 2: Target Size Slider + Presets -->
+                        <div class="space-y-2 pt-1 border-t theme-border">
+                            <div class="flex items-center justify-between text-[11px] font-mono theme-muted">
+                                <span>Selected: <strong id="featuredOriginalSizeText" class="theme-text">No file chosen</strong></span>
+                                <span class="text-emerald-600 font-semibold" id="featuredTargetLabel">Target: 30 KB</span>
                             </div>
 
-                            <!-- Target KB inline -->
                             <div class="flex items-center gap-2">
                                 <span class="text-[11px] font-semibold theme-text whitespace-nowrap">Target:</span>
                                 <input type="range" id="featuredKbSlider" min="5" max="300" step="5" value="30" oninput="syncFeaturedKb(this.value)" class="flex-1 accent-emerald-600 cursor-pointer">
                                 <input type="number" id="featuredKbInput" min="5" max="500" value="30" oninput="syncFeaturedKb(this.value)" class="w-14 theme-bg border theme-border theme-text text-xs p-1 rounded-lg font-mono text-center focus:outline-none">
                                 <span class="text-[10px] font-mono theme-muted">KB</span>
                             </div>
-                            <div class="flex flex-wrap gap-1">
-                                <button type="button" onclick="syncFeaturedKb(10)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">10</button>
-                                <button type="button" onclick="syncFeaturedKb(25)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">25</button>
-                                <button type="button" onclick="syncFeaturedKb(40)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">40</button>
-                                <button type="button" onclick="syncFeaturedKb(80)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">80</button>
-                                <button type="button" onclick="syncFeaturedKb(150)" class="px-2 py-0.5 rounded-lg theme-card border theme-border text-[10px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">150</button>
-                            </div>
 
-                            <!-- CONVERT BUTTON -->
+                            <div class="flex flex-wrap gap-1">
+                                <button type="button" onclick="syncFeaturedKb(10)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">10 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(25)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">25 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(40)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">40 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(80)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">80 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(150)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-emerald-600 hover:text-white transition-colors">150 KB</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Action Buttons -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t theme-border">
                             <button type="button" onclick="executeFeaturedCompression()" id="featuredCompressBtn" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
                                 ⚡ Convert to WebP (<span id="featuredCompressTargetLabel">30 KB</span>)
                             </button>
+                            <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                🌟 Upload / Set Cover Image
+                            </button>
+                        </div>
 
-                            <!-- WebP Preview (hidden until converted) -->
-                            <div id="featuredPreviewRow" class="hidden flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
+                        <!-- Step 4: WebP Thumbnail Preview -->
+                        <div id="featuredPreviewRow" class="hidden pt-2 border-t theme-border">
+                            <div class="flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
                                 <img id="featuredCompressedThumb" src="" alt="WebP Preview" class="w-16 h-12 rounded-lg object-cover border theme-border">
                                 <div class="text-[11px] space-y-0.5 flex-1 font-mono">
                                     <div class="text-emerald-600 font-bold" id="featuredFinalSizeText">--</div>
                                     <div class="text-zinc-500 text-[10px]" id="featuredSavingsText">--</div>
                                 </div>
-                            </div>
-
-                            <!-- UPLOAD BUTTONS (disabled until converted, then enabled) -->
-                            <div class="grid grid-cols-2 gap-2">
-                                <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" disabled class="py-2.5 rounded-xl bg-gray-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all opacity-50 cursor-not-allowed">
-                                    🌟 Upload Cover
-                                </button>
-                                <button type="button" onclick="insertWebpIntoEditorProse()" id="featuredInsertBtn" disabled class="py-2.5 rounded-xl bg-gray-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all opacity-50 cursor-not-allowed">
-                                    📝 Insert in Body
-                                </button>
+                                <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-bold">✓ Cover Ready</span>
                             </div>
                         </div>
                     </div>
@@ -270,43 +267,67 @@
 
                                 <button type="button" onclick="insertLinkPrompt()" class="px-2 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-emerald-600 font-semibold">🔗 Link</button>
                                 <button type="button" onclick="insertImagePrompt()" class="px-2 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-blue-600 font-semibold">🖼️ Image URL</button>
-                                <button type="button" onclick="toggleEditorImageUpload()" class="px-2 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-purple-600 font-semibold">📷 Upload Image</button>
+                                <button type="button" onclick="toggleEditorImageUpload()" id="editorImageToggleBtn" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold flex items-center gap-1 shadow-xs">📷 Upload Image (WebP)</button>
                                 <button type="button" onclick="formatDoc('insertHorizontalRule')" class="px-2 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 font-mono">— HR</button>
                             </div>
 
-                            <!-- Editor Inline Image Upload Panel (hidden by default) -->
-                            <div id="editorImageUploadPanel" class="hidden p-3 border-b theme-border theme-search-bg space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[11px] font-bold theme-text">📷 Upload Image to Article</span>
-                                    <button type="button" onclick="toggleEditorImageUpload()" class="text-[10px] theme-muted hover:theme-text">✕ Close</button>
+                            <!-- Editor Inline Image Upload Panel (WebP Studio) -->
+                            <div id="editorImageUploadPanel" class="hidden p-4 border-b theme-border theme-search-bg space-y-3 bg-purple-500/5">
+                                <div class="flex items-center justify-between border-b theme-border pb-2">
+                                    <span class="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
+                                        📷 Article Body Image Studio (WebP Compress & Insert)
+                                    </span>
+                                    <button type="button" onclick="toggleEditorImageUpload()" class="text-xs theme-muted hover:theme-text font-bold px-2 py-0.5 rounded-lg border theme-border hover:bg-zinc-100 dark:hover:bg-zinc-800">✕ Close</button>
                                 </div>
-                                <input type="file" id="editorImageFileInput" accept="image/*" onchange="onEditorImageSelected(event)" class="text-xs theme-muted file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:opacity-90 w-full cursor-pointer p-1 rounded-lg border theme-border theme-bg">
-                                
-                                <!-- Editor Convert Section (hidden until file selected) -->
-                                <div id="editorConvertSection" class="hidden space-y-2 pt-1 border-t theme-border">
-                                    <div class="text-[10px] font-mono theme-muted"><span id="editorSelectedFileName">--</span></div>
+
+                                <!-- Step 1: Select Image -->
+                                <div class="space-y-1">
+                                    <label class="text-[11px] font-semibold theme-text block">1. Select Article Image:</label>
+                                    <input type="file" id="editorImageFileInput" accept="image/*" onchange="onEditorImageSelected(event)" class="text-xs theme-muted file:mr-3 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:opacity-90 w-full cursor-pointer p-1 rounded-xl border theme-border theme-bg">
+                                </div>
+
+                                <!-- Step 2: Target Size Slider + Presets -->
+                                <div class="space-y-2 pt-1 border-t theme-border">
+                                    <div class="flex items-center justify-between text-[11px] font-mono theme-muted">
+                                        <span>Selected: <strong id="editorSelectedFileName" class="theme-text">No file chosen</strong></span>
+                                        <span class="text-purple-600 dark:text-purple-400 font-semibold" id="editorTargetLabel">Target: 40 KB</span>
+                                    </div>
+
                                     <div class="flex items-center gap-2">
-                                        <span class="text-[10px] font-semibold theme-text">Target:</span>
+                                        <span class="text-[11px] font-semibold theme-text whitespace-nowrap">Target:</span>
                                         <input type="range" id="editorKbSlider" min="5" max="300" step="5" value="40" oninput="syncEditorKb(this.value)" class="flex-1 accent-purple-600 cursor-pointer">
-                                        <input type="number" id="editorKbInput" min="5" max="500" value="40" oninput="syncEditorKb(this.value)" class="w-12 theme-bg border theme-border theme-text text-[10px] p-1 rounded font-mono text-center focus:outline-none">
+                                        <input type="number" id="editorKbInput" min="5" max="500" value="40" oninput="syncEditorKb(this.value)" class="w-14 theme-bg border theme-border theme-text text-xs p-1 rounded-lg font-mono text-center focus:outline-none">
                                         <span class="text-[10px] font-mono theme-muted">KB</span>
                                     </div>
-                                    <button type="button" onclick="executeEditorImageConvert()" id="editorConvertBtn" class="w-full py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all">
+
+                                    <div class="flex flex-wrap gap-1">
+                                        <button type="button" onclick="syncEditorKb(10)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-purple-600 hover:text-white transition-colors">10 KB</button>
+                                        <button type="button" onclick="syncEditorKb(25)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-purple-600 hover:text-white transition-colors">25 KB</button>
+                                        <button type="button" onclick="syncEditorKb(40)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-purple-600 hover:text-white transition-colors">40 KB</button>
+                                        <button type="button" onclick="syncEditorKb(80)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-purple-600 hover:text-white transition-colors">80 KB</button>
+                                        <button type="button" onclick="syncEditorKb(150)" class="px-2.5 py-1 rounded-lg theme-card border theme-border text-[11px] font-mono hover:bg-purple-600 hover:text-white transition-colors">150 KB</button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Action Buttons -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t theme-border">
+                                    <button type="button" onclick="executeEditorImageConvert()" id="editorConvertBtn" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
                                         ⚡ Convert to WebP (<span id="editorConvertTargetLabel">40 KB</span>)
                                     </button>
-                                    
-                                    <!-- Editor Preview + Insert (hidden until converted) -->
-                                    <div id="editorConvertedPreview" class="hidden space-y-2">
-                                        <div class="flex items-center gap-2 p-2 rounded-lg theme-card border theme-border">
-                                            <img id="editorConvertedThumb" src="" alt="" class="w-12 h-9 rounded object-cover border theme-border">
-                                            <div class="text-[10px] font-mono flex-1">
-                                                <div class="text-purple-600 font-bold" id="editorConvertedSize">--</div>
-                                                <div class="text-zinc-500" id="editorConvertedSavings">--</div>
-                                            </div>
+                                    <button type="button" onclick="executeEditorImageInsert()" id="editorInsertBtn" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                                        📝 Insert WebP into Article
+                                    </button>
+                                </div>
+
+                                <!-- Step 4: Converted WebP Preview -->
+                                <div id="editorConvertedPreview" class="hidden pt-2 border-t theme-border">
+                                    <div class="flex items-center gap-3 p-3 rounded-xl theme-card border theme-border">
+                                        <img id="editorConvertedThumb" src="" alt="" class="w-16 h-12 rounded-lg object-cover border theme-border">
+                                        <div class="text-[11px] space-y-0.5 flex-1 font-mono">
+                                            <div class="text-purple-600 dark:text-purple-400 font-bold" id="editorConvertedSize">--</div>
+                                            <div class="text-zinc-500 text-[10px]" id="editorConvertedSavings">--</div>
                                         </div>
-                                        <button type="button" onclick="executeEditorImageInsert()" id="editorInsertBtn" class="w-full py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all">
-                                            📝 Insert WebP into Article
-                                        </button>
+                                        <span class="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 text-[10px] font-bold">✓ Converted</span>
                                     </div>
                                 </div>
                             </div>
