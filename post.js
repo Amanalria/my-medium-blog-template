@@ -312,10 +312,7 @@ function hydratePostFromCache() {
         const cachedSettings = localStorage.getItem('cached_settings');
         if (cachedSettings) {
             globalSettings = JSON.parse(cachedSettings);
-            if (globalSettings.brand_color) {
-                document.documentElement.style.setProperty('--accent-green', globalSettings.brand_color);
-            }
-            renderPostCategories(globalSettings.categories || []);
+            applyPostLiveSettings(globalSettings);
         }
         if (cachedArticles && currentSlug) {
             const list = JSON.parse(cachedArticles);
@@ -328,6 +325,60 @@ function hydratePostFromCache() {
             }
         }
     } catch (e) {}
+}
+
+function applyPostLiveSettings(s) {
+    if (!s) return;
+    if (s.site_name) {
+        document.querySelectorAll('.site-logo-text').forEach(el => el.textContent = s.site_name);
+    }
+    if (s.brand_color) {
+        document.documentElement.style.setProperty('--accent-green', s.brand_color);
+    }
+    if (s.favicon_url) {
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = s.favicon_url;
+    }
+    if (s.footer_copyright) {
+        document.querySelectorAll('.site-copyright-text').forEach(el => el.textContent = `• ${s.footer_copyright}`);
+    }
+
+    // GA4 & Plugins
+    if (s.plugins) {
+        if (s.plugins.ga_measurement_id && !window._ga_injected) {
+            const gaId = s.plugins.ga_measurement_id.trim();
+            if (gaId) {
+                window._ga_injected = true;
+                const gaScript = document.createElement('script');
+                gaScript.async = true;
+                gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                document.head.appendChild(gaScript);
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', gaId);
+            }
+        }
+        if (s.plugins.custom_head_code && !window._custom_head_injected) {
+            window._custom_head_injected = true;
+            const container = document.createElement('div');
+            container.innerHTML = s.plugins.custom_head_code;
+            Array.from(container.childNodes).forEach(node => document.head.appendChild(node));
+        }
+        if (s.plugins.custom_footer_code && !window._custom_footer_injected) {
+            window._custom_footer_injected = true;
+            const container = document.createElement('div');
+            container.innerHTML = s.plugins.custom_footer_code;
+            Array.from(container.childNodes).forEach(node => document.body.appendChild(node));
+        }
+    }
+
+    renderPostCategories(s.categories || []);
 }
 
 async function loadLiveStory() {

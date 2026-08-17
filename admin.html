@@ -49,7 +49,7 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="/" class="flex items-center gap-2 group shrink-0">
-                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Medium':'Medium');}catch(e){document.write('Medium');}})();</script></span>
                 </a>
                 <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-mono text-[11px] font-bold uppercase border border-emerald-500/20">
                     Studio Pro Suite
@@ -106,10 +106,16 @@
                 <span>⚡ Supabase DB</span>
             </button>
             <button type="button" onclick="switchAdminTab('siteTab')" id="tabBtn_siteTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
-                <span>🌐 Site Branding</span>
+                <span>🌐 Branding & Identity</span>
             </button>
             <button type="button" onclick="switchAdminTab('seoTab')" id="tabBtn_seoTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>🔍 SEO & Meta</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('socialTab')" id="tabBtn_socialTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>📱 Social Links</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('pluginsTab')" id="tabBtn_pluginsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🔌 Plugins & Analytics</span>
             </button>
             <button type="button" onclick="switchAdminTab('adsTab')" id="tabBtn_adsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>💰 Monetization</span>
@@ -620,38 +626,57 @@
         </section>
 
         <!-- ============================================================= -->
-        <!-- TAB 6: Site Branding Settings -->
+        <!-- TAB 6: Site Branding & Identity Settings -->
         <!-- ============================================================= -->
         <section id="siteTab" class="space-y-6" style="display: none;">
             <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
                 <div>
-                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🌐 Site Branding & Navigation</h2>
-                    <p class="text-xs theme-muted">Configure site name, tagline, brand color, and footer notice.</p>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🌐 Site Branding & Identity</h2>
+                    <p class="text-xs theme-muted">Configure site name, tagline, favicon, default share image, brand color, and footer notice.</p>
                 </div>
                 <button type="button" onclick="saveSiteBrandingSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
-                    💾 Save Site Settings
+                    💾 Save Branding Settings
                 </button>
             </div>
 
-            <div class="max-w-2xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold theme-text">Website Logo Wordmark</label>
-                    <input type="text" id="siteNameInput" value="Medium" class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+            <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Website Logo Wordmark</label>
+                        <input type="text" id="siteNameInput" value="Medium" class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Site Tagline</label>
+                        <input type="text" id="siteTaglineInput" value="Where good ideas find you." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold theme-text">Site Tagline</label>
-                    <input type="text" id="siteTaglineInput" value="Where good ideas find you." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Favicon URL (.ico / .png / .webp)</label>
+                        <input type="text" id="faviconUrlInput" placeholder="https://... or data:image/webp;base64..." class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Default OpenGraph Share Image URL</label>
+                        <input type="text" id="ogImageUrlInput" placeholder="https://... default preview thumbnail" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold theme-text">Brand Color (Accent Hex)</label>
-                    <input type="text" id="brandColorInput" value="#1a8917" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Brand Accent Color</label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="brandColorPicker" value="#1a8917" oninput="document.getElementById('brandColorInput').value = this.value" class="w-10 h-10 rounded-lg cursor-pointer border theme-border p-0.5 theme-bg">
+                            <input type="text" id="brandColorInput" value="#1a8917" oninput="document.getElementById('brandColorPicker').value = this.value" class="flex-1 theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                        </div>
+                    </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold theme-text">Footer Copyright Notice</label>
-                    <input type="text" id="footerCopyrightInput" value="© 2026 Medium. All rights reserved." class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Footer Copyright Notice</label>
+                        <input type="text" id="footerCopyrightInput" value="© 2026 Medium. All rights reserved." class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    </div>
                 </div>
             </div>
         </section>
@@ -662,15 +687,15 @@
         <section id="seoTab" class="space-y-6" style="display: none;">
             <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
                 <div>
-                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🔍 SEO & Google Verification</h2>
-                    <p class="text-xs theme-muted">Configure meta tags, canonical URL, and search engine parameters.</p>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🔍 SEO & Meta Configuration</h2>
+                    <p class="text-xs theme-muted">Fine-tune global meta tags, keywords, canonical URLs, and search bot indexing.</p>
                 </div>
                 <button type="button" onclick="saveSeoSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
                     💾 Save SEO Settings
                 </button>
             </div>
 
-            <div class="max-w-2xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
+            <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold theme-text">Global SEO Meta Title</label>
                     <input type="text" id="seoTitleInput" value="Medium – Where good ideas find you." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
@@ -678,31 +703,135 @@
 
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold theme-text">Global SEO Meta Description</label>
-                    <textarea id="seoDescInput" rows="3" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">Discover stories, thinking, and expertise from writers.</textarea>
+                    <textarea id="seoDescInput" rows="3" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">Discover stories, thinking, and expertise from writers across technology, design, and AI.</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Global Meta Keywords (Comma-separated)</label>
+                        <input type="text" id="seoKeywordsInput" placeholder="ai, agentic-ai, software, technology, engineering" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Canonical Base URL</label>
+                        <input type="text" id="seoCanonicalInput" placeholder="https://my-me-olive.vercel.app/" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-xs font-semibold theme-text">Canonical URL</label>
-                    <input type="text" id="seoCanonicalInput" placeholder="https://yourdomain.com/" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    <label class="text-xs font-semibold theme-text">Robots Indexing Directive</label>
+                    <select id="seoRobotsInput" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                        <option value="index, follow">index, follow (Allow Google & search engines to index)</option>
+                        <option value="noindex, nofollow">noindex, nofollow (Block search engines)</option>
+                    </select>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================= -->
-        <!-- TAB 8: Monetization Settings -->
+        <!-- TAB 8: Social Links -->
+        <!-- ============================================================= -->
+        <section id="socialTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">📱 Social Media Profiles</h2>
+                    <p class="text-xs theme-muted">Connect your official social media channels for footer links and author bios.</p>
+                </div>
+                <button type="button" onclick="saveSocialSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Social Links
+                </button>
+            </div>
+
+            <div class="max-w-3xl space-y-4 p-6 rounded-2xl theme-card border theme-border">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Twitter / X URL</label>
+                        <input type="text" id="socialTwitterInput" placeholder="https://x.com/username" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">GitHub URL</label>
+                        <input type="text" id="socialGithubInput" placeholder="https://github.com/username" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">LinkedIn URL</label>
+                        <input type="text" id="socialLinkedinInput" placeholder="https://linkedin.com/in/username" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">YouTube Channel URL</label>
+                        <input type="text" id="socialYoutubeInput" placeholder="https://youtube.com/@channel" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Instagram URL</label>
+                        <input type="text" id="socialInstagramInput" placeholder="https://instagram.com/username" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Facebook Page URL</label>
+                        <input type="text" id="socialFacebookInput" placeholder="https://facebook.com/page" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 9: Plugins, Analytics & Custom Code -->
+        <!-- ============================================================= -->
+        <section id="pluginsTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🔌 Plugins, Analytics & Custom Scripts</h2>
+                    <p class="text-xs theme-muted">Integrate Google Analytics 4, Search Console, custom &lt;head&gt; tags, and tracking pixels.</p>
+                </div>
+                <button type="button" onclick="savePluginsSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Plugins & Scripts
+                </button>
+            </div>
+
+            <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Google Analytics 4 (GA4 Measurement ID)</label>
+                    <input type="text" id="pluginGaIdInput" placeholder="G-XXXXXXXXXX" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    <p class="text-[11px] theme-muted">Automatically loads gtag.js and tracks pageviews and readers asynchronously across all pages.</p>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Google Search Console Verification Code</label>
+                    <input type="text" id="pluginGscInput" placeholder="google-site-verification code string" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    <p class="text-[11px] theme-muted">Injected as &lt;meta name="google-site-verification" content="..."&gt; in &lt;head&gt;.</p>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Custom &lt;head&gt; HTML / Scripts / Pixels</label>
+                    <textarea id="pluginCustomHeadInput" rows="4" placeholder="<!-- Paste custom Meta Pixel, Clarity, or verification tags here -->" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none"></textarea>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Custom &lt;body&gt; Footer Scripts</label>
+                    <textarea id="pluginCustomFooterInput" rows="3" placeholder="<!-- Paste live chat widgets or footer tracking scripts here -->" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 10: Monetization Settings -->
         <!-- ============================================================= -->
         <section id="adsTab" class="space-y-6" style="display: none;">
             <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
                 <div>
                     <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">💰 Google AdSense & Monetization</h2>
-                    <p class="text-xs theme-muted">Manage ads.txt and display ad placements.</p>
+                    <p class="text-xs theme-muted">Manage Auto-Ads, publisher ID, and ads.txt records.</p>
                 </div>
                 <button type="button" onclick="saveAdsSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
                     💾 Save Monetization Settings
                 </button>
             </div>
 
-            <div class="max-w-2xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
+            <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold theme-text">AdSense Publisher ID</label>
                     <input type="text" id="adsenseClientIdInput" placeholder="ca-pub-XXXXXXXXXXXXXXXX" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">

@@ -383,21 +383,101 @@ async function loadLiveFeedData() {
 
 function applyLiveSettings(s) {
     if (!s) return;
+
+    // 1. Site Branding
     if (s.site_name) {
         document.querySelectorAll('.site-logo-text').forEach(el => el.textContent = s.site_name);
+        if (s.site_tagline && !s.seo?.meta_title) {
+            document.title = `${s.site_name} – ${s.site_tagline}`;
+        }
+    }
+    if (s.brand_color) {
+        document.documentElement.style.setProperty('--accent-green', s.brand_color);
+    }
+    if (s.favicon_url) {
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = s.favicon_url;
     }
     if (s.footer_copyright) {
         document.querySelectorAll('.site-copyright-text').forEach(el => el.textContent = `• ${s.footer_copyright}`);
     }
-    if (s.hero?.headline) {
-        const h = document.querySelector('.hero-headline');
-        if (h) h.textContent = s.hero.headline;
+
+    // 2. SEO & Meta
+    if (s.seo?.meta_title) {
+        document.title = s.seo.meta_title;
     }
-    if (s.hero?.subtitle) {
-        const sub = document.querySelector('.hero-subtitle');
-        if (sub) sub.textContent = s.hero.subtitle;
+    if (s.seo?.meta_description) {
+        const desc = document.querySelector('meta[name="description"]');
+        if (desc) desc.setAttribute('content', s.seo.meta_description);
     }
+
+    // 3. Plugins & Analytics (GA4, GSC, Custom Scripts)
+    if (s.plugins) {
+        // GA4
+        if (s.plugins.ga_measurement_id && !window._ga_injected) {
+            const gaId = s.plugins.ga_measurement_id.trim();
+            if (gaId) {
+                window._ga_injected = true;
+                const gaScript = document.createElement('script');
+                gaScript.async = true;
+                gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                document.head.appendChild(gaScript);
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', gaId);
+            }
+        }
+        // GSC Verification
+        if (s.plugins.gsc_verification && !document.querySelector('meta[name="google-site-verification"]')) {
+            const meta = document.createElement('meta');
+            meta.name = 'google-site-verification';
+            meta.content = s.plugins.gsc_verification.trim();
+            document.head.appendChild(meta);
+        }
+        // Custom Head Code
+        if (s.plugins.custom_head_code && !window._custom_head_injected) {
+            window._custom_head_injected = true;
+            const container = document.createElement('div');
+            container.innerHTML = s.plugins.custom_head_code;
+            Array.from(container.childNodes).forEach(node => document.head.appendChild(node));
+        }
+        // Custom Footer Code
+        if (s.plugins.custom_footer_code && !window._custom_footer_injected) {
+            window._custom_footer_injected = true;
+            const container = document.createElement('div');
+            container.innerHTML = s.plugins.custom_footer_code;
+            Array.from(container.childNodes).forEach(node => document.body.appendChild(node));
+        }
+    }
+
+    // 4. Social Links Rendering
+    renderSocialLinks(s.social);
+
+    // 5. Dynamic Categories
     renderDynamicCategories(s.categories || []);
+}
+
+function renderSocialLinks(social) {
+    const container = document.getElementById('footerSocialLinks');
+    if (!container || !social) return;
+
+    const links = [];
+    if (social.twitter) links.push(`<a href="${social.twitter}" target="_blank" class="hover:theme-text transition-colors" title="Twitter / X">X / Twitter</a>`);
+    if (social.github) links.push(`<a href="${social.github}" target="_blank" class="hover:theme-text transition-colors" title="GitHub">GitHub</a>`);
+    if (social.linkedin) links.push(`<a href="${social.linkedin}" target="_blank" class="hover:theme-text transition-colors" title="LinkedIn">LinkedIn</a>`);
+    if (social.youtube) links.push(`<a href="${social.youtube}" target="_blank" class="hover:theme-text transition-colors" title="YouTube">YouTube</a>`);
+    if (social.instagram) links.push(`<a href="${social.instagram}" target="_blank" class="hover:theme-text transition-colors" title="Instagram">Instagram</a>`);
+    if (social.facebook) links.push(`<a href="${social.facebook}" target="_blank" class="hover:theme-text transition-colors" title="Facebook">Facebook</a>`);
+
+    if (links.length > 0) {
+        container.innerHTML = links.join(' · ');
+    }
 }
 
 // 0ms Instant Hydration + Background SWR

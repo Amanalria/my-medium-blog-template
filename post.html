@@ -18,9 +18,10 @@
     <!-- Non-blocking Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 
-    <!-- Theme Initialization Script (Zero-FOUC) -->
+    <!-- 0ms Zero-CLS Instant Synchronous Settings & Theme Hydration -->
     <script>
         (function() {
+            // Theme initialization
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
@@ -28,6 +29,32 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
+
+            // Synchronous settings hydration
+            try {
+                const raw = localStorage.getItem('cached_settings');
+                if (raw) {
+                    const s = JSON.parse(raw);
+                    if (s.brand_color) {
+                        document.documentElement.style.setProperty('--accent-green', s.brand_color);
+                    }
+                    if (s.favicon_url) {
+                        let link = document.querySelector("link[rel~='icon']");
+                        if (!link) {
+                            link = document.createElement('link');
+                            link.rel = 'icon';
+                            document.head.appendChild(link);
+                        }
+                        link.href = s.favicon_url;
+                    }
+                    if (s.plugins?.gsc_verification) {
+                        const meta = document.createElement('meta');
+                        meta.name = 'google-site-verification';
+                        meta.content = s.plugins.gsc_verification.trim();
+                        document.head.appendChild(meta);
+                    }
+                }
+            } catch(e) {}
         })();
     </script>
 
@@ -59,7 +86,7 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <a href="/" class="flex items-center gap-2">
-                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Medium':'Medium');}catch(e){document.write('Medium');}})();</script></span>
                 </a>
             </div>
 
@@ -308,17 +335,20 @@
 
     <!-- 8. Footer -->
     <footer class="border-t theme-border theme-hero-bg w-full py-8 px-4 sm:px-8 mt-12 font-sans text-xs">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <a href="/" class="font-serif font-black text-lg theme-text site-logo-text">Medium</a>
-                <span class="theme-muted site-copyright-text">• © 2026 Medium. All rights reserved.</span>
-            </div>
-            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 theme-muted text-xs font-medium">
-                <a href="/about" class="hover:theme-text transition-colors">About Us</a>
-                <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
-                <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
-                <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
-                <a href="/disclaimer" class="hover:theme-text transition-colors">Disclaimer</a>
+        <div class="max-w-7xl mx-auto space-y-4">
+            <div id="footerSocialLinks" class="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs theme-muted font-medium"></div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t theme-border/60">
+                <div class="flex items-center gap-2">
+                    <a href="/" class="font-serif font-black text-lg theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Medium':'Medium');}catch(e){document.write('Medium');}})();</script></a>
+                    <span class="theme-muted site-copyright-text">• © 2026 Medium. All rights reserved.</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 theme-muted text-xs font-medium">
+                    <a href="/about" class="hover:theme-text transition-colors">About Us</a>
+                    <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
+                    <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
+                    <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
+                    <a href="/disclaimer" class="hover:theme-text transition-colors">Disclaimer</a>
+                </div>
             </div>
         </div>
     </footer>

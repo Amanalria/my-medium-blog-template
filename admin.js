@@ -972,9 +972,15 @@ window.testSupabaseConnection = async function() {
 // 12. SETTINGS MANAGEMENT (Site Branding, SEO, Ads)
 // ================================================================
 
+// ================================================================
+// 12. SETTINGS MANAGEMENT (Site Branding, SEO, Social, Plugins, Ads)
+// ================================================================
+
 window.saveSiteBrandingSettings = function() {
-    globalSettings.site_name = document.getElementById('siteNameInput').value.trim();
+    globalSettings.site_name = document.getElementById('siteNameInput').value.trim() || 'Medium';
     globalSettings.site_tagline = document.getElementById('siteTaglineInput').value.trim();
+    globalSettings.favicon_url = document.getElementById('faviconUrlInput').value.trim();
+    globalSettings.og_image_url = document.getElementById('ogImageUrlInput').value.trim();
     globalSettings.brand_color = document.getElementById('brandColorInput').value.trim() || "#1a8917";
     globalSettings.footer_copyright = document.getElementById('footerCopyrightInput').value.trim();
     pushSettingsToServer(globalSettings);
@@ -984,7 +990,29 @@ window.saveSeoSettings = function() {
     if (!globalSettings.seo) globalSettings.seo = {};
     globalSettings.seo.meta_title = document.getElementById('seoTitleInput').value.trim();
     globalSettings.seo.meta_description = document.getElementById('seoDescInput').value.trim();
+    globalSettings.seo.meta_keywords = document.getElementById('seoKeywordsInput').value.trim();
     globalSettings.seo.canonical_url = document.getElementById('seoCanonicalInput').value.trim();
+    globalSettings.seo.robots = document.getElementById('seoRobotsInput').value;
+    pushSettingsToServer(globalSettings);
+};
+
+window.saveSocialSettings = function() {
+    if (!globalSettings.social) globalSettings.social = {};
+    globalSettings.social.twitter = document.getElementById('socialTwitterInput').value.trim();
+    globalSettings.social.github = document.getElementById('socialGithubInput').value.trim();
+    globalSettings.social.linkedin = document.getElementById('socialLinkedinInput').value.trim();
+    globalSettings.social.youtube = document.getElementById('socialYoutubeInput').value.trim();
+    globalSettings.social.instagram = document.getElementById('socialInstagramInput').value.trim();
+    globalSettings.social.facebook = document.getElementById('socialFacebookInput').value.trim();
+    pushSettingsToServer(globalSettings);
+};
+
+window.savePluginsSettings = function() {
+    if (!globalSettings.plugins) globalSettings.plugins = {};
+    globalSettings.plugins.ga_measurement_id = document.getElementById('pluginGaIdInput').value.trim();
+    globalSettings.plugins.gsc_verification = document.getElementById('pluginGscInput').value.trim();
+    globalSettings.plugins.custom_head_code = document.getElementById('pluginCustomHeadInput').value.trim();
+    globalSettings.plugins.custom_footer_code = document.getElementById('pluginCustomFooterInput').value.trim();
     pushSettingsToServer(globalSettings);
 };
 
@@ -996,6 +1024,9 @@ window.saveAdsSettings = function() {
 };
 
 async function pushSettingsToServer(settings) {
+    // 0ms Instant local cache update
+    localStorage.setItem('cached_settings', JSON.stringify(settings));
+
     const client = window.supabaseClient;
     if (client) {
         try {
@@ -1004,14 +1035,26 @@ async function pushSettingsToServer(settings) {
                 value: settings,
                 updated_at: new Date().toISOString()
             }], { onConflict: 'key' });
-            showToast('✓ Settings synchronized with Supabase');
+            showToast('✓ Settings synchronized & saved instantly!');
             return;
-        } catch(e) {}
+        } catch(e) {
+            console.error("Supabase sync error:", e);
+        }
     }
-    showToast('✓ Settings saved locally');
+    showToast('✓ Settings saved locally to browser cache!');
 }
 
 async function loadGlobalSettings() {
+    // 1. Instant cache load
+    try {
+        const cached = localStorage.getItem('cached_settings');
+        if (cached) {
+            globalSettings = Object.assign(globalSettings, JSON.parse(cached));
+            populateSettingsToUI();
+        }
+    } catch(e) {}
+
+    // 2. Background sync with Supabase
     const client = window.supabaseClient;
     if (client) {
         try {
@@ -1019,11 +1062,11 @@ async function loadGlobalSettings() {
             if (!error && data && data.value) {
                 const parsed = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
                 globalSettings = Object.assign(globalSettings, parsed);
+                localStorage.setItem('cached_settings', JSON.stringify(globalSettings));
+                populateSettingsToUI();
             }
         } catch(e) {}
     }
-
-    populateSettingsToUI();
 }
 
 function populateSettingsToUI() {
@@ -1039,26 +1082,53 @@ function populateSettingsToUI() {
     if (document.getElementById('siteTaglineInput')) {
         document.getElementById('siteTaglineInput').value = globalSettings.site_tagline || '';
     }
+    if (document.getElementById('faviconUrlInput')) {
+        document.getElementById('faviconUrlInput').value = globalSettings.favicon_url || '';
+    }
+    if (document.getElementById('ogImageUrlInput')) {
+        document.getElementById('ogImageUrlInput').value = globalSettings.og_image_url || '';
+    }
     if (document.getElementById('brandColorInput')) {
         document.getElementById('brandColorInput').value = globalSettings.brand_color || '#1a8917';
+        if (document.getElementById('brandColorPicker')) {
+            document.getElementById('brandColorPicker').value = globalSettings.brand_color || '#1a8917';
+        }
     }
     if (document.getElementById('footerCopyrightInput')) {
         document.getElementById('footerCopyrightInput').value = globalSettings.footer_copyright || '';
     }
-    if (document.getElementById('seoTitleInput') && globalSettings.seo) {
-        document.getElementById('seoTitleInput').value = globalSettings.seo.meta_title || '';
+
+    // SEO
+    if (globalSettings.seo) {
+        if (document.getElementById('seoTitleInput')) document.getElementById('seoTitleInput').value = globalSettings.seo.meta_title || '';
+        if (document.getElementById('seoDescInput')) document.getElementById('seoDescInput').value = globalSettings.seo.meta_description || '';
+        if (document.getElementById('seoKeywordsInput')) document.getElementById('seoKeywordsInput').value = globalSettings.seo.meta_keywords || '';
+        if (document.getElementById('seoCanonicalInput')) document.getElementById('seoCanonicalInput').value = globalSettings.seo.canonical_url || '';
+        if (document.getElementById('seoRobotsInput')) document.getElementById('seoRobotsInput').value = globalSettings.seo.robots || 'index, follow';
     }
-    if (document.getElementById('seoDescInput') && globalSettings.seo) {
-        document.getElementById('seoDescInput').value = globalSettings.seo.meta_description || '';
+
+    // Social
+    if (globalSettings.social) {
+        if (document.getElementById('socialTwitterInput')) document.getElementById('socialTwitterInput').value = globalSettings.social.twitter || '';
+        if (document.getElementById('socialGithubInput')) document.getElementById('socialGithubInput').value = globalSettings.social.github || '';
+        if (document.getElementById('socialLinkedinInput')) document.getElementById('socialLinkedinInput').value = globalSettings.social.linkedin || '';
+        if (document.getElementById('socialYoutubeInput')) document.getElementById('socialYoutubeInput').value = globalSettings.social.youtube || '';
+        if (document.getElementById('socialInstagramInput')) document.getElementById('socialInstagramInput').value = globalSettings.social.instagram || '';
+        if (document.getElementById('socialFacebookInput')) document.getElementById('socialFacebookInput').value = globalSettings.social.facebook || '';
     }
-    if (document.getElementById('seoCanonicalInput') && globalSettings.seo) {
-        document.getElementById('seoCanonicalInput').value = globalSettings.seo.canonical_url || '';
+
+    // Plugins & Analytics
+    if (globalSettings.plugins) {
+        if (document.getElementById('pluginGaIdInput')) document.getElementById('pluginGaIdInput').value = globalSettings.plugins.ga_measurement_id || '';
+        if (document.getElementById('pluginGscInput')) document.getElementById('pluginGscInput').value = globalSettings.plugins.gsc_verification || '';
+        if (document.getElementById('pluginCustomHeadInput')) document.getElementById('pluginCustomHeadInput').value = globalSettings.plugins.custom_head_code || '';
+        if (document.getElementById('pluginCustomFooterInput')) document.getElementById('pluginCustomFooterInput').value = globalSettings.plugins.custom_footer_code || '';
     }
-    if (document.getElementById('adsenseClientIdInput') && globalSettings.monetization) {
-        document.getElementById('adsenseClientIdInput').value = globalSettings.monetization.adsense_client_id || '';
-    }
-    if (document.getElementById('adsTxtInput') && globalSettings.monetization) {
-        document.getElementById('adsTxtInput').value = globalSettings.monetization.ads_txt || '';
+
+    // Monetization
+    if (globalSettings.monetization) {
+        if (document.getElementById('adsenseClientIdInput')) document.getElementById('adsenseClientIdInput').value = globalSettings.monetization.adsense_client_id || '';
+        if (document.getElementById('adsTxtInput')) document.getElementById('adsTxtInput').value = globalSettings.monetization.ads_txt || '';
     }
 
     renderFullCategoriesList(globalSettings.categories || []);
