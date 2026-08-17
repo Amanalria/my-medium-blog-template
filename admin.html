@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CMS Studio Pro – WordPress Editor, WebP Compressor & Cloud Manager</title>
+    <meta name="description" content="Professional CMS with WordPress Classic editor, custom KB WebP image compression, Google SEO rankings, AdSense slots, and category manager.">
+
+    <!-- Theme Initialization Script -->
+    <script>
+        (function() {
+            try {
+                const saved = localStorage.getItem('medium_theme') || 'light';
+                if (saved === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                } else {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mediumGreen: '#1a8917',
+                        mediumGreenDark: '#156d12',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        serif: ['Newsreader', 'Charter', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-bg theme-text font-sans antialiased overflow-x-hidden w-full min-h-screen transition-colors duration-200 flex flex-col justify-between">
+
+    <!-- Toast Notification Banner -->
+    <div id="toastNotification" class="fixed top-5 right-5 z-[99999] hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-sans text-xs font-semibold shadow-xl transition-all">
+        <span id="toastMsg">✓ Action completed successfully</span>
+    </div>
+
+    <!-- 1. Admin Top Navigation Bar -->
+    <header class="w-full border-b theme-border sticky top-0 z-40 theme-bg/95 backdrop-blur-md px-4 sm:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="flex items-center gap-2 group shrink-0">
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
+                </a>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-mono text-[11px] font-bold uppercase border border-emerald-500/20">
+                    CMS Studio Pro v7.5
+                </span>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-3 text-xs">
+                <a href="index.html" target="_blank" class="framer-tap hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full theme-search-bg theme-border border text-xs font-medium theme-text hover:border-zinc-400 transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span>Live Public Site</span>
+                </a>
+
+                <button type="button" onclick="window.toggleTheme()" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer" title="Toggle Theme">
+                    <svg class="themeSunSvg w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="themeMoonSvg w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Admin Multi-Tab Navigation Bar -->
+    <nav class="w-full border-b theme-border px-4 sm:px-8 py-2.5 overflow-x-auto no-scrollbar theme-hero-bg">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
+            <button type="button" onclick="switchAdminTab('editorTab')" id="tabBtn_editorTab" class="admin-tab-btn px-3.5 py-2 rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>✍️ Write Story</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('aiTab')" id="tabBtn_aiTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🤖 AI Writer</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('storiesTab')" id="tabBtn_storiesTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>📚 Manage Stories</span>
+                <span id="adminStoriesCountBadge" class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-mono text-[10px]">0</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('categoryTab')" id="tabBtn_categoryTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🏷️ Categories Manager</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('siteTab')" id="tabBtn_siteTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🌐 Site & Navigation</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('seoTab')" id="tabBtn_seoTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🔍 SEO & Google</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('adsTab')" id="tabBtn_adsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>💰 Google AdSense</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('appearanceTab')" id="tabBtn_appearanceTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🎨 Appearance & Hero</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('pluginsTab')" id="tabBtn_pluginsTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>🔌 Plugins Hub</span>
+            </button>
+            <button type="button" onclick="switchAdminTab('codeTab')" id="tabBtn_codeTab" class="admin-tab-btn px-3.5 py-2 rounded-xl theme-muted hover:theme-text transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>⚙️ Analytics & Code</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 3. Main Admin Workspace Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex-1 w-full space-y-8">
+
+        <!-- ============================================================= -->
+        <!-- TAB 1: WordPress Classic Story Editor with Custom KB WebP Compressor -->
+        <!-- ============================================================= -->
+        <section id="editorTab" class="space-y-6">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">WordPress Classic Story Editor</h2>
+                    <p class="text-xs theme-muted">Write stories with live editable domain/post-name permalinks, custom KB WebP compressor, and tags.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="resetEditorForm()" class="framer-tap px-3.5 py-1.5 rounded-xl theme-card border theme-border text-xs font-semibold theme-text hover:border-zinc-400">
+                        New Blank Story
+                    </button>
+                    <button type="button" onclick="saveStory('draft')" class="framer-tap px-4 py-1.5 rounded-xl theme-card border theme-border text-xs font-semibold theme-text hover:border-zinc-400">
+                        Save Draft
+                    </button>
+                    <button type="button" onclick="saveStory('published')" class="framer-tap px-5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                        Publish Story
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                
+                <!-- Left 2 Cols: Main Editor (Title, Subtitle & Classic WYSIWYG) -->
+                <div class="lg:col-span-2 space-y-5">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold uppercase tracking-wider theme-muted">Story Headline Title *</label>
+                        <input type="text" id="editStoryTitle" oninput="autoGenerateSlug(this.value)" placeholder="Enter headline title..." class="w-full theme-bg border theme-border theme-text text-lg sm:text-xl font-serif font-bold p-3.5 rounded-xl focus:outline-none focus:border-zinc-400">
+                    </div>
+
+                    <!-- Clean Interactive Editable Permalink Box -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold uppercase tracking-wider theme-muted">Custom Permalink (domain/post-name) *</label>
+                        <div class="flex items-center rounded-xl border theme-border theme-bg overflow-hidden focus-within:border-zinc-400 shadow-sm">
+                            <span class="px-3.5 py-3 text-xs font-mono theme-muted border-r theme-border theme-search-bg select-none shrink-0" id="permalinkDomainPrefix">https://yourdomain.com/</span>
+                            <input type="text" id="editStorySlug" placeholder="post-name-slug" class="flex-1 bg-transparent text-xs p-3 font-mono theme-text focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold uppercase tracking-wider theme-muted">Subtitle / Lead Summary</label>
+                        <input type="text" id="editStorySubtitle" placeholder="Brief summary of the story..." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none focus:border-zinc-400">
+                    </div>
+
+                    <!-- WordPress Classic Editor Suite -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold uppercase tracking-wider theme-muted">Article Body (Classic Editor)</label>
+                            <button type="button" onclick="toggleHtmlMode()" id="htmlModeToggleBtn" class="text-[11px] font-mono theme-muted hover:theme-text underline">
+                                Switch to HTML Code Mode
+                            </button>
+                        </div>
+
+                        <!-- Classic Editor Toolbar -->
+                        <div class="border theme-border rounded-xl overflow-hidden shadow-sm">
+                            <div class="p-2 border-b theme-border theme-search-bg flex flex-wrap items-center gap-1 text-xs" id="classicToolbar">
+                                <select onchange="formatDoc('formatBlock', this.value); this.selectedIndex=0;" class="theme-bg border theme-border theme-text text-xs p-1.5 rounded-lg focus:outline-none">
+                                    <option value="">Paragraph</option>
+                                    <option value="h2">Heading 2</option>
+                                    <option value="h3">Heading 3</option>
+                                    <option value="blockquote">Quote</option>
+                                    <option value="pre">Code Block</option>
+                                </select>
+
+                                <div class="h-4 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-1"></div>
+
+                                <button type="button" onclick="formatDoc('bold')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 font-bold" title="Bold">B</button>
+                                <button type="button" onclick="formatDoc('italic')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 italic font-serif" title="Italic">I</button>
+                                <button type="button" onclick="formatDoc('underline')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 underline" title="Underline">U</button>
+                                <button type="button" onclick="formatDoc('strikeThrough')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 line-through" title="Strikethrough">S</button>
+
+                                <div class="h-4 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-1"></div>
+
+                                <button type="button" onclick="formatDoc('insertUnorderedList')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700" title="Bullet List">• List</button>
+                                <button type="button" onclick="formatDoc('insertOrderedList')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700" title="Numbered List">1. List</button>
+
+                                <div class="h-4 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-1"></div>
+
+                                <button type="button" onclick="insertLinkPrompt()" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-emerald-600 font-semibold">🔗 Link</button>
+                                <button type="button" onclick="openImageUploadModal()" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-blue-500 font-semibold">🖼️ Add Image / WebP</button>
+                                <button type="button" onclick="insertCodeBlockPrompt()" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 font-mono text-[11px]">&lt;/&gt;</button>
+
+                                <div class="h-4 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-1"></div>
+
+                                <button type="button" onclick="formatDoc('removeFormat')" class="p-1.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-red-500 text-[11px]" title="Clear Formatting">Clear</button>
+                            </div>
+
+                            <!-- WYSIWYG Canvas -->
+                            <div id="wysiwygEditor" contenteditable="true" class="p-4 sm:p-6 min-h-[360px] max-h-[500px] overflow-y-auto focus:outline-none medium-prose font-serif text-sm sm:text-base leading-relaxed">
+                                <p>Start writing your story here...</p>
+                            </div>
+
+                            <!-- Raw HTML Mode Textarea -->
+                            <textarea id="rawHtmlEditor" class="w-full p-4 font-mono text-xs hidden min-h-[360px] max-h-[500px] theme-bg theme-text focus:outline-none" placeholder="Write or edit raw HTML tags directly here..."></textarea>
+
+                            <div class="px-4 py-2 border-t theme-border theme-search-bg flex items-center justify-between text-[11px] font-mono theme-muted">
+                                <span>Words: <strong id="wordCount" class="theme-text">0</strong> | Characters: <strong id="charCount" class="theme-text">0</strong></span>
+                                <span class="text-emerald-500">Google SEO & WebP Ready</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right 1 Col: Story Settings & Featured Image with Custom KB WebP Compressor -->
+                <div class="space-y-5 p-5 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">Story Settings & Featured Image</h3>
+
+                    <input type="hidden" id="editStoryId">
+
+                    <!-- Interactive 5-Step Custom KB WebP Compressor Studio -->
+                    <div class="space-y-3 p-4 rounded-xl theme-search-bg border theme-border">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-emerald-600">⚡ Custom KB WebP Studio</label>
+                            <span class="text-[10px] font-mono theme-muted">Target Size: <strong id="featuredKbDisplay" class="text-emerald-600">30 KB</strong></span>
+                        </div>
+
+                        <!-- Step 1: Custom KB Selector (Min 5 KB to Max 500 KB) -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2">
+                                <input type="range" id="featuredKbSlider" min="5" max="300" step="5" value="30" oninput="syncFeaturedKb(this.value)" class="flex-1 accent-emerald-600 cursor-pointer">
+                                <input type="number" id="featuredKbInput" min="5" max="500" value="30" oninput="syncFeaturedKb(this.value)" class="w-16 theme-bg border theme-border theme-text text-xs p-1.5 rounded-lg font-mono text-center">
+                                <span class="text-xs font-mono theme-muted">KB</span>
+                            </div>
+
+                            <!-- Quick Preset Buttons -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <button type="button" onclick="syncFeaturedKb(10)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono hover:bg-emerald-600 hover:text-white">10 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(25)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono hover:bg-emerald-600 hover:text-white">25 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(40)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono hover:bg-emerald-600 hover:text-white">40 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(80)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono hover:bg-emerald-600 hover:text-white">80 KB</button>
+                                <button type="button" onclick="syncFeaturedKb(150)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono hover:bg-emerald-600 hover:text-white">150 KB</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: File Picker -->
+                        <div class="space-y-1 pt-1">
+                            <input type="file" id="featuredFileInput" accept="image/*" onchange="onFeaturedFileSelected(event)" class="text-xs theme-muted file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 w-full cursor-pointer">
+                        </div>
+
+                        <!-- Step 3: Compress Button (Appears once file is picked) -->
+                        <div id="featuredCompressActionBox" class="hidden space-y-2 pt-1 border-t theme-border">
+                            <div class="text-[11px] font-mono theme-muted flex items-center justify-between">
+                                <span>Original Size:</span>
+                                <strong id="featuredOriginalSizeText" class="theme-text">--</strong>
+                            </div>
+                            <button type="button" onclick="executeFeaturedCompression()" id="featuredCompressBtn" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm">
+                                <span>⚡ Compress to WebP (<span id="featuredCompressTargetLabel">30 KB</span>)</span>
+                            </button>
+                        </div>
+
+                        <!-- Step 4: Preview, Rename & Final Upload Box -->
+                        <div id="featuredUploadActionBox" class="hidden space-y-2.5 pt-2 border-t theme-border">
+                            <div class="flex items-center gap-3 p-2 rounded-lg theme-card border theme-border">
+                                <img id="featuredCompressedThumb" src="" alt="Compressed WebP Preview" class="w-12 h-12 rounded object-cover border theme-border">
+                                <div class="text-[11px] space-y-0.5 flex-1 font-mono">
+                                    <div class="text-emerald-600 font-bold" id="featuredFinalSizeText">--</div>
+                                    <div class="text-zinc-500 text-[10px]" id="featuredSavingsText">--</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-[11px] font-semibold theme-text">Custom Image Name (.webp):</label>
+                                <input type="text" id="featuredCustomFileName" placeholder="my-story-image.webp" class="w-full theme-bg border theme-border theme-text text-xs p-2 rounded-lg font-mono focus:outline-none">
+                            </div>
+
+                            <button type="button" onclick="executeFeaturedUpload()" id="featuredUploadBtn" class="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm">
+                                <span>🚀 Upload WebP Image to Story</span>
+                            </button>
+                        </div>
+
+                        <!-- Direct Image URL & Alt text -->
+                        <div class="space-y-2 pt-2 border-t theme-border">
+                            <input type="text" id="editStoryImage" placeholder="Or enter direct image URL..." class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
+                            <input type="text" id="editStoryImageAlt" placeholder="Image Alt text for Google SEO..." class="w-full theme-bg border theme-border theme-text text-xs p-2 rounded-xl focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold theme-text">Category / Topic</label>
+                            <button type="button" onclick="switchAdminTab('categoryTab')" class="text-[11px] text-emerald-600 font-bold hover:underline">+ New Topic</button>
+                        </div>
+                        <select id="editStoryCategory" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                            <option value="ai">AI & Agents</option>
+                            <option value="engineering">Software Engineering</option>
+                            <option value="architecture">System Architecture</option>
+                            <option value="databases">Databases</option>
+                            <option value="productivity">Productivity</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Tags (Comma Separated)</label>
+                        <input type="text" id="editStoryTags" placeholder="e.g. ai, python, performance, architecture" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Author Name</label>
+                        <input type="text" id="editStoryAuthor" value="Dr. Kaelen Vance" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Reading Time Estimate</label>
+                        <input type="text" id="editStoryReadTime" value="6 min read" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2 border-t theme-border">
+                        <input type="checkbox" id="editStoryIsMember" class="rounded theme-border">
+                        <label for="editStoryIsMember" class="text-xs font-medium theme-text cursor-pointer">★ Featured Star Badge</label>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 2: AI Story Synthesizer -->
+        <!-- ============================================================= -->
+        <section id="aiTab" class="space-y-6" style="display: none;">
+            <div class="border-b theme-border pb-4">
+                <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🤖 AI Article Synthesizer</h2>
+                <p class="text-xs theme-muted">Provide any engineering topic. The AI will generate an exhaustive, structured, SEO-optimized article draft with code blocks in seconds.</p>
+            </div>
+
+            <div class="max-w-3xl space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold uppercase tracking-wider theme-text">Topic or Target Headline</label>
+                    <textarea id="aiPromptInput" rows="3" placeholder="e.g. Building sub-millisecond async Python microservices with io_uring and zero-copy JSON parsers" class="w-full theme-bg border theme-border theme-text text-sm p-3.5 rounded-xl focus:outline-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Category</label>
+                        <select id="aiTopicSelect" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                            <option value="ai">AI & Agents</option>
+                            <option value="engineering">Software Engineering</option>
+                            <option value="architecture">System Architecture</option>
+                            <option value="databases">Databases</option>
+                            <option value="productivity">Productivity</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="button" onclick="generateStoryWithAI()" id="aiGenerateBtn" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-sm">
+                            <span>✨ Generate Article Draft</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="aiResultBox" class="space-y-4 pt-4 border-t theme-border hidden">
+                    <div class="p-4 rounded-xl theme-search-bg border theme-border space-y-2">
+                        <span class="text-[10px] font-mono uppercase text-emerald-500 font-bold">Generated Preview:</span>
+                        <h3 id="aiResultTitle" class="text-lg font-serif font-bold theme-text"></h3>
+                        <p id="aiResultSubtitle" class="text-xs theme-muted"></p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="applyAiArticleToEditor()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                            ✍️ Open in WordPress Classic Editor
+                        </button>
+                        <button type="button" onclick="publishAiArticleImmediately()" class="flex-1 py-2.5 rounded-xl theme-card border theme-border text-xs font-semibold theme-text hover:border-zinc-400">
+                            🚀 Publish Immediately to Live Feed
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 3: Manage Stories Table -->
+        <!-- ============================================================= -->
+        <section id="storiesTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">📚 Story Management</h2>
+                    <p class="text-xs theme-muted">View, edit, filter, or delete articles from your database.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="text" id="manageSearchInput" oninput="filterManageStories(this.value)" placeholder="Search stories..." class="theme-bg border theme-border theme-text text-xs px-3.5 py-2 rounded-xl focus:outline-none">
+                </div>
+            </div>
+
+            <div class="border theme-border rounded-2xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="theme-search-bg border-b theme-border font-mono uppercase text-theme-muted text-[11px]">
+                            <tr>
+                                <th class="p-3.5">Title & Author</th>
+                                <th class="p-3.5">Category</th>
+                                <th class="p-3.5">Date</th>
+                                <th class="p-3.5">Status</th>
+                                <th class="p-3.5 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manageStoriesTbody" class="divide-y theme-border">
+                            <!-- Injected via admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 4: Dedicated Categories Manager -->
+        <!-- ============================================================= -->
+        <section id="categoryTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🏷️ Categories & Topics Manager</h2>
+                    <p class="text-xs theme-muted">Create, edit, or delete categories. They immediately synchronize with your story editor and homepage sidebar.</p>
+                </div>
+                <button type="button" onclick="saveCategoriesOnly()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Categories to Database
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <!-- Left: Create New Category Form -->
+                <div class="space-y-4 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">+ Create New Category</h3>
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Category Name *</label>
+                        <input type="text" id="newCatName" oninput="autoGenCatSlug(this.value)" placeholder="e.g. Cloud Architecture" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Category Slug (ID) *</label>
+                        <input type="text" id="newCatSlug" placeholder="e.g. cloud-architecture" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <button type="button" onclick="createNewCategory()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                        + Add Category to List
+                    </button>
+                </div>
+
+                <!-- Right: Active Categories List -->
+                <div class="lg:col-span-2 space-y-4 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">Active Website Categories</h3>
+                    
+                    <div id="fullCategoryManagerList" class="space-y-2.5">
+                        <!-- Injected dynamically via admin.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 5: Site Branding & Header Navigation Menu Builder -->
+        <!-- ============================================================= -->
+        <section id="siteTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🌐 Site Branding & Navigation</h2>
+                    <p class="text-xs theme-muted">Configure your website wordmark, tagline, header menu links, and footer copyright.</p>
+                </div>
+                <button type="button" onclick="saveSiteBrandingSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Site Settings
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">1. Branding & Identity</h3>
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Website Name / Logo Wordmark</label>
+                        <input type="text" id="siteNameInput" value="Medium" class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Site Tagline</label>
+                        <input type="text" id="siteTaglineInput" value="Where good ideas find you." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Footer Copyright Notice</label>
+                        <input type="text" id="footerCopyrightInput" value="© 2026 Medium. All rights reserved." class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Editorial Contact Email</label>
+                        <input type="email" id="contactEmailInput" value="editorial@synapse-medium.internal" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <div class="flex items-center justify-between border-b theme-border pb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider theme-text">2. Header Navigation Links</h3>
+                        <button type="button" onclick="addNavLinkRow()" class="text-xs text-emerald-600 font-bold hover:underline">+ Add Menu Link</button>
+                    </div>
+
+                    <div id="navLinksList" class="space-y-2">
+                        <!-- Injected via admin.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 6: Full SEO & Google Rankings Engine -->
+        <!-- ============================================================= -->
+        <section id="seoTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🔍 SEO & Google Ranking Engine</h2>
+                    <p class="text-xs theme-muted">Configure OpenGraph, Meta tags, Focus Keywords, and Search Console verification to rank #1 on Google.</p>
+                </div>
+                <button type="button" onclick="saveSeoSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save SEO Config
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Global SEO Meta Title</label>
+                        <input type="text" id="seoMetaTitle" oninput="updateGooglePreview()" value="Medium – Where good ideas find you." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Global Meta Description</label>
+                        <textarea id="seoMetaDescription" rows="3" oninput="updateGooglePreview()" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">Discover in-depth stories, architectural blueprints, and engineering research on autonomous AI.</textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Focus Keywords (Comma Separated)</label>
+                        <input type="text" id="seoFocusKeywords" value="autonomous ai, software engineering, databases, system design" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Canonical Custom Domain URL</label>
+                        <input type="url" id="seoCanonicalUrl" value="http://127.0.0.1:9095/" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Google Search Console Verification Tag Content</label>
+                        <input type="text" id="seoGoogleVerify" placeholder="e.g. google-site-verification=XXXXXXXXXXXXXXXXX" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">Google Search Live Preview (SERP)</h3>
+                    
+                    <div class="p-5 rounded-xl bg-white text-black border border-zinc-200 shadow-sm space-y-1.5 font-sans">
+                        <div class="flex items-center gap-2 text-xs text-zinc-600">
+                            <span class="w-4 h-4 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[9px]">M</span>
+                            <span id="googlePreviewUrl" class="font-mono text-[11px] truncate">https://yourdomain.com</span>
+                        </div>
+                        <h4 id="googlePreviewTitle" class="text-base text-blue-800 hover:underline font-medium cursor-pointer line-clamp-1 leading-snug">
+                            Medium – Where good ideas find you.
+                        </h4>
+                        <p id="googlePreviewDesc" class="text-xs text-zinc-600 line-clamp-2 leading-relaxed">
+                            Discover in-depth stories, architectural blueprints, and engineering research on autonomous AI.
+                        </p>
+                    </div>
+
+                    <div class="space-y-2 pt-4 border-t theme-border text-xs">
+                        <span class="font-bold theme-text uppercase tracking-wider text-[11px]">Instant Google Search Index Feeds:</span>
+                        <div class="flex flex-wrap gap-3 font-mono text-xs">
+                            <a href="/sitemap.xml" target="_blank" class="text-emerald-600 underline font-semibold">📄 /sitemap.xml</a>
+                            <a href="/robots.txt" target="_blank" class="text-emerald-600 underline font-semibold">🤖 /robots.txt</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 7: Google AdSense & Monetization -->
+        <!-- ============================================================= -->
+        <section id="adsTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">💰 Google AdSense & Monetization</h2>
+                    <p class="text-xs theme-muted">Manage your AdSense publisher ID, in-feed ads, in-article ads, and ads.txt compliance file.</p>
+                </div>
+                <button type="button" onclick="saveAdSenseSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save AdSense Config
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <div class="flex items-center justify-between p-3.5 rounded-xl theme-search-bg border theme-border">
+                        <div>
+                            <h4 class="font-bold text-xs theme-text">Enable Google AdSense Integration</h4>
+                            <p class="text-[11px] theme-muted">Injects AdSense verification tags and auto ads globally.</p>
+                        </div>
+                        <input type="checkbox" id="adSenseEnabled" class="w-5 h-5 rounded theme-border cursor-pointer">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Google AdSense Publisher ID</label>
+                        <input type="text" id="adSenseClientId" value="ca-pub-1234567890123456" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <h4 class="text-xs font-bold uppercase tracking-wider theme-text">Ad Slot Placements:</h4>
+                        
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center gap-2 font-medium theme-text cursor-pointer">
+                                <input type="checkbox" id="adHeaderEnabled" class="rounded theme-border">
+                                <span>Header Top Banner Slot</span>
+                            </label>
+                            <label class="flex items-center gap-2 font-medium theme-text cursor-pointer">
+                                <input type="checkbox" id="adInFeedEnabled" class="rounded theme-border">
+                                <span>Homepage In-Feed Native Ad</span>
+                            </label>
+                            <label class="flex items-center gap-2 font-medium theme-text cursor-pointer">
+                                <input type="checkbox" id="adInArticleEnabled" class="rounded theme-border">
+                                <span>Article Mid-Content Ad Slot</span>
+                            </label>
+                            <label class="flex items-center gap-2 font-medium theme-text cursor-pointer">
+                                <input type="checkbox" id="adSidebarEnabled" class="rounded theme-border">
+                                <span>Sidebar Sticky 300x250 Ad Slot</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <div class="flex items-center justify-between border-b theme-border pb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider theme-text">ads.txt Content (Required by Google)</h3>
+                        <a href="/ads.txt" target="_blank" class="text-xs font-mono text-emerald-600 underline">View /ads.txt</a>
+                    </div>
+                    <div class="space-y-1.5">
+                        <textarea id="adsTxtContent" rows="6" class="w-full theme-bg border theme-border theme-text text-xs font-mono p-3 rounded-xl focus:outline-none">google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0</textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 8: Appearance, Hero & Brand Styling -->
+        <!-- ============================================================= -->
+        <section id="appearanceTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🎨 Appearance, Hero & Styling</h2>
+                    <p class="text-xs theme-muted">Toggle Hero section, set background images, brand accent colors, and animations.</p>
+                </div>
+                <button type="button" onclick="saveAppearanceSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Appearance
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">1. Hero Section Controls</h3>
+
+                    <div class="flex items-center justify-between p-3.5 rounded-xl theme-search-bg border theme-border">
+                        <div>
+                            <h4 class="font-bold text-xs theme-text">Show Hero Banner on Homepage</h4>
+                            <p class="text-[11px] theme-muted">Toggle the large headline banner on or off.</p>
+                        </div>
+                        <input type="checkbox" id="heroEnabled" checked class="w-5 h-5 rounded theme-border cursor-pointer">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Hero Headline</label>
+                        <input type="text" id="heroHeadline" value="Stay curious." class="w-full theme-bg border theme-border theme-text text-sm p-3 rounded-xl focus:outline-none">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Hero Subtitle</label>
+                        <textarea id="heroSubtitle" rows="2" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl focus:outline-none">Discover stories, thinking, and expertise from writers on software engineering, autonomous agents, and architecture.</textarea>
+                    </div>
+
+                    <!-- Hero Background Custom KB WebP Box -->
+                    <div class="space-y-2 p-3 rounded-xl theme-search-bg border theme-border">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-emerald-600">Hero BG WebP Uploader</label>
+                            <span class="text-[10px] font-mono theme-muted">Target: 40 KB</span>
+                        </div>
+                        <input type="file" id="heroBgFileInput" accept="image/*" onchange="handleHeroBgUpload(event)" class="text-xs theme-muted file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 w-full">
+                        <div id="heroBgCompressStats" class="hidden text-[11px] font-mono text-emerald-600"></div>
+                        <input type="text" id="heroBgImage" placeholder="Or enter background image URL..." class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl font-mono focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-5 p-6 rounded-2xl theme-card border theme-border">
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">2. Styling & Animations</h3>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold theme-text">Primary Brand Color</label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" id="brandColorPicker" value="#1a8917" class="w-10 h-10 rounded-lg cursor-pointer border-0 bg-transparent">
+                            <input type="text" id="brandColorHex" value="#1a8917" class="theme-bg border theme-border theme-text text-xs p-2 rounded-xl font-mono w-28 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3.5 rounded-xl theme-search-bg border theme-border">
+                        <div>
+                            <h4 class="font-bold text-xs theme-text">Framer Motion Scroll Animations</h4>
+                            <p class="text-[11px] theme-muted">Enable or disable smooth viewport scroll entry effects.</p>
+                        </div>
+                        <input type="checkbox" id="animationsEnabled" checked class="w-5 h-5 rounded theme-border cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 9: Custom Plugins Hub -->
+        <!-- ============================================================= -->
+        <section id="pluginsTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">🔌 Custom Plugins Hub</h2>
+                    <p class="text-xs theme-muted">Enable, disable, or configure custom modular extensions for your publishing website.</p>
+                </div>
+                <button type="button" onclick="savePluginsSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Plugins
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl" id="pluginsGrid">
+                <!-- Injected dynamically via admin.js -->
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- TAB 10: Google Analytics & Code Injection -->
+        <!-- ============================================================= -->
+        <section id="codeTab" class="space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b theme-border pb-4 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold theme-text tracking-tight">⚙️ Analytics & External Code Injection</h2>
+                    <p class="text-xs theme-muted">Inject Google Analytics, Meta Pixel, custom CSS, or third-party scripts into &lt;head&gt; and footer.</p>
+                </div>
+                <button type="button" onclick="saveCodeSettings()" class="framer-tap px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-all shadow-sm">
+                    💾 Save Code Injection
+                </button>
+            </div>
+
+            <div class="space-y-5 max-w-3xl p-6 rounded-2xl theme-card border theme-border">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Google Analytics 4 Measurement ID</label>
+                    <input type="text" id="gaMeasurementId" placeholder="G-XXXXXXXXXX" class="w-full theme-bg border theme-border theme-text text-xs p-3 rounded-xl font-mono focus:outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Custom &lt;head&gt; Code Injection (Scripts, Meta, Pixels)</label>
+                    <textarea id="customHeadCode" rows="4" placeholder="<script>/* custom analytics / meta tags */</script>" class="w-full theme-bg border theme-border theme-text text-xs font-mono p-3 rounded-xl focus:outline-none"></textarea>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold theme-text">Custom Footer Code Injection</label>
+                    <textarea id="customFooterCode" rows="4" placeholder="<script>/* footer scripts */</script>" class="w-full theme-bg border theme-border theme-text text-xs font-mono p-3 rounded-xl focus:outline-none"></textarea>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Image Upload Modal with WebP Compression Slider & Custom KB -->
+    <div id="imageUploadModal" style="display: none;" class="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="theme-card border theme-border rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b theme-border pb-3">
+                <h3 class="font-bold text-sm theme-text">Insert Image (Custom KB WebP Studio)</h3>
+                <button type="button" onclick="closeImageUploadModal()" class="text-zinc-400 hover:theme-text">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <!-- Custom Target Size Selector -->
+                <div class="space-y-2 p-3 rounded-xl theme-search-bg border theme-border">
+                    <div class="flex items-center justify-between font-semibold theme-text">
+                        <span>⚡ WebP Target Size:</span>
+                        <span class="font-mono text-emerald-600"><strong id="modalKbDisplay">25 KB</strong></span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="range" id="modalKbSlider" min="5" max="300" step="5" value="25" oninput="syncModalKb(this.value)" class="flex-1 accent-emerald-600 cursor-pointer">
+                        <input type="number" id="modalKbInput" min="5" max="500" value="25" oninput="syncModalKb(this.value)" class="w-16 theme-bg border theme-border theme-text text-xs p-1 rounded-lg font-mono text-center">
+                        <span class="text-xs font-mono theme-muted">KB</span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1 pt-1">
+                        <button type="button" onclick="syncModalKb(10)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono">10 KB</button>
+                        <button type="button" onclick="syncModalKb(25)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono">25 KB</button>
+                        <button type="button" onclick="syncModalKb(40)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono">40 KB</button>
+                        <button type="button" onclick="syncModalKb(80)" class="px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-[10px] font-mono">80 KB</button>
+                    </div>
+
+                    <input type="file" id="modalImageFileInput" accept="image/*" onchange="onModalFileSelected(event)" class="text-xs theme-muted file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white w-full cursor-pointer pt-2">
+
+                    <!-- Modal Compress Action Box -->
+                    <div id="modalCompressActionBox" class="hidden space-y-2 pt-2 border-t theme-border">
+                        <div class="text-[11px] font-mono theme-muted flex items-center justify-between">
+                            <span>Original Size:</span>
+                            <strong id="modalOriginalSizeText" class="theme-text">--</strong>
+                        </div>
+                        <button type="button" onclick="executeModalCompression()" class="w-full py-1.5 rounded-lg bg-emerald-600 text-white font-semibold text-xs">
+                            ⚡ Compress to WebP (<span id="modalCompressTargetLabel">25 KB</span>)
+                        </button>
+                    </div>
+
+                    <!-- Modal Upload Action Box -->
+                    <div id="modalUploadActionBox" class="hidden space-y-2 pt-2 border-t theme-border">
+                        <div class="flex items-center gap-3 p-1.5 rounded-lg theme-card border theme-border">
+                            <img id="modalCompressedThumb" src="" alt="Thumb" class="w-10 h-10 rounded object-cover">
+                            <div class="text-[11px] font-mono text-emerald-600" id="modalFinalSizeText">--</div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-semibold theme-text">Custom Name:</label>
+                            <input type="text" id="modalCustomFileName" placeholder="article-visual.webp" class="w-full theme-bg border theme-border theme-text text-xs p-1.5 rounded-lg font-mono">
+                        </div>
+                        <button type="button" onclick="executeModalUpload()" class="w-full py-1.5 rounded-lg bg-blue-600 text-white font-semibold text-xs">
+                            🚀 Upload WebP File
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="font-semibold theme-text">Or Direct Image URL</label>
+                    <input type="text" id="modalImageUrl" placeholder="https://..." class="w-full theme-bg border theme-border theme-text p-2.5 rounded-xl font-mono focus:outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="font-semibold theme-text">Alt Text (Crucial for Google Image SEO) *</label>
+                    <input type="text" id="modalImageAlt" placeholder="Descriptive image explanation..." class="w-full theme-bg border theme-border theme-text p-2.5 rounded-xl focus:outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="font-semibold theme-text">Caption Text (Optional)</label>
+                    <input type="text" id="modalImageCaption" placeholder="Optional caption beneath image..." class="w-full theme-bg border theme-border theme-text p-2.5 rounded-xl focus:outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="font-semibold theme-text">Hyperlink (Optional Destination URL)</label>
+                    <input type="url" id="modalImageLink" placeholder="https://example.com/target" class="w-full theme-bg border theme-border theme-text p-2.5 rounded-xl font-mono focus:outline-none">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t theme-border">
+                <button type="button" onclick="closeImageUploadModal()" class="px-4 py-2 rounded-xl theme-search-bg theme-border border text-xs font-semibold">Cancel</button>
+                <button type="button" onclick="confirmInsertImageToEditor()" class="px-5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-semibold">Insert into Article</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Footer -->
+    <footer class="border-t theme-border theme-hero-bg w-full py-4 px-4 sm:px-8 font-sans text-xs theme-muted text-center">
+        <span>Medium CMS Studio Pro • Google SEO & Custom KB WebP Compression Engine</span>
+    </footer>
+
+    <!-- Admin Studio Script -->
+    <script src="admin.js"></script>
+</body>
+</html>
