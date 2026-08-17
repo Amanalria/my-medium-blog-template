@@ -30,13 +30,23 @@ const currentSlug = urlParams.get('slug') || cleanPathSlug || "";
 let currentStory = null;
 
 function renderStoryDetails(story) {
+    const authorTopBar = document.getElementById('authorTopBar');
+    const socialShareSection = document.getElementById('socialShareSection');
+    const authorBioFooter = document.getElementById('authorBioFooter');
+    const responsesSection = document.getElementById('responsesSection');
+    const heroFigure = document.getElementById('heroFigure');
+
     if (!story) {
         document.title = "Story Not Found – Medium";
         const titleEl = document.getElementById('storyTitle');
         const subtitleEl = document.getElementById('storySubtitle');
         const proseEl = document.querySelector('.medium-prose');
-        const heroImgEl = document.getElementById('storyHeroImage');
-        if (heroImgEl && heroImgEl.parentElement) heroImgEl.parentElement.style.display = 'none';
+        if (heroFigure) heroFigure.classList.add('hidden');
+        if (authorTopBar) { authorTopBar.classList.add('hidden'); authorTopBar.classList.remove('flex'); }
+        if (socialShareSection) socialShareSection.classList.add('hidden');
+        if (authorBioFooter) authorBioFooter.classList.add('hidden');
+        if (responsesSection) responsesSection.classList.add('hidden');
+
         if (titleEl) titleEl.textContent = "Story Not Found";
         if (subtitleEl) subtitleEl.textContent = "The requested article does not exist or has been removed.";
         if (proseEl) proseEl.innerHTML = `
@@ -51,6 +61,12 @@ function renderStoryDetails(story) {
     // Dynamic SEO Metadata & Google Title
     document.title = `${story.title} – Medium`;
     
+    // Reveal all dynamic story sections
+    if (authorTopBar) { authorTopBar.classList.remove('hidden'); authorTopBar.classList.add('flex'); }
+    if (socialShareSection) socialShareSection.classList.remove('hidden');
+    if (authorBioFooter) authorBioFooter.classList.remove('hidden');
+    if (responsesSection) responsesSection.classList.remove('hidden');
+
     const titleEl = document.getElementById('storyTitle');
     const subtitleEl = document.getElementById('storySubtitle');
     const authorEl = document.getElementById('storyAuthor');
@@ -65,20 +81,20 @@ function renderStoryDetails(story) {
     if (titleEl) titleEl.textContent = story.title;
     if (subtitleEl) subtitleEl.textContent = story.subtitle || '';
     if (authorEl) authorEl.textContent = story.author;
-    if (authorAvatarEl) authorAvatarEl.textContent = story.authorInitials || "AU";
-    if (authorCardAvatarEl) authorCardAvatarEl.textContent = story.authorInitials || "AU";
+    if (authorAvatarEl) authorAvatarEl.textContent = story.authorInitials || (story.author ? story.author.slice(0, 2).toUpperCase() : "AU");
+    if (authorCardAvatarEl) authorCardAvatarEl.textContent = story.authorInitials || (story.author ? story.author.slice(0, 2).toUpperCase() : "AU");
     if (authorCardNameEl) authorCardNameEl.textContent = `Written by ${story.author}`;
-    if (dateEl) dateEl.textContent = story.date;
-    if (readTimeEl) readTimeEl.textContent = story.readTime;
-    if (heroImgEl) {
+    if (dateEl) dateEl.textContent = story.date || 'Recently published';
+    if (readTimeEl) readTimeEl.textContent = story.readTime || '5 min read';
+    if (heroImgEl && heroFigure) {
         if (story.image) {
             heroImgEl.src = story.image;
             heroImgEl.alt = story.imageAlt || story.title;
             heroImgEl.loading = "lazy";
             heroImgEl.decoding = "async";
-            if (heroImgEl.parentElement) heroImgEl.parentElement.style.display = 'block';
+            heroFigure.classList.remove('hidden');
         } else {
-            if (heroImgEl.parentElement) heroImgEl.parentElement.style.display = 'none';
+            heroFigure.classList.add('hidden');
         }
     }
 

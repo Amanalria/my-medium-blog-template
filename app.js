@@ -52,6 +52,7 @@ function renderStoriesFeed(list) {
                 <a href="/admin" class="inline-block mt-2 px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold text-xs">Open Admin Studio</a>
             </div>
         `;
+        renderSidebarLatestPosts([]);
         return;
     }
 

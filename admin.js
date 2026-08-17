@@ -739,8 +739,8 @@ window.generateStoryWithAI = async function() {
         subtitle: `A comprehensive technical guide to mastering ${cleanTopic} with zero latency and high reliability.`,
         category: topic,
         tags: `${topic}, engineering, architecture, performance`,
-        author: "Dr. Kaelen Vance",
-        readTime: "6 min read",
+        author: "Author",
+        readTime: "5 min read",
         image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop&q=75",
         imageAlt: `${title} Architecture Guide`,
         bodyHtml: `<h2>1. Introduction to ${title}</h2><p>Modern distributed systems require predictable latency, resilient data contracts, and fault tolerance at scale. By adhering to core principles of asynchronous event processing, teams can eliminate bottlenecks and optimize throughput.</p><blockquote>"Engineering excellence is achieved through continuous verification, strict boundaries, and minimal moving parts."</blockquote><h2>2. Architectural Deep Dive</h2><p>When structuring components for high-concurrency workloads, isolation of state and automated regression boundaries ensure zero unexpected side effects.</p><pre><code>// Core implementation pattern\nasync function executePipeline(request) {\n    const verified = await validateContract(request);\n    return await processWorkflow(verified);\n}</code></pre><h2>3. Summary & Next Steps</h2><p>Deploying this blueprint provides immediate observability and scalable performance across edge infrastructure.</p>`
