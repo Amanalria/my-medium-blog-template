@@ -56,6 +56,8 @@ const pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').p
 const cleanPathSlug = (pathSlug && !pathSlug.includes('.') && pathSlug !== 'post') ? pathSlug : null;
 const currentSlug = urlParams.get('slug') || cleanPathSlug || "";
 
+let lastRenderedStoryId = '';
+
 // 5. Render Story Details
 function renderStoryDetails(story) {
     const authorTopBar = document.getElementById('authorTopBar');
@@ -65,6 +67,8 @@ function renderStoryDetails(story) {
     const heroFigure = document.getElementById('heroFigure');
 
     if (!story) {
+        if (lastRenderedStoryId === 'notfound') return;
+        lastRenderedStoryId = 'notfound';
         document.title = "Story Not Found – Medium";
         const titleEl = document.getElementById('storyTitle');
         const subtitleEl = document.getElementById('storySubtitle');
@@ -88,6 +92,12 @@ function renderStoryDetails(story) {
         }
         return;
     }
+
+    const storyId = (story.id || story.slug || '') + '_' + (story.title || '');
+    if (storyId === lastRenderedStoryId) {
+        return; // Zero-delay freeze
+    }
+    lastRenderedStoryId = storyId;
 
     // Dynamic Title
     document.title = `${story.title} – Medium`;

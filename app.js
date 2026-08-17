@@ -121,12 +121,16 @@ window.onMobileSearchInput = function(query) {
     }
 };
 
+let lastRenderedFeedJson = '';
+
 // 5. Render Stories Feed & Sidebar
 function renderStoriesFeed(list) {
     const feed = document.getElementById('storiesFeed');
     if (!feed) return;
 
     if (!list || list.length === 0) {
+        if (lastRenderedFeedJson === 'empty') return;
+        lastRenderedFeedJson = 'empty';
         feed.innerHTML = `
             <div class="py-16 text-center text-xs theme-muted space-y-3">
                 <p class="text-sm font-medium theme-text">No stories found.</p>
@@ -136,6 +140,12 @@ function renderStoriesFeed(list) {
         renderSidebarLatestPosts([]);
         return;
     }
+
+    const currentJson = JSON.stringify(list.map(s => s.id || s.slug));
+    if (currentJson === lastRenderedFeedJson) {
+        return; // Zero-delay freeze: DOM is already pristine
+    }
+    lastRenderedFeedJson = currentJson;
 
     feed.innerHTML = list.map(s => {
         const authorInitial = (s.author || 'M').trim().charAt(0).toUpperCase();
