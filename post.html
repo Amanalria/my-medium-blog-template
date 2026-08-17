@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medium – Story Reader</title>
-    <meta name="description" content="Discover stories, thinking, and expertise.">
-    <link rel="canonical" id="canonicalTag" href="https://hivecloud.in/">
-
-    <!-- DNS Prefetch & Preconnect for Super Fast Network Handshakes -->
-    <link rel="preconnect" href="https://okpyphrqudeeoboesdzz.supabase.co" crossorigin>
-    <link rel="dns-prefetch" href="https://okpyphrqudeeoboesdzz.supabase.co">
+    <link rel="canonical" id="canonicalTag" href="">
+    <script>
+        (function() {
+            try {
+                const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+                const clean = (path && !path.includes('.') && path !== 'post') ? path : '';
+                const url = clean ? `https://hivecloud.in/${clean}` : 'https://hivecloud.in/';
+                const tag = document.getElementById('canonicalTag');
+                if (tag) tag.href = url;
+            } catch(e){}
+        })();
+    </script>
 
     <!-- 0ms Zero-CLS Instant Synchronous Settings & Theme Hydration -->
     <script>
@@ -68,8 +74,8 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
 .font-normal{font-weight:400}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.font-black{font-weight:900}
 .tracking-tight{letter-spacing:-0.025em}.tracking-tighter{letter-spacing:-0.05em}.tracking-wider{letter-spacing:0.05em}.uppercase{text-transform:uppercase}
 .text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}.leading-snug{line-height:1.375}.leading-relaxed{line-height:1.625}
-.text-white{color:#ffffff}.text-emerald-600{color:#059669}.text-emerald-400{color:#34d399}.text-zinc-400{color:#a1a1aa}.text-zinc-900{color:#18181b}
-.bg-emerald-600{background-color:#059669}.bg-emerald-700{background-color:#047857}.bg-zinc-900{background-color:#18181b}.bg-zinc-800{background-color:#27272a}.bg-zinc-100{background-color:#f4f4f5}.bg-zinc-200{background-color:#e4e4e7}.bg-black\/75{background-color:rgba(0,0,0,0.75)}.bg-emerald-500\/10{background-color:rgba(16,185,129,0.1)}.border-emerald-500\/20{border-color:rgba(16,185,129,0.2)}
+.text-white{color:#ffffff}.text-emerald-600{color:#047857}.text-emerald-400{color:#34d399}.text-zinc-400{color:#a1a1aa}.text-zinc-900{color:#18181b}
+.bg-emerald-600{background-color:#047857}.bg-emerald-700{background-color:#065f46}.bg-emerald-800{background-color:#064e3b}.bg-zinc-900{background-color:#18181b}.bg-zinc-800{background-color:#27272a}.bg-zinc-100{background-color:#f4f4f5}.bg-zinc-200{background-color:#e4e4e7}.bg-black\/75{background-color:rgba(0,0,0,0.75)}.bg-emerald-500\/10{background-color:rgba(16,185,129,0.1)}.border-emerald-500\/20{border-color:rgba(16,185,129,0.2)}
 .flex{display:flex}.inline-flex{display:inline-flex}.block{display:block}.inline-block{display:inline-block}.hidden{display:none}.grid{display:grid}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .flex-col{flex-direction:column}.flex-row{flex-direction:row}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.min-w-0{min-width:0px}
 .gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-12{gap:3rem}.gap-x-3{column-gap:0.75rem}.gap-y-1\.5{row-gap:0.375rem}
@@ -139,8 +145,7 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                         <svg class="themeMoonSvg w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
-                    </button>
-                    <button type="button" onclick="window.shareCurrentStory()" class="framer-tap px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+                    <button type="button" onclick="window.shareCurrentStory()" class="framer-tap px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="18" cy="5" r="3"></circle>
                             <circle cx="6" cy="12" r="3"></circle>
@@ -177,8 +182,8 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
             <p id="storySubtitle" class="text-lg sm:text-xl theme-muted font-sans font-normal leading-relaxed"></p>
         </header>
 
-        <!-- Author Card (Hidden until real story loads) -->
-        <div id="authorTopBar" class="hidden items-center justify-between border-y theme-border py-4 font-sans text-xs">
+        <!-- Author Card (Stable 0ms Skeleton to Prevent CLS) -->
+        <div id="authorTopBar" class="flex items-center justify-between border-y theme-border py-4 font-sans text-xs min-h-[64px]">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-xs" id="storyAuthorAvatar">
                     AU
@@ -218,12 +223,12 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
         </div>
 
         <!-- Featured High-Res Header Image -->
-        <figure id="heroFigure" class="space-y-2 hidden">
-            <img id="storyHeroImage" src="" alt="Cover Artwork" class="w-full h-64 sm:h-96 object-cover rounded-xl border theme-border shadow-sm">
+        <figure id="heroFigure" class="space-y-2 hidden overflow-hidden rounded-xl">
+            <img id="storyHeroImage" src="" alt="Cover Artwork" class="w-full aspect-video sm:h-96 object-cover rounded-xl border theme-border shadow-sm">
         </figure>
 
-        <!-- Article Prose Body (Medium Editorial Typography) -->
-        <article class="medium-prose font-serif">
+        <!-- Article Prose Body (Medium Editorial Typography with 0-CLS min-height) -->
+        <article class="medium-prose font-serif min-h-[400px]">
             <div class="py-12 space-y-4 animate-pulse">
                 <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-3/4"></div>
                 <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-full"></div>
@@ -234,8 +239,8 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
         <!-- Article Tags Container -->
         <div id="storyTagsContainer" class="flex flex-wrap items-center gap-2 pt-6"></div>
 
-        <!-- 3. Social Sharing Bar (Hidden until real story loads) -->
-        <section id="socialShareSection" class="hidden border-y theme-border py-6 my-8 space-y-3 font-sans">
+        <!-- 3. Social Sharing Bar -->
+        <section id="socialShareSection" class="border-y theme-border py-6 my-8 space-y-3 font-sans">
             <div class="flex items-center justify-between flex-wrap gap-4">
                 <span class="text-xs font-bold uppercase tracking-wider theme-text">Share this article</span>
                 
@@ -264,8 +269,8 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                         <span>Facebook</span>
                     </a>
 
-                    <!-- Copy Link -->
-                    <button type="button" id="copyLinkBtn" onclick="window.copyStoryLink()" class="framer-tap flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-colors text-xs font-medium cursor-pointer shadow-sm">
+                    <!-- Copy Link (High-Contrast Emerald-800 for 100 Accessibility) -->
+                    <button type="button" id="copyLinkBtn" onclick="window.copyStoryLink()" class="framer-tap flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold transition-colors text-xs cursor-pointer shadow-sm">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -276,34 +281,34 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
             </div>
         </section>
 
-        <!-- 4. Author Profile Bio Card (Hidden until real story loads) -->
-        <footer id="authorBioFooter" class="hidden border-t theme-border pt-8 space-y-4 font-sans">
+        <!-- 4. Author Profile Bio Card -->
+        <footer id="authorBioFooter" class="border-t theme-border pt-8 space-y-4 font-sans">
             <div class="p-6 rounded-2xl theme-card border theme-border space-y-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-sm" id="authorCardAvatar">
                         AU
                     </div>
                     <div>
-                        <h4 class="font-bold theme-text" id="authorCardName">Written by Author</h4>
+                        <h3 class="font-bold theme-text text-sm" id="authorCardName">Written by Author</h3>
                         <span class="text-xs theme-muted">Writer & Contributor</span>
                     </div>
                 </div>
             </div>
         </footer>
 
-        <!-- 5. Responses / Dynamic Comments Section (Hidden until real story loads) -->
-        <section id="responsesSection" class="hidden border-t theme-border pt-8 space-y-4 font-sans">
+        <!-- 5. Responses / Dynamic Comments Section -->
+        <section id="responsesSection" class="border-t theme-border pt-8 space-y-4 font-sans">
             <div class="flex items-center justify-between">
                 <h3 class="font-bold text-sm theme-text">
                     Responses (<span id="commentCount">0</span>)
                 </h3>
             </div>
 
-            <!-- Comment Form -->
+            <!-- Comment Form (High Contrast Submit Button) -->
             <form id="commentForm" class="space-y-2">
                 <textarea id="commentInput" rows="3" required placeholder="What are your thoughts on this story?" class="w-full theme-bg border theme-border theme-text text-xs p-3.5 rounded-xl focus:outline-none focus:border-zinc-400"></textarea>
                 <div class="flex justify-end">
-                    <button type="submit" class="px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-sm cursor-pointer">
+                    <button type="submit" class="px-5 py-2 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs transition-colors shadow-sm cursor-pointer">
                         Respond
                     </button>
                 </div>
@@ -412,7 +417,7 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
 
             <!-- Drawer Bottom CTA -->
             <div class="pt-4 border-t theme-border">
-                <a href="/" class="block text-center py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs">
+                <a href="/" class="block text-center py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs">
                     Back to Feed
                 </a>
             </div>

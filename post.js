@@ -99,8 +99,49 @@ function renderStoryDetails(story) {
     }
     lastRenderedStoryId = storyId;
 
-    // Dynamic Title
+    // Dynamic Title & Canonical
+    const fullUrl = `https://hivecloud.in/${story.slug || currentSlug}`;
     document.title = `${story.title} – Medium`;
+    const canonicalTag = document.getElementById('canonicalTag');
+    if (canonicalTag) canonicalTag.href = fullUrl;
+
+    // Dynamic Meta Description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.name = 'description';
+        document.head.appendChild(metaDesc);
+    }
+    metaDesc.content = story.subtitle || story.title;
+
+    // Dynamic JSON-LD Schema for 100 SEO & Agentic Browsing
+    let schemaEl = document.getElementById('storySchema');
+    if (!schemaEl) {
+        schemaEl = document.createElement('script');
+        schemaEl.id = 'storySchema';
+        schemaEl.type = 'application/ld+json';
+        document.head.appendChild(schemaEl);
+    }
+    schemaEl.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": story.title,
+        "description": story.subtitle || story.title,
+        "author": {
+            "@type": "Person",
+            "name": story.author || "Aman Alria"
+        },
+        "datePublished": story.created_at || "2026-08-18",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": fullUrl
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "HiveCloud",
+            "url": "https://hivecloud.in"
+        }
+    });
 
     // Reveal story sections
     if (authorTopBar) { authorTopBar.classList.remove('hidden'); authorTopBar.classList.add('flex'); }
