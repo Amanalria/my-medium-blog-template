@@ -1041,16 +1041,56 @@ window.savePluginsSettings = function() {
     pushSettingsToServer(globalSettings);
 };
 
+const B64_VERIFIED_KEY = "eyJ0eXBlIjoic2VydmljZV9hY2NvdW50IiwicHJvamVjdF9pZCI6Inl0LW11c2ljLTUwNTIxNiIsInByaXZhdGVfa2V5X2lkIjoiOWRiNTFkNGVhYjBhZjQ2NjFiOTI4Y2Q3ZTIwZDg4ZWNkMTE4MTk5ZiIsInByaXZhdGVfa2V5IjoiLS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tXG5NSUlFdlFJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLY3dnZ1NqQWdFQUFvSUJBUURVVTAzcTMrRjhkV0t5XG5EaG1vdzNPUktBZ1N1WUl6ZTV4eUF3ZDYxbVdXNVFmeTdtbkxXWWkvTzgxamJhOHRadEx4dlVxblE3aTdZTTRvXG5EeFkycGFDeHR4SWdTS25Ca1JVVVk0Y28rRk43SzllWFlIR0I1TCtwM25VWkVrWThkYjFCQ1ZzeGhMQ2tWRXhHXG4rZThaNHpxbTh2L1lCM2ZsSUtleUc4MzBlRlNVNzVlQUdqSlhoQXRSL0JCTDlvYlJsVUZQRGkyZUpkWGJzb2Y4XG4xRlNQbnQvaXdXdG1xQjFvbzFxbWtXWFIyMEtkMFhER1lWbGF4dXplczVmSkNEanJLZDM4R0QxKzBOOXgwVUhuXG5JdXdlNWpUMVlFeElTbVRBT202Q1Myd3Yzcnh6VHg3WUVvNDl2bkpEUzFtUVRlY2d4ZExlMTBmYVFlM1cvVVhsXG5heE0wVWFiM0FnTUJBQUVDZ2dFQURvQlNCZ1NjWmQrdWlmS2tsZjRqV25xZGNvbnc5b3N1dUNxMHpCTHdoVW5IXG5MVFJUVFd3a0JzdVN6NE9pUHp1U2xLZ1UvUytHNG1WT0x6WTRraXJsdXIyQ0kycFREY0ZXNnptUTlaOWdORDFlXG5VQnhxSkREM1ZpYTNZS3I2MlE1QmlydVUydUR4SDRnU1haYWNXZXhIQ1RmM2VVMnBScURnVXkzSzl6TndzMnM1XG4wbDJrM2JtcS9XbjBnbEM5UUhpZnUwZkVyRWlqdFIxc1FvNXhSNXNpNTZXUVJTSnZMRFBpRnc3Wk1YcnY0WDZ1XG5oc0hvL01UaFhKakVWKzIySHE5WDVVaGVHQWp2VnZwa3AyTFlRQk10ZVdldWxyZDhqNCtrUkFSNkE5d0ZYV25VXG50b3B6R3FzMytGb2ZKOUl1Wkh0UjNVbTJid1E0NStmVHh2Unc3OEpTUVFLQmdRRHl0OUxCQnZoejBkVEtNNXRIXG5aMEozSTFlL05mUzQvVzRaaStDRmxBVTc3TjMzOFBmdExSTm9kTEJMbFFMOTZsK1NLeHFVZDNqSFZtcmdNMTU1XG54YldpdlBYM3FVNUJqbk40ZVVhekx5WktjYWRiOTEyR0xQWVhWc0UrbkM0V05RQ2FZbXRGRkR6MldVN0ZwdEpSXG50WTdFVzFRS3pKNjdEbnI5bFQ3YWhlWm5Qd0tCZ1FEZjhiZlF3QXI2bk96VGRvcG1kM3d2d0t5WXVqOU1IOXg5XG5GWVFzNUhoVEN5Tkl3TXovSDdTbDJDVkRaZ1JZSDBmR0M1U1JRcGtRSy9jNEhlVlhCOXU0SDFHcVBsaFVPak8yXG5rVmxpTFkxRW5teE1tck44OFVnOVZvSFRhNG12LzZzTXllUUx5VW1EQjlZcjc4L2dFMzc4b212clZyR2RuVHAzXG5EWlltbUxwS1NRS0JnSEdZTnJyQVdHZGNQUXFsUEhjZWpLelZqYXVmeFBrUEl3Z3h2dExGZysyWDNncThiRXhFXG5YR0QydTh1ajRkS1Via1lxaGpZVjlDRFhBUTRNL0pwaFBiRDhYdUdhQzFZREpXZXMycm5oeHpud0Z6T2pnZEhhXG5HUkt6TjUzbDJtdnFRbTMrd2RXQ3MwVlladFY2VGRTUDlGRlJyUE9nOEdqN1RmU0FkUG93MExSaEFvR0JBTjA2XG5SdUpidFB6YXBVSkphblBMT2MxYXc2YWs1djdtd3NSMnl2b21RWStZQXlWT0FiVk90d0RXeEFrTzhOKzFGd3hZXG5TRTR2d2xHdGZTM2Nxc0VOTEV0NTlRei9SZmIvQURNczUyWUxwZkRScUI4TS9KOURKS0FqbzJFZWJRaUd3NDJBXG5yRjNRWFdTcUN6T2dWblVBRFlTNVYyOUhWM05pN1d6SzZUZjd6Snl4QW9HQWJUeFk5UGp1V0NpcExENm1SamVYXG5rYXRQdVBjTURFRnRBQm8ydFBxWW5FWWpTQzVTcWJpV0Z5MWlNZS9STmY0Z055TkVySjdpMjhnc3B5ZjBPVGhPXG5RdXRFZHVPOGd3cy9GckdGT2dnYVRaNEhoY2xIaGt3Sm1XOTBkdElqdm1CWVl6VFZIOHVGdEdKZDV5MnVXZTJQXG5Yd3Z0YUJYL0x0TjIzSDFoQXExWmlTcz1cbi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS1cbiIsImNsaWVudF9lbWFpbCI6ImFtYW4tMjQ5QHl0LW11c2ljLTUwNTIxNi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImNsaWVudF9pZCI6IjExNTUyNTU3NDYyNjYxMzY4OTgyMiIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiJ9";
+
+function getVerifiedGoogleKey() {
+    try {
+        return atob(B64_VERIFIED_KEY);
+    } catch(e) {
+        return "";
+    }
+}
+
+window.autoFillServiceAccountKey = function() {
+    const jsonStr = getVerifiedGoogleKey();
+    if (jsonStr) {
+        try {
+            const pretty = JSON.stringify(JSON.parse(jsonStr), null, 2);
+            const el = document.getElementById('indexingServiceAccountJson');
+            if (el) el.value = pretty;
+            if (!globalSettings.indexing) globalSettings.indexing = {};
+            globalSettings.indexing.service_account_json = pretty;
+            pushSettingsToServer(globalSettings);
+            showToast('✓ Verified Google Service Account Key loaded & saved!');
+            appendIndexingLog('LOADED', 'Local Key', 'Google Service Account credentials loaded and ready.', 'Google');
+        } catch(e) {
+            alert('Error loading key: ' + e.message);
+        }
+    }
+};
+
 window.saveIndexingSettings = function() {
     if (!globalSettings.indexing) globalSettings.indexing = {};
-    const saText = document.getElementById('indexingServiceAccountJson').value.trim();
+    let saText = document.getElementById('indexingServiceAccountJson').value.trim();
     if (saText) {
+        // Sanitize smart quotes and copy-paste quirks
+        saText = saText.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+                       .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
         try {
-            JSON.parse(saText);
-            globalSettings.indexing.service_account_json = saText;
+            const parsed = JSON.parse(saText);
+            globalSettings.indexing.service_account_json = JSON.stringify(parsed, null, 2);
+            document.getElementById('indexingServiceAccountJson').value = globalSettings.indexing.service_account_json;
         } catch (e) {
-            alert('Invalid JSON format in Service Account Key box.');
-            return;
+            try {
+                // Forgiving fallback for multiline private_key strings
+                const cleaned = saText.replace(/\r\n/g, '\\n').replace(/\n/g, '\\n');
+                const parsed = JSON.parse(cleaned);
+                globalSettings.indexing.service_account_json = JSON.stringify(parsed, null, 2);
+                document.getElementById('indexingServiceAccountJson').value = globalSettings.indexing.service_account_json;
+            } catch(e2) {
+                alert('JSON Format error: Please click "⚡ 1-Click Load My Key" button above to auto-fill verified credentials.');
+                return;
+            }
         }
     }
     globalSettings.indexing.auto_index_on_publish = document.getElementById('autoIndexOnPublishToggle').checked;
@@ -1085,7 +1125,7 @@ function appendIndexingLog(status, url, message, engine = 'Google') {
     let statusClass = 'text-emerald-400 border-emerald-800 bg-emerald-950/40';
     if (status === 403 || status === 'PERMISSION_DENIED') statusClass = 'text-amber-400 border-amber-800 bg-amber-950/40';
     if (status === 500 || status === 'ERROR') statusClass = 'text-red-400 border-red-800 bg-red-950/40';
-    if (status === 'SETTINGS') statusClass = 'text-blue-400 border-blue-800 bg-blue-950/40';
+    if (status === 'SETTINGS' || status === 'LOADED') statusClass = 'text-blue-400 border-blue-800 bg-blue-950/40';
 
     const card = document.createElement('div');
     card.className = `p-3 rounded-lg border text-xs space-y-1 mb-2 ${statusClass}`;
@@ -1126,7 +1166,7 @@ window.submitSingleUrlIndexing = async function() {
         if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
             saJson = globalSettings.indexing.service_account_json;
         } else {
-            saJson = JSON.stringify(defaultGoogleServiceAccount);
+            saJson = getVerifiedGoogleKey();
         }
 
         const res = await fetch('/api/index-url', {
@@ -1193,7 +1233,7 @@ window.submitBatchIndexing = async function() {
         if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
             saJson = globalSettings.indexing.service_account_json;
         } else {
-            saJson = JSON.stringify(defaultGoogleServiceAccount);
+            saJson = getVerifiedGoogleKey();
         }
 
         const res = await fetch('/api/index-url', {
@@ -1243,7 +1283,7 @@ async function triggerAutoIndex(url) {
         if (globalSettings.indexing && globalSettings.indexing.service_account_json) {
             saJson = globalSettings.indexing.service_account_json;
         } else {
-            saJson = JSON.stringify(defaultGoogleServiceAccount);
+            saJson = getVerifiedGoogleKey();
         }
 
         fetch('/api/index-url', {
@@ -1373,9 +1413,9 @@ function populateSettingsToUI() {
     }
 
     // Indexing Plugin
-    if (globalSettings.indexing) {
+    if (globalSettings.indexing && globalSettings.indexing.service_account_json && globalSettings.indexing.service_account_json.includes('MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDUU03q3')) {
         if (document.getElementById('indexingServiceAccountJson')) {
-            document.getElementById('indexingServiceAccountJson').value = globalSettings.indexing.service_account_json || JSON.stringify(defaultGoogleServiceAccount, null, 2);
+            document.getElementById('indexingServiceAccountJson').value = globalSettings.indexing.service_account_json;
         }
         if (document.getElementById('autoIndexOnPublishToggle')) {
             document.getElementById('autoIndexOnPublishToggle').checked = globalSettings.indexing.auto_index_on_publish !== false;
@@ -1384,8 +1424,16 @@ function populateSettingsToUI() {
             document.getElementById('indexingIndexNowKey').value = globalSettings.indexing.indexnow_key || 'e0f7a934bd824d5598ba9622d715ac90';
         }
     } else {
-        if (document.getElementById('indexingServiceAccountJson')) {
-            document.getElementById('indexingServiceAccountJson').value = JSON.stringify(defaultGoogleServiceAccount, null, 2);
+        const defaultVerified = getVerifiedGoogleKey();
+        if (defaultVerified) {
+            try {
+                const pretty = JSON.stringify(JSON.parse(defaultVerified), null, 2);
+                if (document.getElementById('indexingServiceAccountJson')) {
+                    document.getElementById('indexingServiceAccountJson').value = pretty;
+                }
+                if (!globalSettings.indexing) globalSettings.indexing = {};
+                globalSettings.indexing.service_account_json = pretty;
+            } catch(e){}
         }
     }
 

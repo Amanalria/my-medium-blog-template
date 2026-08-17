@@ -917,8 +917,13 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider theme-text border-b theme-border pb-3">Service Key Config</h3>
                     
                     <div class="space-y-1.5">
-                        <label class="text-xs font-semibold theme-text">Google Service Account JSON</label>
-                        <textarea id="indexingServiceAccountJson" rows="6" placeholder="Paste full Google Service Account JSON here" class="w-full theme-bg border theme-border theme-text text-[11px] p-2.5 rounded-xl font-mono focus:outline-none leading-tight"></textarea>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold theme-text">Google Service Account JSON</label>
+                            <button type="button" onclick="autoFillServiceAccountKey()" class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline cursor-pointer">
+                                ⚡ 1-Click Load My Key
+                            </button>
+                        </div>
+                        <textarea id="indexingServiceAccountJson" rows="6" placeholder="Paste full Google Service Account JSON here or click '1-Click Load My Key' above" class="w-full theme-bg border theme-border theme-text text-[11px] p-2.5 rounded-xl font-mono focus:outline-none leading-tight"></textarea>
                     </div>
 
                     <div class="space-y-1.5">
