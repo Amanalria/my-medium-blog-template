@@ -71,10 +71,15 @@ function renderStoryDetails(story) {
     if (dateEl) dateEl.textContent = story.date;
     if (readTimeEl) readTimeEl.textContent = story.readTime;
     if (heroImgEl) {
-        heroImgEl.src = story.image;
-        heroImgEl.alt = story.imageAlt || story.title;
-        heroImgEl.loading = "lazy";
-        heroImgEl.decoding = "async";
+        if (story.image) {
+            heroImgEl.src = story.image;
+            heroImgEl.alt = story.imageAlt || story.title;
+            heroImgEl.loading = "lazy";
+            heroImgEl.decoding = "async";
+            if (heroImgEl.parentElement) heroImgEl.parentElement.style.display = 'block';
+        } else {
+            if (heroImgEl.parentElement) heroImgEl.parentElement.style.display = 'none';
+        }
     }
 
     if (proseEl && story.bodyHtml) {
