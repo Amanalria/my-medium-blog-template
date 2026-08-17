@@ -82,8 +82,12 @@
       "dest": "/e0f7a934bd824d5598ba9622d715ac90.txt"
     },
     {
-      "src": "^/api/(.*)$",
-      "dest": "/api/$1"
+      "src": "^/api/index-url/?$",
+      "dest": "/api/index-url.js"
+    },
+    {
+      "src": "^/api/index-url\\.js$",
+      "dest": "/api/index-url.js"
     },
     {
       "src": "^/([a-zA-Z0-9_-]+)/?$",
