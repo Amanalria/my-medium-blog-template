@@ -252,20 +252,36 @@ window.handleNewsletterSubmit = async function(e) {
     }
 };
 
-// 8. Fetch Data from Supabase
+// 8. Instant Cache Hydration & Supabase Background Sync
+function hydrateFromCache() {
+    try {
+        const cachedSettings = localStorage.getItem('cached_settings');
+        if (cachedSettings) {
+            globalSettings = JSON.parse(cachedSettings);
+            applyLiveSettings(globalSettings);
+        }
+        const cachedArticles = localStorage.getItem('cached_articles');
+        if (cachedArticles) {
+            mediumStories = JSON.parse(cachedArticles);
+            renderStoriesFeed(mediumStories);
+        }
+    } catch (e) {}
+}
+
 async function loadLiveFeedData() {
     const client = window.supabaseClient;
 
     if (client) {
         try {
             const [artRes, setRes] = await Promise.all([
-                client.from('articles').select('*').order('created_at', { ascending: false }),
+                client.from('articles').select('id, slug, title, subtitle, author, date, read_time, category, tags, image, image_alt, body_html, status').order('created_at', { ascending: false }),
                 client.from('site_settings').select('*').eq('key', 'global_settings').single()
             ]);
 
             if (!setRes.error && setRes.data && setRes.data.value) {
                 const parsed = typeof setRes.data.value === 'string' ? JSON.parse(setRes.data.value) : setRes.data.value;
                 globalSettings = parsed;
+                localStorage.setItem('cached_settings', JSON.stringify(globalSettings));
                 applyLiveSettings(globalSettings);
             }
 
@@ -284,13 +300,18 @@ async function loadLiveFeedData() {
                     imageAlt: item.image_alt,
                     bodyHtml: item.body_html
                 }));
+                localStorage.setItem('cached_articles', JSON.stringify(mediumStories));
+                renderStoriesFeed(mediumStories);
             }
+            return;
         } catch (e) {
             console.warn("Supabase load error:", e);
         }
     }
 
-    renderStoriesFeed(mediumStories);
+    if (mediumStories.length === 0) {
+        renderStoriesFeed([]);
+    }
 }
 
 function applyLiveSettings(s) {
@@ -312,5 +333,7 @@ function applyLiveSettings(s) {
     renderDynamicCategories(s.categories || []);
 }
 
-// Initial Load
+// 0ms Instant Hydration + Background SWR
+hydrateFromCache();
 loadLiveFeedData();
+

@@ -1,23 +1,74 @@
 {
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "^/(styles\\.css|app\\.js|post\\.js|admin\\.js|supabase-client\\.js|robots\\.txt|sitemap\\.xml)$",
       "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800"
       },
-      "continue": true
+      "dest": "/$1"
     },
-    { "src": "^/$", "dest": "/index.html" },
-    { "src": "^/index\\.html$", "dest": "/index.html" },
-    { "src": "^/admin/?$", "dest": "/admin.html" },
-    { "src": "^/about/?$", "dest": "/about.html" },
-    { "src": "^/contact/?$", "dest": "/contact.html" },
-    { "src": "^/privacy/?$", "dest": "/privacy.html" },
-    { "src": "^/terms/?$", "dest": "/terms.html" },
-    { "src": "^/disclaimer/?$", "dest": "/disclaimer.html" },
-    { "src": "^/(styles\\.css|app\\.js|post\\.js|admin\\.js|supabase-client\\.js|supabase_schema\\.sql|robots\\.txt|sitemap\\.xml)$", "dest": "/$1" },
-    { "src": "^/([a-zA-Z0-9_-]+)/?$", "dest": "/post.html" }
+    {
+      "src": "^/$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=86400"
+      },
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/index\\.html$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=86400"
+      },
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/admin/?$",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      },
+      "dest": "/admin.html"
+    },
+    {
+      "src": "^/about/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+      },
+      "dest": "/about.html"
+    },
+    {
+      "src": "^/contact/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+      },
+      "dest": "/contact.html"
+    },
+    {
+      "src": "^/privacy/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+      },
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "^/terms/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+      },
+      "dest": "/terms.html"
+    },
+    {
+      "src": "^/disclaimer/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+      },
+      "dest": "/disclaimer.html"
+    },
+    {
+      "src": "^/([a-zA-Z0-9_-]+)/?$",
+      "headers": {
+        "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=86400"
+      },
+      "dest": "/post.html"
+    }
   ]
 }

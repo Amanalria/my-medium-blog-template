@@ -305,21 +305,46 @@ function renderPostCategories(categories) {
     container.innerHTML = html;
 }
 
-// 10. Load Live Story
+// 10. Instant Cache Hydration & Supabase Background Sync
+function hydratePostFromCache() {
+    try {
+        const cachedArticles = localStorage.getItem('cached_articles');
+        const cachedSettings = localStorage.getItem('cached_settings');
+        if (cachedSettings) {
+            globalSettings = JSON.parse(cachedSettings);
+            if (globalSettings.brand_color) {
+                document.documentElement.style.setProperty('--accent-green', globalSettings.brand_color);
+            }
+            renderPostCategories(globalSettings.categories || []);
+        }
+        if (cachedArticles && currentSlug) {
+            const list = JSON.parse(cachedArticles);
+            const found = list.find(s => s.slug === currentSlug);
+            if (found) {
+                currentStory = found;
+                renderStoryDetails(currentStory);
+                injectRelatedStories(list, currentStory);
+                injectTrendingList(list, currentStory);
+            }
+        }
+    } catch (e) {}
+}
+
 async function loadLiveStory() {
     const client = window.supabaseClient;
 
     if (client && currentSlug) {
         try {
-            const [artRes, setRes, singleArtRes] = await Promise.all([
-                client.from('articles').select('*'),
+            const [setRes, singleArtRes, artRes] = await Promise.all([
                 client.from('site_settings').select('*').eq('key', 'global_settings').single(),
-                client.from('articles').select('*').eq('slug', currentSlug).single()
+                client.from('articles').select('*').eq('slug', currentSlug).single(),
+                client.from('articles').select('id, slug, title, subtitle, author, date, read_time, category, tags, image, image_alt, body_html, status').limit(8)
             ]);
 
             if (!setRes.error && setRes.data && setRes.data.value) {
                 const parsed = typeof setRes.data.value === 'string' ? JSON.parse(setRes.data.value) : setRes.data.value;
                 globalSettings = parsed;
+                localStorage.setItem('cached_settings', JSON.stringify(globalSettings));
                 if (globalSettings.brand_color) {
                     document.documentElement.style.setProperty('--accent-green', globalSettings.brand_color);
                 }
@@ -360,6 +385,7 @@ async function loadLiveStory() {
                     bodyHtml: item.body_html,
                     status: item.status
                 }));
+                localStorage.setItem('cached_articles', JSON.stringify(mediumStories));
             }
 
             renderStoryDetails(currentStory);
@@ -372,8 +398,12 @@ async function loadLiveStory() {
         }
     }
 
-    renderStoryDetails(null);
+    if (!currentStory) {
+        renderStoryDetails(null);
+    }
 }
 
-// Initial Load
+// 0ms Instant Hydration + Background SWR
+hydratePostFromCache();
 loadLiveStory();
+
