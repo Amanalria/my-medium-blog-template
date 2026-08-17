@@ -343,18 +343,24 @@ function updateThemeIcons() {
 
 updateThemeIcons();
 
+function getClient() {
+    return window.supabaseClient || (window.supabase && typeof window.supabase.createClient === 'function' ? window.supabase.createClient("https://dpludxwkiunmfenjjafh.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbHVkeHdraXVubWZlbmpqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NTQzMzUsImV4cCI6MjEwMjUzMDMzNX0.HR6PY7V1do9uV1g0WwRpBhZYOVXszCMknmMoMZrkAoY") : null);
+}
+
 // 10. Load Live Articles & Settings from Supabase Cloud or Local API
 async function loadLiveFeedData() {
+    const client = getClient();
     // 1. Try Supabase Cloud Database first
-    if (supabaseClient) {
+    if (client) {
         try {
             const [artRes, setRes] = await Promise.all([
-                supabaseClient.from('articles').select('*').order('created_at', { ascending: false }),
-                supabaseClient.from('site_settings').select('*').eq('key', 'global_settings').single()
+                client.from('articles').select('*').order('created_at', { ascending: false }),
+                client.from('site_settings').select('*').eq('key', 'global_settings').single()
             ]);
 
             if (!setRes.error && setRes.data && setRes.data.value) {
-                globalSettings = Object.assign(globalSettings, setRes.data.value);
+                const parsed = typeof setRes.data.value === 'string' ? JSON.parse(setRes.data.value) : setRes.data.value;
+                globalSettings = Object.assign(globalSettings, parsed);
                 applyLiveSettings(globalSettings);
             }
 

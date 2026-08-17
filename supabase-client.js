@@ -7,14 +7,19 @@ const SUPABASE_CONFIG = {
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbHVkeHdraXVubWZlbmpqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NTQzMzUsImV4cCI6MjEwMjUzMDMzNX0.HR6PY7V1do9uV1g0WwRpBhZYOVXszCMknmMoMZrkAoY" 
 };
 
-// Check if Supabase SDK is available
-let supabaseClient = null;
+// Expose globally on window for all scripts
+window.supabaseClient = null;
 
-if (typeof supabase !== 'undefined' && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
-    try {
-        supabaseClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-        console.log("✓ Connected to Supabase Cloud Database: https://dpludxwkiunmfenjjafh.supabase.co");
-    } catch (e) {
-        console.warn("Supabase init fallback:", e);
+function initSupabase() {
+    const sdk = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
+    if (sdk && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
+        try {
+            window.supabaseClient = sdk.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            console.log("✓ Connected to Supabase Cloud Database: https://dpludxwkiunmfenjjafh.supabase.co");
+        } catch (e) {
+            console.warn("Supabase init fallback:", e);
+        }
     }
 }
+
+initSupabase();

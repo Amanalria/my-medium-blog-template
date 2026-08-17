@@ -67,6 +67,10 @@ let featuredCompressedResult = null;
 let modalPendingFile = null;
 let modalCompressedResult = null;
 
+function getClient() {
+    return window.supabaseClient || (window.supabase && typeof window.supabase.createClient === 'function' ? window.supabase.createClient("https://dpludxwkiunmfenjjafh.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbHVkeHdraXVubWZlbmpqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NTQzMzUsImV4cCI6MjEwMjUzMDMzNX0.HR6PY7V1do9uV1g0WwRpBhZYOVXszCMknmMoMZrkAoY") : null);
+}
+
 // 1. Toast Notification Helper
 function showToast(msg) {
     const toast = document.getElementById('toastNotification');
@@ -242,7 +246,7 @@ window.executeFeaturedUpload = async function() {
     if (!customName) customName = featuredCompressedResult.defaultName;
     if (!customName.endsWith('.webp')) customName += '.webp';
 
-    // Direct WebP DataURL assignment for 100% serverless Vercel + Supabase storage
+    // Direct WebP DataURL assignment
     document.getElementById('editStoryImage').value = featuredCompressedResult.dataUrl;
     if (!document.getElementById('editStoryImageAlt').value) {
         document.getElementById('editStoryImageAlt').value = customName.replace('.webp', '').replace(/-/g, ' ');
@@ -474,7 +478,7 @@ window.resetEditorForm = function() {
 };
 
 window.saveStory = async function(status = 'published') {
-    const id = document.getElementById('editStoryId').value.trim();
+    let id = document.getElementById('editStoryId').value.trim();
     const title = document.getElementById('editStoryTitle').value.trim();
     const subtitle = document.getElementById('editStorySubtitle').value.trim();
     let slug = document.getElementById('editStorySlug').value.trim();
@@ -497,7 +501,13 @@ window.saveStory = async function(status = 'published') {
         return;
     }
 
+    if (!id) {
+        id = 'art_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+        document.getElementById('editStoryId').value = id;
+    }
+
     const payload = {
+        id,
         slug,
         title,
         subtitle,
@@ -508,7 +518,7 @@ window.saveStory = async function(status = 'published') {
         author_initials: author.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         read_time: readTime,
-        is_member: isMember,
+        is_member: isMember ? 1 : 0,
         image,
         image_alt: imageAlt,
         body_html: bodyHtml,
@@ -516,12 +526,13 @@ window.saveStory = async function(status = 'published') {
         meta_title: `${title} | Medium`,
         meta_description: subtitle || title
     };
-    if (id) payload.id = id;
+
+    const client = getClient();
 
     // 1. Direct Supabase Cloud Save
-    if (supabaseClient) {
+    if (client) {
         try {
-            const { data, error } = await supabaseClient.from('articles').upsert([payload], { onConflict: 'slug' });
+            const { data, error } = await client.from('articles').upsert([payload], { onConflict: 'slug' });
             if (error) {
                 console.error("Supabase upsert error:", error);
                 throw error;
@@ -530,26 +541,23 @@ window.saveStory = async function(status = 'published') {
             loadManageStories();
             return;
         } catch (supaErr) {
-            console.warn("Supabase save failed, trying local fallback:", supaErr);
+            console.error("Supabase error detail:", supaErr);
+            alert(`Supabase Error: ${supaErr.message || JSON.stringify(supaErr)}`);
+            return;
         }
     }
 
     // 2. Local Python Server Fallback
     try {
-        const localPayload = {
-            id: id || undefined,
-            title, subtitle, slug, category, tags, author,
-            publication: payload.publication,
+        const localPayload = Object.assign({}, payload, {
+            isMember: isMember,
+            imageAlt: imageAlt,
+            bodyHtml: bodyHtml,
+            readTime: readTime,
             authorInitials: payload.author_initials,
-            date: payload.date,
-            readTime: payload.read_time,
-            isMember: payload.is_member,
-            image, imageAlt: payload.image_alt,
-            bodyHtml: payload.body_html,
-            status,
             metaTitle: payload.meta_title,
             metaDescription: payload.meta_description
-        };
+        });
         const res = await fetch(`${API_BASE}/api/v1/articles`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -569,11 +577,11 @@ window.saveStory = async function(status = 'published') {
 
 // 9. Manage Stories Table (Supabase + Local)
 async function loadManageStories() {
-    // 1. Try Supabase
-    if (supabaseClient) {
+    const client = getClient();
+    if (client) {
         try {
-            const { data, error } = await supabaseClient.from('articles').select('*').order('created_at', { ascending: false });
-            if (!error && data && data.length > 0) {
+            const { data, error } = await client.from('articles').select('*').order('created_at', { ascending: false });
+            if (!error && data) {
                 allAdminStories = data.map(item => ({
                     id: item.id,
                     slug: item.slug,
@@ -586,7 +594,7 @@ async function loadManageStories() {
                     readTime: item.read_time,
                     category: item.category,
                     tags: item.tags,
-                    isMember: item.is_member,
+                    isMember: Boolean(item.is_member),
                     image: item.image,
                     imageAlt: item.image_alt,
                     bodyHtml: item.body_html,
@@ -604,7 +612,6 @@ async function loadManageStories() {
         }
     }
 
-    // 2. Local API Fallback
     try {
         const res = await fetch(`${API_BASE}/api/v1/articles`);
         const data = await res.json();
@@ -615,7 +622,6 @@ async function loadManageStories() {
             if (countBadge) countBadge.textContent = allAdminStories.length.toString();
         }
     } catch (err) {
-        // Fallback initial
         if (allAdminStories.length > 0) renderManageTable(allAdminStories);
     }
 }
@@ -692,9 +698,10 @@ window.editStoryFromTable = function(id) {
 window.deleteStoryFromTable = async function(id) {
     if (!confirm('Are you sure you want to delete this story? This cannot be undone.')) return;
 
-    if (supabaseClient) {
+    const client = getClient();
+    if (client) {
         try {
-            await supabaseClient.from('articles').delete().eq('id', id);
+            await client.from('articles').delete().eq('id', id);
             showToast('✓ Story deleted from Supabase');
             loadManageStories();
             return;
@@ -728,7 +735,6 @@ window.generateStoryWithAI = async function() {
         btn.innerHTML = `<span>⏳ Synthesizing Technical SEO Draft...</span>`;
     }
 
-    // Client-side AI Synthesizer fallback if offline/serverless
     const cleanTopic = promptText.replace(/[^\w\s]/gi, '').trim();
     const title = cleanTopic.length > 5 ? cleanTopic.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "Next-Gen Engineering Architectures";
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -871,12 +877,13 @@ function populateCategoryDropdowns(categories) {
 
 // 12. Load Global Settings & Populate UI (Supabase + Local)
 async function loadGlobalSettings() {
-    // 1. Try Supabase Cloud
-    if (supabaseClient) {
+    const client = getClient();
+    if (client) {
         try {
-            const { data, error } = await supabaseClient.from('site_settings').select('*').eq('key', 'global_settings').single();
+            const { data, error } = await client.from('site_settings').select('*').eq('key', 'global_settings').single();
             if (!error && data && data.value) {
-                globalSettings = Object.assign(globalSettings, data.value);
+                const parsed = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+                globalSettings = Object.assign(globalSettings, parsed);
                 populateSettingsToUI();
                 updateDomainPrefix();
                 return;
@@ -886,7 +893,6 @@ async function loadGlobalSettings() {
         }
     }
 
-    // 2. Local API Fallback
     try {
         const res = await fetch(`${API_BASE}/api/v1/settings`);
         const data = await res.json();
@@ -982,11 +988,12 @@ window.updateGooglePreview = function() {
 
 // 14. Push Settings API Helper (Supabase + Local)
 async function pushSettingsToServer(updatedSettings) {
-    if (supabaseClient) {
+    const client = getClient();
+    if (client) {
         try {
-            const { error } = await supabaseClient.from('site_settings').upsert({
+            const { error } = await client.from('site_settings').upsert({
                 key: 'global_settings',
-                value: updatedSettings,
+                value: JSON.stringify(updatedSettings),
                 updated_at: new Date().toISOString()
             });
             if (!error) {

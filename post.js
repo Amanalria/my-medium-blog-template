@@ -301,18 +301,24 @@ function updateThemeIcons() {
 
 updateThemeIcons();
 
+function getClient() {
+    return window.supabaseClient || (window.supabase && typeof window.supabase.createClient === 'function' ? window.supabase.createClient("https://dpludxwkiunmfenjjafh.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbHVkeHdraXVubWZlbmpqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NTQzMzUsImV4cCI6MjEwMjUzMDMzNX0.HR6PY7V1do9uV1g0WwRpBhZYOVXszCMknmMoMZrkAoY") : null);
+}
+
 // 12. Load Live Story from Supabase Cloud or Local API
 async function loadLiveStory() {
+    const client = getClient();
     // 1. Try Supabase Cloud first
-    if (supabaseClient) {
+    if (client) {
         try {
             const [artRes, setRes] = await Promise.all([
-                supabaseClient.from('articles').select('*'),
-                supabaseClient.from('site_settings').select('*').eq('key', 'global_settings').single()
+                client.from('articles').select('*'),
+                client.from('site_settings').select('*').eq('key', 'global_settings').single()
             ]);
 
             if (!setRes.error && setRes.data && setRes.data.value) {
-                globalSettings = Object.assign(globalSettings, setRes.data.value);
+                const parsed = typeof setRes.data.value === 'string' ? JSON.parse(setRes.data.value) : setRes.data.value;
+                globalSettings = Object.assign(globalSettings, parsed);
                 if (globalSettings.brand_color) {
                     document.documentElement.style.setProperty('--accent-green', globalSettings.brand_color);
                 }
