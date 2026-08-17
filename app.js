@@ -273,15 +273,7 @@ function renderWhoToFollow(list) {
     }).join('');
 }
 
-const defaultCategories = [
-    { id: 'agentic-ai', label: 'Agentic AI' },
-    { id: 'ai-architecture', label: 'AI Architecture' },
-    { id: 'machine-learning', label: 'Machine Learning' },
-    { id: 'deep-learning', label: 'Deep Learning' },
-    { id: 'prompt-engineering', label: 'Prompt Engineering' },
-    { id: 'software-engineering', label: 'Software Engineering' },
-    { id: 'autonomous-agents', label: 'Autonomous Agents' }
-];
+const defaultCategories = [];
 
 // 6. Category Selection & Dynamic Render
 window.selectCategory = function(catId) {
