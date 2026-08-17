@@ -311,9 +311,10 @@ async function loadLiveStory() {
     // 1. Try Supabase Cloud first
     if (client) {
         try {
-            const [artRes, setRes] = await Promise.all([
+            const [artRes, setRes, singleArtRes] = await Promise.all([
                 client.from('articles').select('*'),
-                client.from('site_settings').select('*').eq('key', 'global_settings').single()
+                client.from('site_settings').select('*').eq('key', 'global_settings').single(),
+                client.from('articles').select('*').eq('slug', currentSlug).single()
             ]);
 
             if (!setRes.error && setRes.data && setRes.data.value) {
@@ -324,7 +325,51 @@ async function loadLiveStory() {
                 }
             }
 
-            if (!artRes.error && artRes.data && artRes.data.length > 0) {
+            if (!singleArtRes.error && singleArtRes.data) {
+                const item = singleArtRes.data;
+                currentStory = {
+                    id: item.id,
+                    slug: item.slug,
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    author: item.author,
+                    publication: item.publication,
+                    authorInitials: item.author_initials,
+                    date: item.date,
+                    readTime: item.read_time,
+                    category: item.category,
+                    tags: item.tags,
+                    isMember: Boolean(item.is_member),
+                    image: item.image,
+                    imageAlt: item.image_alt,
+                    bodyHtml: item.body_html,
+                    status: item.status
+                };
+            } else if (!artRes.error && artRes.data && artRes.data.length > 0) {
+                const found = artRes.data.find(s => s.slug === currentSlug);
+                if (found) {
+                    currentStory = {
+                        id: found.id,
+                        slug: found.slug,
+                        title: found.title,
+                        subtitle: found.subtitle,
+                        author: found.author,
+                        publication: found.publication,
+                        authorInitials: found.author_initials,
+                        date: found.date,
+                        readTime: found.read_time,
+                        category: found.category,
+                        tags: found.tags,
+                        isMember: Boolean(found.is_member),
+                        image: found.image,
+                        imageAlt: found.image_alt,
+                        bodyHtml: found.body_html,
+                        status: found.status
+                    };
+                }
+            }
+
+            if (!artRes.error && artRes.data) {
                 mediumStories = artRes.data.map(item => ({
                     id: item.id,
                     slug: item.slug,
@@ -337,19 +382,18 @@ async function loadLiveStory() {
                     readTime: item.read_time,
                     category: item.category,
                     tags: item.tags,
-                    isMember: item.is_member,
+                    isMember: Boolean(item.is_member),
                     image: item.image,
                     imageAlt: item.image_alt,
                     bodyHtml: item.body_html,
                     status: item.status
                 }));
-                const found = mediumStories.find(s => s.slug === currentSlug);
-                if (found) currentStory = found;
-                renderStoryDetails(currentStory);
-                injectRelatedStories(mediumStories, currentStory);
-                injectTrendingList(mediumStories, currentStory);
-                return;
             }
+
+            renderStoryDetails(currentStory);
+            injectRelatedStories(mediumStories, currentStory);
+            injectTrendingList(mediumStories, currentStory);
+            return;
         } catch(e) {
             console.warn("Supabase fetch failed on post:", e);
         }
