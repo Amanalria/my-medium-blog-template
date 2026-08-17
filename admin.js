@@ -65,24 +65,23 @@ function showToast(msg) {
 
 // 2. Tab Navigation
 window.switchAdminTab = function(tabId) {
-    const tabs = ['editorTab', 'imageStudioTab', 'storiesTab', 'categoryTab', 'supabaseTab', 'siteTab', 'seoTab', 'socialTab', 'pluginsTab', 'indexingTab', 'adsTab'];
-    
-    tabs.forEach(t => {
-        const el = document.getElementById(t);
-        const btn = document.getElementById(`tabBtn_${t}`);
-        if (el) el.style.display = (t === tabId) ? 'block' : 'none';
-        if (btn) {
-            const isActive = t === tabId;
-            btn.classList.toggle('bg-zinc-900', isActive);
-            btn.classList.toggle('text-white', isActive);
-            btn.classList.toggle('dark:bg-zinc-100', isActive);
-            btn.classList.toggle('dark:text-zinc-900', isActive);
-            btn.classList.toggle('theme-muted', !isActive);
-        }
+    const sections = document.querySelectorAll('main > section');
+    sections.forEach(sec => {
+        sec.style.display = (sec.id === tabId) ? 'block' : 'none';
     });
 
-    if (tabId === 'storiesTab') loadManageStories();
-    populateSettingsToUI();
+    const buttons = document.querySelectorAll('.admin-tab-btn');
+    buttons.forEach(btn => {
+        const isActive = (btn.id === `tabBtn_${tabId}`);
+        btn.classList.toggle('bg-zinc-900', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('dark:bg-zinc-100', isActive);
+        btn.classList.toggle('dark:text-zinc-900', isActive);
+        btn.classList.toggle('theme-muted', !isActive);
+    });
+
+    if (tabId === 'storiesTab' && typeof loadManageStories === 'function') loadManageStories();
+    if (typeof populateSettingsToUI === 'function') populateSettingsToUI();
 };
 
 // 3. Theme Toggle
