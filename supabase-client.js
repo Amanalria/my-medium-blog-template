@@ -1,25 +1,34 @@
-// Supabase Free Cloud Database Connector for Synapse Medium CMS
+// ================================================================
+// SUPABASE CLIENT INITIALIZER (CLOUD NATIVE & ZERO CONFIG CRASH)
+// ================================================================
 
-const SUPABASE_CONFIG = {
-    // 1. Supabase Project URL
-    url: "https://dpludxwkiunmfenjjafh.supabase.co", 
-    // 2. Supabase Public Anon Key
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbHVkeHdraXVubWZlbmpqYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NTQzMzUsImV4cCI6MjEwMjUzMDMzNX0.HR6PY7V1do9uV1g0WwRpBhZYOVXszCMknmMoMZrkAoY" 
-};
+(function () {
+    // 1. You can paste your Supabase Project details here or configure via Admin Studio -> Site Settings
+    const SUPABASE_CONFIG = {
+        url: localStorage.getItem('supabase_url') || "",
+        anonKey: localStorage.getItem('supabase_anon_key') || ""
+    };
 
-// Expose globally on window for all scripts
-window.supabaseClient = null;
+    let client = null;
 
-function initSupabase() {
-    const sdk = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
-    if (sdk && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
+    if (SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && window.supabase && typeof window.supabase.createClient === 'function') {
         try {
-            window.supabaseClient = sdk.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-            console.log("✓ Connected to Supabase Cloud Database: https://dpludxwkiunmfenjjafh.supabase.co");
+            client = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
         } catch (e) {
-            console.warn("Supabase init fallback:", e);
+            console.warn("Supabase init error:", e);
         }
     }
-}
 
-initSupabase();
+    // Attach globally
+    window.supabaseConfig = SUPABASE_CONFIG;
+    window.supabaseClient = client;
+
+    // Helper to dynamically update credentials from Admin UI
+    window.updateSupabaseCredentials = function (url, key) {
+        if (url) localStorage.setItem('supabase_url', url.trim());
+        if (key) localStorage.setItem('supabase_anon_key', key.trim());
+        if (window.supabase && typeof window.supabase.createClient === 'function' && url && key) {
+            window.supabaseClient = window.supabase.createClient(url.trim(), key.trim());
+        }
+    };
+})();

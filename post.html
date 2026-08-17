@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Medium – Where good ideas find you.</title>
+    <title>Medium – Story Reader</title>
     <meta name="description" content="Discover stories, thinking, and expertise.">
-    <link rel="canonical" href="https://agentic-ai-beta-two.vercel.app/">
+    <link rel="canonical" href="/">
 
     <!-- Theme Initialization Script (Zero-FOUC) -->
     <script>
         (function() {
-            try {
-                const saved = localStorage.getItem('medium_theme') || 'light';
-                if (saved === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                } else {
-                    document.documentElement.classList.add('light');
-                    document.documentElement.classList.remove('dark');
-                }
-            } catch(e) {}
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         })();
     </script>
-
-    <!-- Performance DNS Prefetch & Preconnect Hints -->
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,32 +28,27 @@
             theme: {
                 extend: {
                     colors: {
-                        mediumGreen: '#1a8917',
-                        mediumGreenDark: '#156d12',
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                        serif: ['Newsreader', 'Charter', 'Georgia', 'serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+                        brandGreen: '#1a8917',
+                        darkGreen: '#156d12'
                     }
                 }
             }
         }
     </script>
-    
+
     <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="theme-bg theme-text font-serif antialiased overflow-x-hidden w-full min-h-screen transition-colors duration-200 flex flex-col justify-between">
+<body class="theme-bg theme-text font-sans antialiased overflow-x-hidden w-full min-h-screen transition-colors duration-200 flex flex-col justify-between">
 
-    <!-- 1. Reading Progress Bar -->
-    <div id="scrollProgress" class="fixed top-0 left-0 h-0.5 bg-emerald-600 z-50 transition-all duration-75" style="width: 0%;"></div>
+    <!-- Reading Progress Bar -->
+    <div id="scrollProgress" class="fixed top-0 left-0 h-[3px] bg-emerald-600 z-50 transition-all duration-75" style="width: 0%;"></div>
 
-    <!-- 2. Medium Header Navigation Bar -->
+    <!-- 1. Header Navigation Bar -->
     <header class="w-full border-b theme-border sticky top-0 z-40 theme-bg/95 backdrop-blur-md px-4 sm:px-8 py-3.5 font-sans">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <a href="/" class="flex items-center gap-2">
-                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text">Medium</span>
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
                 </a>
             </div>
 
@@ -124,7 +107,7 @@
         </div>
     </header>
 
-    <!-- 3. Medium Main Article Container -->
+    <!-- 2. Medium Main Article Container -->
     <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 flex-1 w-full">
 
         <!-- Story Title & Subtitle -->
@@ -135,7 +118,7 @@
             <p id="storySubtitle" class="text-lg sm:text-xl theme-muted font-sans font-normal leading-relaxed"></p>
         </header>
 
-        <!-- Author Card & Share / Dynamic Response Stats -->
+        <!-- Author Card (Hidden until real story loads) -->
         <div id="authorTopBar" class="hidden items-center justify-between border-y theme-border py-4 font-sans text-xs">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-xs" id="storyAuthorAvatar">
@@ -149,9 +132,9 @@
                         </button>
                     </div>
                     <div class="flex items-center gap-2 theme-muted text-[11px] pt-0.5">
-                        <span id="storyReadTime">1 min read</span>
+                        <span id="storyReadTime">5 min read</span>
                         <span>•</span>
-                        <span id="storyDate">Today</span>
+                        <span id="storyDate">Published</span>
                     </div>
                 </div>
             </div>
@@ -195,7 +178,7 @@
         <!-- Article Tags Container -->
         <div id="storyTagsContainer" class="flex flex-wrap items-center gap-2 pt-6"></div>
 
-        <!-- 4. Social Sharing Bar (WhatsApp, Twitter/X, Facebook, Copy Link) -->
+        <!-- 3. Social Sharing Bar (Hidden until real story loads) -->
         <section id="socialShareSection" class="hidden border-y theme-border py-6 my-8 space-y-3 font-sans">
             <div class="flex items-center justify-between flex-wrap gap-4">
                 <span class="text-xs font-bold uppercase tracking-wider theme-text">Share this article</span>
@@ -237,7 +220,7 @@
             </div>
         </section>
 
-        <!-- 5. Author Profile Bio Card -->
+        <!-- 4. Author Profile Bio Card (Hidden until real story loads) -->
         <footer id="authorBioFooter" class="hidden border-t theme-border pt-8 space-y-4 font-sans">
             <div class="p-6 rounded-2xl theme-card border theme-border space-y-3">
                 <div class="flex items-center gap-3">
@@ -252,7 +235,7 @@
             </div>
         </footer>
 
-        <!-- 6. Responses / Dynamic Comments Section -->
+        <!-- 5. Responses / Dynamic Comments Section (Hidden until real story loads) -->
         <section id="responsesSection" class="hidden border-t theme-border pt-8 space-y-4 font-sans">
             <div class="flex items-center justify-between">
                 <h3 class="font-bold text-sm theme-text">
@@ -276,7 +259,7 @@
             </div>
         </section>
 
-        <!-- 7. Related Stories Section (2-3 Stories) -->
+        <!-- 6. Related Stories Section -->
         <section class="border-t theme-border pt-10 space-y-6 font-sans">
             <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
                 Recommended Stories
@@ -287,10 +270,9 @@
             </div>
         </section>
 
-        <!-- 8. Stacked Bottom Sidebar Sections (Categories + Trending) -->
+        <!-- 7. Topics & Trending Footer Stack -->
         <section class="border-t theme-border pt-10 space-y-8 font-sans">
             
-            <!-- Bottom Categories Section -->
             <div class="space-y-3">
                 <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
                     Recommended Topics
@@ -300,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- Bottom Trending Stories List -->
             <div class="space-y-4 border-t theme-border pt-6">
                 <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
                     Trending on Medium
@@ -314,12 +295,12 @@
 
     </main>
 
-    <!-- 9. Clean Production Footer -->
+    <!-- 8. Footer -->
     <footer class="border-t theme-border theme-hero-bg w-full py-8 px-4 sm:px-8 mt-12 font-sans text-xs">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-                <a href="/" class="font-serif font-black text-lg theme-text">Medium</a>
-                <span class="theme-muted">• © 2026 Medium. All rights reserved.</span>
+                <a href="/" class="font-serif font-black text-lg theme-text site-logo-text">Medium</a>
+                <span class="theme-muted site-copyright-text">• © 2026 Medium. All rights reserved.</span>
             </div>
             <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 theme-muted text-xs font-medium">
                 <a href="/about" class="hover:theme-text transition-colors">About Us</a>
@@ -331,12 +312,12 @@
         </div>
     </footer>
 
-    <!-- 10. Mobile Navigation Drawer -->
+    <!-- 9. Mobile Navigation Drawer -->
     <div id="mobileDrawer" style="display: none;" class="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-md flex justify-end font-sans">
         <div class="drawer-content-animate theme-card border-l theme-border w-full max-w-xs h-full p-6 space-y-6 flex flex-col justify-between shadow-2xl overflow-y-auto" onclick="event.stopPropagation()">
             <div class="space-y-6">
                 <div class="flex items-center justify-between border-b theme-border pb-4">
-                    <span class="font-serif font-black text-2xl tracking-tighter theme-text">Medium</span>
+                    <span class="font-serif font-black text-2xl tracking-tighter theme-text site-logo-text">Medium</span>
                     <button type="button" onclick="window.closeMobileDrawer()" class="framer-tap p-1.5 text-zinc-400 hover:theme-text cursor-pointer">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -355,6 +336,7 @@
                     <label class="text-[11px] font-mono uppercase tracking-wider theme-muted">Pages</label>
                     <nav class="space-y-1 text-sm font-medium">
                         <a href="/" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg">Home Feed</a>
+                        <a href="/admin" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg font-semibold text-emerald-600">Admin Studio</a>
                         <a href="/about" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg">About Us</a>
                         <a href="/contact" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg">Contact</a>
                         <a href="/privacy" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg">Privacy Policy</a>
@@ -371,10 +353,10 @@
         </div>
     </div>
 
-    <!-- Supabase Free Cloud Client -->
+    <!-- Supabase JS Client & Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/supabase-client.js"></script>
-    <!-- Story Script -->
+    <!-- Story Reader Script -->
     <script src="/post.js"></script>
 </body>
 </html>
