@@ -3,10 +3,12 @@
 // ================================================================
 
 (function () {
-    // 1. You can paste your Supabase Project details here or configure via Admin Studio -> Site Settings
+    const DEFAULT_URL = "https://okpyphrqudeeoboesdzz.supabase.co";
+    const DEFAULT_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcHlwaHJxdWRlZW9ib2VzZHp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NjYxNDUsImV4cCI6MjEwMjU0MjE0NX0.jyg2OqFSx_qtfkkPHU0E_VINxJgtYSK_70UpFLd_X2k";
+
     const SUPABASE_CONFIG = {
-        url: localStorage.getItem('supabase_url') || "",
-        anonKey: localStorage.getItem('supabase_anon_key') || ""
+        url: localStorage.getItem('supabase_url') || DEFAULT_URL,
+        anonKey: localStorage.getItem('supabase_anon_key') || DEFAULT_ANON_KEY
     };
 
     let client = null;
