@@ -1,9 +1,15 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
-    {
-      "source": "/(?!admin|about|contact|privacy|terms|disclaimer|sitemap\\.xml|robots\\.txt|ads\\.txt|.*\\..*)(.+)",
-      "destination": "/post.html"
-    }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/disclaimer", "destination": "/disclaimer.html" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/ads.txt", "destination": "/ads.txt" },
+    { "source": "/:slug((?!styles|app|admin|post|supabase-client|assets|favicon|.*\\..*).*)", "destination": "/post.html" }
   ]
 }
