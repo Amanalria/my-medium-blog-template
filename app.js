@@ -203,21 +203,64 @@ function renderSidebarLatestPosts(list) {
     if (!container) return;
 
     if (!list || list.length === 0) {
-        container.innerHTML = `<p class="text-xs theme-muted">No stories published yet.</p>`;
+        container.innerHTML = `<p class="text-xs theme-muted">No picks yet.</p>`;
         return;
     }
 
-    const latest = list.slice(0, 5);
-    container.innerHTML = latest.map(s => `
-        <a href="/${s.slug}" class="block space-y-1 group">
-            <div class="flex items-center gap-2 theme-muted text-[11px] font-mono">
-                <span>${s.author}</span>
-                <span>•</span>
-                <span>${s.date || 'Published'}</span>
+    const latest = list.slice(0, 4);
+    container.innerHTML = latest.map(s => {
+        const authorInitial = (s.author || 'M').trim().charAt(0).toUpperCase();
+        return `
+            <a href="/${s.slug}" class="block space-y-1 group">
+                <div class="flex items-center gap-2 text-xs theme-muted">
+                    <span class="w-4 h-4 rounded-full bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 text-[9px] font-bold flex items-center justify-center">${authorInitial}</span>
+                    <span class="font-semibold theme-text text-[11px]">${s.author}</span>
+                </div>
+                <h4 class="font-bold text-xs sm:text-sm theme-text group-hover:underline leading-snug font-serif line-clamp-2">${s.title}</h4>
+            </a>
+        `;
+    }).join('');
+
+    renderWhoToFollow(list);
+}
+
+function renderWhoToFollow(list) {
+    const container = document.getElementById('whoToFollowList');
+    if (!container) return;
+
+    const authors = [];
+    const seen = new Set();
+    if (list && list.length > 0) {
+        list.forEach(s => {
+            if (s.author && !seen.has(s.author)) {
+                seen.add(s.author);
+                authors.push({
+                    name: s.author,
+                    category: s.category || 'Writer'
+                });
+            }
+        });
+    }
+
+    if (authors.length === 0) {
+        authors.push({ name: 'Medium Editorial', category: 'Curated Stories' });
+    }
+
+    container.innerHTML = authors.slice(0, 3).map(a => {
+        const initial = a.name.trim().charAt(0).toUpperCase();
+        return `
+            <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">${initial}</div>
+                    <div class="min-w-0">
+                        <h4 class="font-bold theme-text text-xs truncate">${a.name}</h4>
+                        <p class="text-[11px] theme-muted truncate">${a.category}</p>
+                    </div>
+                </div>
+                <button type="button" onclick="this.textContent = this.textContent === 'Follow' ? 'Following' : 'Follow'; this.classList.toggle('bg-zinc-900'); this.classList.toggle('text-white');" class="px-3 py-1 rounded-full border theme-border theme-text text-xs font-medium hover:border-zinc-400 transition-all shrink-0 cursor-pointer">Follow</button>
             </div>
-            <h4 class="font-bold theme-text group-hover:underline leading-snug">${s.title}</h4>
-        </a>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // 6. Category Selection & Dynamic Render
@@ -237,13 +280,13 @@ function renderDynamicCategories(categories) {
     const topicBar = document.getElementById('topicFilterBar');
     const pillsContainer = document.getElementById('sidebarCategoryPills');
 
-    let tabsHtml = `<button class="topic-tab ${activeTopic === 'all' ? 'theme-text font-semibold active' : 'hover:theme-text transition-colors'}" data-cat="all" onclick="selectCategory('all')">For you</button>`;
+    let tabsHtml = `<button class="topic-tab ${activeTopic === 'all' ? 'active' : ''}" data-cat="all" onclick="selectCategory('all')">For you</button>`;
     let pillsHtml = `<button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${activeTopic === 'all' ? 'active-pill' : ''}">All Topics</button>`;
 
     if (categories && categories.length > 0) {
         categories.forEach(c => {
             const isSel = activeTopic === c.id;
-            tabsHtml += `<button class="topic-tab ${isSel ? 'theme-text font-semibold active' : 'hover:theme-text transition-colors'}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>`;
+            tabsHtml += `<button class="topic-tab ${isSel ? 'active' : ''}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>`;
             pillsHtml += `<button type="button" onclick="selectCategory('${c.id}')" data-cat-pill="${c.id}" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${isSel ? 'active-pill' : ''}">${c.label}</button>`;
         });
     }

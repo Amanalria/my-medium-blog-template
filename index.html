@@ -55,63 +55,67 @@
     <div id="scrollProgress" class="fixed top-0 left-0 h-[3px] bg-emerald-600 z-50 transition-all duration-75" style="width: 0%;"></div>
 
     <!-- 1. Header Navigation Bar -->
-    <header class="w-full border-b theme-border sticky top-0 z-40 theme-bg/95 backdrop-blur-md px-4 sm:px-8 py-3.5">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <header class="w-full border-b theme-border sticky top-0 z-40 theme-bg/95 backdrop-blur-md px-4 sm:px-8 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
-            <!-- Left: Wordmark Logo -->
-            <a href="/" class="flex items-center gap-2 group shrink-0">
-                <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
-            </a>
+            <!-- Left: Wordmark Logo + Search Input -->
+            <div class="flex items-center gap-6">
+                <a href="/" class="flex items-center gap-2 group shrink-0">
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text">Medium</span>
+                </a>
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center gap-6 text-xs">
-                <nav class="flex items-center gap-6 theme-muted font-medium">
-                    <a href="/about" class="hover:theme-text transition-colors">About Us</a>
-                    <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
-                    <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
-                    <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
-                    <a href="/disclaimer" class="hover:theme-text transition-colors">Disclaimer</a>
-                </nav>
-
-                <div class="h-4 w-[1px] bg-zinc-200 dark:bg-zinc-800"></div>
-
-                <!-- Controls: Theme Toggle, Search, Admin Link -->
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="window.toggleTheme()" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer" title="Toggle Light/Dark Theme">
-                        <svg class="themeSunSvg w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        <svg class="themeMoonSvg w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </button>
-
-                    <button type="button" onclick="window.openSearch()" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer" title="Search Stories">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
+                <!-- Medium Integrated Search Bar -->
+                <div class="hidden sm:flex items-center relative">
+                    <svg class="w-4 h-4 absolute left-3 theme-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" onclick="window.openSearch()" onfocus="window.openSearch()" placeholder="Search Medium..." class="pl-9 pr-4 py-2 rounded-full theme-search-bg text-xs theme-text border theme-border focus:border-zinc-400 outline-none w-48 lg:w-64 cursor-pointer transition-all">
                 </div>
             </div>
 
-            <!-- Mobile Navigation Trigger -->
-            <div class="flex md:hidden items-center gap-2">
-                <button type="button" onclick="window.openSearch()" class="framer-tap p-2 rounded-lg theme-muted hover:theme-text">
+            <!-- Right Navigation & Controls -->
+            <div class="flex items-center gap-4 text-xs font-sans">
+                <nav class="hidden md:flex items-center gap-6 theme-muted font-medium">
+                    <a href="/about" class="hover:theme-text transition-colors">Our story</a>
+                    <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
+                    <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
+                    <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
+                </nav>
+
+                <!-- Light / Dark Theme Toggle -->
+                <button type="button" onclick="window.toggleTheme()" class="framer-tap p-2 rounded-full theme-muted hover:theme-text hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center cursor-pointer" title="Toggle Light/Dark Theme">
+                    <svg class="themeSunSvg w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="themeMoonSvg w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <!-- Search button on Mobile -->
+                <button type="button" onclick="window.openSearch()" class="flex sm:hidden framer-tap p-2 rounded-lg theme-muted hover:theme-text">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
-                <button type="button" onclick="window.openMobileDrawer()" class="framer-tap p-2 rounded-lg theme-muted hover:theme-text cursor-pointer" aria-label="Open navigation menu">
+
+                <!-- Get Started Green Button -->
+                <a href="#feedSection" class="hidden sm:inline-block px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition-all shadow-xs">
+                    Get started
+                </a>
+
+                <!-- Mobile Hamburger Menu Button -->
+                <button type="button" onclick="window.openMobileDrawer()" class="flex md:hidden framer-tap p-2 rounded-lg theme-muted hover:theme-text cursor-pointer" aria-label="Open navigation menu">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -131,11 +135,11 @@
                     Stay curious.
                 </h1>
                 <p class="text-base sm:text-xl font-sans font-normal theme-muted leading-relaxed max-w-xl hero-subtitle">
-                    Discover stories, thinking, and expertise from writers.
+                    Discover stories, thinking, and expertise from writers on any topic.
                 </p>
                 <div class="pt-2">
-                    <a href="#storiesFeed" class="inline-block px-6 sm:px-8 py-3 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-sm sm:text-base hover:opacity-90 transition-all shadow-sm">
-                        Start Reading
+                    <a href="#feedSection" class="inline-block px-6 sm:px-8 py-3 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-sm sm:text-base hover:opacity-90 transition-all shadow-sm">
+                        Start reading
                     </a>
                 </div>
             </div>
@@ -148,17 +152,17 @@
     </section>
 
     <!-- 3. Dynamic Topic Filter Bar -->
-    <nav class="w-full border-b theme-border px-4 sm:px-8 py-3.5 overflow-x-auto no-scrollbar" id="feedSection">
-        <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs font-medium theme-muted whitespace-nowrap" id="topicFilterBar">
-            <button class="topic-tab theme-text font-semibold active" data-cat="all" onclick="selectCategory('all')">For you</button>
+    <nav class="w-full border-b theme-border px-4 sm:px-8 overflow-x-auto no-scrollbar sticky top-[57px] z-30 theme-bg/95 backdrop-blur-md" id="feedSection">
+        <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs whitespace-nowrap" id="topicFilterBar">
+            <button class="topic-tab active" data-cat="all" onclick="selectCategory('all')">For you</button>
         </div>
     </nav>
 
     <!-- 4. Medium 2-Column Main Feed Layout -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-8 py-10 flex flex-col lg:flex-row gap-12 items-start flex-1 w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col lg:flex-row gap-12 items-start flex-1 w-full">
 
         <!-- Left Column: Story Feed -->
-        <main class="w-full lg:flex-1 space-y-8" id="storiesFeed">
+        <main class="w-full lg:flex-1 space-y-6" id="storiesFeed">
             <!-- Dynamic Feed rendered by app.js -->
             <div class="space-y-6 animate-pulse">
                 <div class="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3"></div>
@@ -167,13 +171,26 @@
             </div>
         </main>
 
-        <!-- Right Column: Sidebar (Topics & Latest Stories) -->
+        <!-- Right Column: Sidebar (Staff Picks, Topics, Who to Follow) -->
         <aside class="w-full lg:w-80 space-y-8 lg:border-l theme-border lg:pl-8 shrink-0">
 
-            <!-- Topics Section -->
-            <div class="space-y-3">
+            <!-- Staff Picks Section -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
+                        Staff Picks
+                    </h3>
+                </div>
+                <div class="space-y-4 text-xs" id="sidebarLatestPosts">
+                    <p class="text-xs theme-muted">Loading picks...</p>
+                </div>
+            </div>
+
+            <!-- Recommended Topics Section -->
+            <div class="space-y-3 border-t theme-border pt-6">
                 <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
-                    Recommended Topics
+                    Recommended topics
                 </h3>
                 <div class="flex flex-wrap gap-2 pt-1" id="sidebarCategoryPills">
                     <button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all active-pill">
@@ -182,21 +199,33 @@
                 </div>
             </div>
 
-            <!-- Latest Posts Section -->
+            <!-- Who to Follow -->
             <div class="space-y-4 border-t theme-border pt-6">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
-                        Latest Posts
-                    </h3>
-                </div>
-                <div class="space-y-4 text-xs" id="sidebarLatestPosts">
-                    <p class="text-xs theme-muted">No stories published yet.</p>
+                <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
+                    Who to follow
+                </h3>
+                <div class="space-y-3 text-xs" id="whoToFollowList">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">M</div>
+                            <div>
+                                <h4 class="font-bold theme-text">Medium Editorial</h4>
+                                <p class="text-[11px] theme-muted">Curated insights & stories</p>
+                            </div>
+                        </div>
+                        <button type="button" class="px-3 py-1 rounded-full border theme-border theme-text text-xs font-medium hover:border-zinc-400 transition-all">Follow</button>
+                    </div>
                 </div>
             </div>
 
+            <!-- Reading List Box -->
+            <div class="p-5 rounded-2xl theme-search-bg border theme-border space-y-2.5">
+                <h4 class="text-sm font-serif font-bold theme-text">Reading list</h4>
+                <p class="text-xs theme-muted">Click the bookmark icon on any story to easily add it to your reading list.</p>
+            </div>
+
             <!-- Newsletter Subscription Box -->
-            <div class="p-6 rounded-2xl theme-search-bg border theme-border space-y-3">
+            <div class="p-5 rounded-2xl theme-search-bg border theme-border space-y-3">
                 <h4 class="text-sm font-serif font-bold theme-text">Join the newsletter</h4>
                 <p class="text-xs theme-muted">Get top stories delivered directly to your inbox weekly.</p>
                 <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" class="space-y-2 pt-1">
@@ -206,6 +235,17 @@
                     </button>
                 </form>
                 <div id="newsletterMsg" class="text-[11px] text-emerald-600 hidden font-medium">✓ Subscribed successfully!</div>
+            </div>
+
+            <!-- Medium Footer Minimal Links -->
+            <div class="pt-4 border-t theme-border flex flex-wrap gap-x-3 gap-y-1.5 text-[11px] theme-muted font-sans">
+                <a href="/about" class="hover:theme-text">Help</a>
+                <a href="/about" class="hover:theme-text">Status</a>
+                <a href="/about" class="hover:theme-text">About</a>
+                <a href="/about" class="hover:theme-text">Careers</a>
+                <a href="/privacy" class="hover:theme-text">Privacy</a>
+                <a href="/terms" class="hover:theme-text">Terms</a>
+                <a href="/contact" class="hover:theme-text">Contact</a>
             </div>
 
         </aside>
