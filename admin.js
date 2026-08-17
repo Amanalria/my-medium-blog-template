@@ -184,198 +184,176 @@ window.updateCoverPreview = function(url) {
 };
 
 // ================================================================
-// 7. WEBP & MULTI-FORMAT IMAGE COMPRESSION ENGINE (CANVAS BASED)
+// 7. HIGH-PRECISION 5-STEP WEBP COMPRESSION ENGINE
 // ================================================================
 
-async function compressImageFile(file, targetKb = 80, maxWidth = 1200, mimeType = 'image/webp') {
-    let sourceWidth, sourceHeight, drawSource;
+let featuredPendingFile = null;
+let featuredCompressedResult = null;
 
-    try {
-        if (window.createImageBitmap) {
-            drawSource = await createImageBitmap(file);
-            sourceWidth = drawSource.width;
-            sourceHeight = drawSource.height;
-        }
-    } catch(e) {
-        drawSource = null;
-    }
+async function compressImageToWebpPrecise(file, targetKb = 30) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let maxDim = 1400;
+                if (targetKb <= 20) maxDim = 800;
+                else if (targetKb <= 45) maxDim = 1100;
 
-    if (!drawSource) {
-        drawSource = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error('Failed to load image.'));
-                img.src = e.target.result;
+                let width = img.width;
+                let height = img.height;
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let quality = 0.85;
+                let dataUrl = canvas.toDataURL('image/webp', quality);
+                let sizeKb = Math.round((dataUrl.length * 3 / 4) / 1024);
+
+                while (sizeKb > targetKb && quality > 0.08) {
+                    quality -= 0.08;
+                    dataUrl = canvas.toDataURL('image/webp', quality);
+                    sizeKb = Math.round((dataUrl.length * 3 / 4) / 1024);
+                }
+
+                if (sizeKb > targetKb && width > 400) {
+                    canvas.width = Math.round(width * 0.75);
+                    canvas.height = Math.round(height * 0.75);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    dataUrl = canvas.toDataURL('image/webp', quality);
+                    sizeKb = Math.round((dataUrl.length * 3 / 4) / 1024);
+                }
+
+                const originalKb = Math.round(file.size / 1024);
+                const savingsPct = originalKb > 0 ? Math.round(((originalKb - sizeKb) / originalKb) * 100) : 0;
+                const defaultName = file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.webp';
+
+                resolve({
+                    dataUrl,
+                    sizeKb,
+                    originalKb,
+                    savingsPct,
+                    defaultName,
+                    width: canvas.width,
+                    height: canvas.height
+                });
             };
-            reader.onerror = () => reject(new Error('Failed to read file.'));
-            reader.readAsDataURL(file);
-        });
-        sourceWidth = drawSource.width;
-        sourceHeight = drawSource.height;
-    }
-
-    let width = sourceWidth;
-    let height = sourceHeight;
-
-    if (maxWidth && width > maxWidth) {
-        height = Math.round((height * maxWidth) / width);
-        width = maxWidth;
-    }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d', { alpha: mimeType === 'image/webp' || mimeType === 'image/png' });
-    
-    if (mimeType === 'image/jpeg') {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, width, height);
-    }
-    ctx.drawImage(drawSource, 0, 0, width, height);
-
-    let bestDataUrl = null;
-    let bestSize = Infinity;
-    const origSizeKb = Math.round(file.size / 1024);
-
-    if (mimeType === 'image/png') {
-        bestDataUrl = canvas.toDataURL('image/png');
-        bestSize = Math.round((bestDataUrl.length * 3) / 4 / 1024);
-    } else {
-        let minQ = 0.05, maxQ = 0.98;
-        for (let i = 0; i < 7; i++) {
-            const midQ = (minQ + maxQ) / 2;
-            const dataUrl = canvas.toDataURL(mimeType, midQ);
-            const sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
-
-            if (sizeKb <= targetKb) {
-                bestDataUrl = dataUrl;
-                bestSize = sizeKb;
-                minQ = midQ;
-            } else {
-                maxQ = midQ;
-            }
-        }
-
-        if (!bestDataUrl) {
-            bestDataUrl = canvas.toDataURL(mimeType, 0.1);
-            bestSize = Math.round((bestDataUrl.length * 3) / 4 / 1024);
-        }
-    }
-
-    return {
-        dataUrl: bestDataUrl,
-        sizeKb: bestSize,
-        origSizeKb: origSizeKb || bestSize,
-        width,
-        height,
-        mimeType,
-        fileName: file.name
-    };
+            img.onerror = () => reject(new Error('Failed to decode image file'));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('Failed to read file from storage'));
+        reader.readAsDataURL(file);
+    });
 }
 
-// Editor Preset Helpers
-window.setEditorTargetKb = function(kb) {
-    const input = document.getElementById('editorCustomKbInput');
-    if (input) {
-        input.value = kb;
-        if (currentCompressedFile) recompressEditorImage();
-    }
+// 5-Step Featured Image WebP Studio Handlers
+window.syncFeaturedKb = function(val) {
+    const num = parseInt(val, 10) || 30;
+    const slider = document.getElementById('featuredKbSlider');
+    const input = document.getElementById('featuredKbInput');
+    const display = document.getElementById('featuredKbDisplay');
+    const label = document.getElementById('featuredCompressTargetLabel');
+    if (slider) slider.value = num;
+    if (input) input.value = num;
+    if (display) display.textContent = `${num} KB`;
+    if (label) label.textContent = `${num} KB`;
 };
 
-window.setStandaloneTargetKb = function(kb) {
-    const input = document.getElementById('standaloneCustomKbInput');
-    if (input) {
-        input.value = kb;
-        if (currentStandaloneFile) recompressStandaloneImage();
-    }
-};
-
-// Editor Inline Image Handler
-window.handleEditorImageUpload = async function(event) {
-    const file = event.target.files?.[0];
+window.onFeaturedFileSelected = function(e) {
+    const file = e.target.files?.[0];
     if (!file) return;
-    currentCompressedFile = file;
-    event.target.value = ''; // Reset input to allow re-upload of same file
 
-    const label = document.getElementById('editorFileBtnLabel');
-    if (label) label.textContent = file.name.length > 18 ? file.name.slice(0, 15) + '...' : file.name;
+    featuredPendingFile = file;
+    const origKb = Math.round(file.size / 1024);
+    const sizeStr = origKb > 1024 ? `${(origKb / 1024).toFixed(2)} MB` : `${origKb} KB`;
 
-    const statusEl = document.getElementById('editorImgStatus');
-    if (statusEl) statusEl.textContent = `Selected: ${file.name} (${Math.round(file.size/1024)} KB)`;
+    const sizeEl = document.getElementById('featuredOriginalSizeText');
+    const compressBox = document.getElementById('featuredCompressActionBox');
+    const uploadBox = document.getElementById('featuredUploadActionBox');
 
-    await recompressEditorImage();
+    if (sizeEl) sizeEl.textContent = `${file.name} (${sizeStr})`;
+    if (compressBox) compressBox.classList.remove('hidden');
+    if (uploadBox) uploadBox.classList.add('hidden');
+
+    showToast(`✓ Image selected: ${file.name} (${sizeStr})`);
 };
 
-window.recompressEditorImage = async function() {
-    if (!currentCompressedFile) {
+window.executeFeaturedCompression = async function() {
+    if (!featuredPendingFile) {
         alert('Please select an image file first.');
         return;
     }
 
-    const targetKb = parseInt(document.getElementById('editorCustomKbInput').value, 10) || 80;
-    const maxWidth = parseInt(document.getElementById('editorMaxWidthSelect').value, 10) || 1200;
-    const mimeType = document.getElementById('editorFormatSelect').value || 'image/webp';
+    const btn = document.getElementById('featuredCompressBtn');
+    const targetKb = parseInt(document.getElementById('featuredKbInput')?.value || '30', 10);
 
-    const statusEl = document.getElementById('editorImgStatus');
-    if (statusEl) statusEl.textContent = '⚡ Converting to WebP...';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Compressing to WebP (${targetKb} KB)...</span>`;
+    }
 
     try {
-        const res = await compressImageFile(currentCompressedFile, targetKb, maxWidth, mimeType);
-        currentCompressedDataUrl = res.dataUrl;
+        const result = await compressImageToWebpPrecise(featuredPendingFile, targetKb);
+        featuredCompressedResult = result;
 
-        const previewStrip = document.getElementById('editorImagePreviewStrip');
-        const previewImg = document.getElementById('editorImagePreviewImg');
-        const statsEl = document.getElementById('editorImgStats');
-        const savingsBadge = document.getElementById('editorImgSavingsBadge');
-        const dimEl = document.getElementById('editorImgDim');
+        const thumb = document.getElementById('featuredCompressedThumb');
+        const finalSizeText = document.getElementById('featuredFinalSizeText');
+        const savingsText = document.getElementById('featuredSavingsText');
+        const customFileName = document.getElementById('featuredCustomFileName');
+        const uploadBox = document.getElementById('featuredUploadActionBox');
 
-        if (previewStrip) {
-            previewStrip.classList.remove('hidden');
-            previewStrip.classList.add('flex');
-        }
-        if (previewImg) previewImg.src = res.dataUrl;
-        
-        const formatName = mimeType.split('/')[1].toUpperCase();
-        if (statsEl) statsEl.textContent = `${res.sizeKb} KB (${formatName})`;
-        
-        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / Math.max(1, res.origSizeKb)) * 100));
-        if (savingsBadge) {
-            savingsBadge.textContent = `-${savings}% Size`;
-        }
+        if (thumb) thumb.src = result.dataUrl;
+        if (finalSizeText) finalSizeText.innerHTML = `Final Size: <strong>${result.sizeKb} KB</strong> (Target: ${targetKb} KB)`;
+        if (savingsText) savingsText.textContent = `Original: ${result.originalKb} KB (${result.savingsPct}% saved)`;
+        if (customFileName) customFileName.value = result.defaultName;
+        if (uploadBox) uploadBox.classList.remove('hidden');
 
-        if (dimEl) dimEl.textContent = `${res.width} × ${res.height} px • Original: ${res.origSizeKb} KB`;
-        if (statusEl) statusEl.textContent = `✓ Converted to ${formatName} (${res.sizeKb} KB)`;
-
-        showToast(`✓ Image converted to ${formatName} (${res.sizeKb} KB)`);
+        showToast(`✓ Compressed to ${result.sizeKb} KB WebP! Click below to apply.`);
     } catch (err) {
-        console.error("Compression error:", err);
-        if (statusEl) statusEl.textContent = '✕ Error converting image';
-        showToast('✕ Image conversion failed: ' + err.message);
+        console.error(err);
+        alert('WebP compression failed: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>⚡ Convert to WebP & Compress (<span id="featuredCompressTargetLabel">${targetKb} KB</span>)</span>`;
+        }
     }
 };
 
-window.applyCompressedAsFeatured = function() {
-    if (!currentCompressedDataUrl) {
-        alert('Please convert an image first.');
+window.executeFeaturedUpload = function() {
+    if (!featuredCompressedResult) {
+        alert('Please compress the image first.');
         return;
     }
+
     const imgInput = document.getElementById('editStoryImage');
     if (imgInput) {
-        imgInput.value = currentCompressedDataUrl;
-        window.updateCoverPreview(currentCompressedDataUrl);
-        showToast('✓ Set as Featured Cover Image!');
+        imgInput.value = featuredCompressedResult.dataUrl;
+        window.updateCoverPreview(featuredCompressedResult.dataUrl);
+        showToast(`✓ WebP Image (${featuredCompressedResult.sizeKb} KB) attached as cover!`);
     }
 };
 
-window.insertCompressedIntoProse = function() {
-    if (!currentCompressedDataUrl) {
-        alert('Please convert an image first.');
+window.insertWebpIntoEditorProse = function() {
+    if (!featuredCompressedResult) {
+        alert('Please compress the image first.');
         return;
     }
-    const imgHtml = `<figure class="my-6 space-y-2"><img src="${currentCompressedDataUrl}" alt="Story Illustration" class="w-full rounded-xl border theme-border object-cover shadow-sm"><figcaption class="text-center text-xs theme-muted">Illustration</figcaption></figure><p></p>`;
-    
+
+    const imgHtml = `<figure class="my-6 space-y-2"><img src="${featuredCompressedResult.dataUrl}" alt="${featuredCompressedResult.defaultName}" class="w-full rounded-xl border theme-border object-cover shadow-sm"><figcaption class="text-center text-xs theme-muted">${featuredCompressedResult.defaultName}</figcaption></figure><p></p>`;
+
     if (isHtmlMode) {
         const raw = document.getElementById('rawHtmlEditor');
         raw.value += imgHtml;
@@ -385,24 +363,22 @@ window.insertCompressedIntoProse = function() {
         document.execCommand('insertHTML', false, imgHtml);
     }
     updateWordAndCharCount();
-    showToast('✓ Image inserted into article body!');
+    showToast(`✓ WebP Image (${featuredCompressedResult.sizeKb} KB) inserted into article!`);
 };
 
-window.downloadEditorCompressedImg = function() {
-    if (!currentCompressedDataUrl) return;
-    const a = document.createElement('a');
-    a.href = currentCompressedDataUrl;
-    const ext = (document.getElementById('editorFormatSelect').value || 'image/webp').split('/')[1];
-    a.download = `optimized-image-${Date.now()}.${ext}`;
-    a.click();
+// Standalone WebP Studio Handlers
+window.setStandaloneTargetKb = function(kb) {
+    const input = document.getElementById('standaloneCustomKbInput');
+    if (input) {
+        input.value = kb;
+        if (currentStandaloneFile) recompressStandaloneImage();
+    }
 };
 
-// Standalone WebP Studio Handler
 window.handleStandaloneImageUpload = async function(event) {
     const file = event.target.files?.[0];
     if (!file) return;
     currentStandaloneFile = file;
-    event.target.value = ''; // Reset input to allow re-upload
 
     const label = document.getElementById('standaloneFileLabel');
     if (label) label.textContent = `Selected: ${file.name} (${Math.round(file.size/1024)} KB)`;
@@ -417,23 +393,19 @@ window.recompressStandaloneImage = async function() {
     }
 
     const targetKb = parseInt(document.getElementById('standaloneCustomKbInput').value, 10) || 100;
-    const maxWidth = parseInt(document.getElementById('standaloneMaxWidth').value, 10) || 1200;
-    const mimeType = document.getElementById('standaloneFormatSelect').value || 'image/webp';
 
     try {
-        const res = await compressImageFile(currentStandaloneFile, targetKb, maxWidth, mimeType);
+        const res = await compressImageToWebpPrecise(currentStandaloneFile, targetKb);
         currentStandaloneDataUrl = res.dataUrl;
 
         document.getElementById('standaloneEmptyMsg').classList.add('hidden');
         document.getElementById('standaloneActiveResult').classList.remove('hidden');
 
         document.getElementById('standalonePreviewImg').src = res.dataUrl;
-        document.getElementById('resOrigSize').textContent = `${res.origSizeKb} KB`;
+        document.getElementById('resOrigSize').textContent = `${res.originalKb} KB`;
         document.getElementById('resCompSize').textContent = `${res.sizeKb} KB`;
-
-        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / Math.max(1, res.origSizeKb)) * 100));
-        document.getElementById('resSavings').textContent = `${savings}%`;
-        showToast(`✓ Converted to ${mimeType.split('/')[1].toUpperCase()} (${res.sizeKb} KB)`);
+        document.getElementById('resSavings').textContent = `${res.savingsPct}%`;
+        showToast(`✓ Converted to WebP (${res.sizeKb} KB)`);
     } catch (err) {
         console.error(err);
         showToast('✕ Conversion failed: ' + err.message);
@@ -457,25 +429,6 @@ window.sendStandaloneToEditor = function() {
     window.switchAdminTab('editorTab');
     showToast('✓ Transferred to Story Editor as Featured Cover!');
 };
-
-// Clipboard Paste Listener for Screenshots/Images
-window.addEventListener('paste', async (e) => {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-            const file = items[i].getAsFile();
-            if (file) {
-                currentCompressedFile = file;
-                const label = document.getElementById('editorFileBtnLabel');
-                if (label) label.textContent = 'Pasted Screenshot';
-                await recompressEditorImage();
-                showToast('✓ Clipboard image loaded & converted to WebP!');
-                break;
-            }
-        }
-    }
-});
 
 // ================================================================
 // 8. RESET & SAVE STORY FORM
