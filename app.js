@@ -343,8 +343,49 @@ function updateThemeIcons() {
 
 updateThemeIcons();
 
-// 10. Load Live Articles & Settings from SQLite REST API
+// 10. Load Live Articles & Settings from Supabase Cloud or Local API
 async function loadLiveFeedData() {
+    // 1. Try Supabase Cloud Database first
+    if (supabaseClient) {
+        try {
+            const [artRes, setRes] = await Promise.all([
+                supabaseClient.from('articles').select('*').order('created_at', { ascending: false }),
+                supabaseClient.from('site_settings').select('*').eq('key', 'global_settings').single()
+            ]);
+
+            if (!setRes.error && setRes.data && setRes.data.value) {
+                globalSettings = Object.assign(globalSettings, setRes.data.value);
+                applyLiveSettings(globalSettings);
+            }
+
+            if (!artRes.error && artRes.data && artRes.data.length > 0) {
+                mediumStories = artRes.data.filter(a => a.status === 'published').map(item => ({
+                    id: item.id,
+                    slug: item.slug,
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    author: item.author,
+                    publication: item.publication,
+                    authorInitials: item.author_initials,
+                    date: item.date,
+                    readTime: item.read_time,
+                    category: item.category,
+                    tags: item.tags,
+                    isMember: item.is_member,
+                    image: item.image,
+                    imageAlt: item.image_alt,
+                    bodyHtml: item.body_html,
+                    status: item.status
+                }));
+                renderStoriesFeed(mediumStories);
+                return;
+            }
+        } catch (e) {
+            console.warn("Supabase fetch failed on feed:", e);
+        }
+    }
+
+    // 2. Fallback to Local API or initial
     try {
         const [articlesRes, settingsRes] = await Promise.all([
             fetch(`${API_BASE}/api/v1/articles`),
@@ -364,7 +405,6 @@ async function loadLiveFeedData() {
             }
         }
     } catch (e) {
-        console.warn('API sync fallback to static:', e);
         renderStoriesFeed(mediumStories);
     }
 }

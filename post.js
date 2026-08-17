@@ -301,8 +301,55 @@ function updateThemeIcons() {
 
 updateThemeIcons();
 
-// 12. Load Live Articles from SQLite REST API
+// 12. Load Live Story from Supabase Cloud or Local API
 async function loadLiveStory() {
+    // 1. Try Supabase Cloud first
+    if (supabaseClient) {
+        try {
+            const [artRes, setRes] = await Promise.all([
+                supabaseClient.from('articles').select('*'),
+                supabaseClient.from('site_settings').select('*').eq('key', 'global_settings').single()
+            ]);
+
+            if (!setRes.error && setRes.data && setRes.data.value) {
+                globalSettings = Object.assign(globalSettings, setRes.data.value);
+                if (globalSettings.brand_color) {
+                    document.documentElement.style.setProperty('--accent-green', globalSettings.brand_color);
+                }
+            }
+
+            if (!artRes.error && artRes.data && artRes.data.length > 0) {
+                mediumStories = artRes.data.map(item => ({
+                    id: item.id,
+                    slug: item.slug,
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    author: item.author,
+                    publication: item.publication,
+                    authorInitials: item.author_initials,
+                    date: item.date,
+                    readTime: item.read_time,
+                    category: item.category,
+                    tags: item.tags,
+                    isMember: item.is_member,
+                    image: item.image,
+                    imageAlt: item.image_alt,
+                    bodyHtml: item.body_html,
+                    status: item.status
+                }));
+                const found = mediumStories.find(s => s.slug === currentSlug);
+                if (found) currentStory = found;
+                renderStoryDetails(currentStory);
+                injectRelatedStories(mediumStories, currentStory);
+                injectTrendingList(mediumStories, currentStory);
+                return;
+            }
+        } catch(e) {
+            console.warn("Supabase fetch failed on post:", e);
+        }
+    }
+
+    // 2. Fallback to Local API
     try {
         const [articlesRes, settingsRes] = await Promise.all([
             fetch(`${API_BASE}/api/v1/articles`),
