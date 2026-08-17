@@ -184,10 +184,10 @@ window.updateCoverPreview = function(url) {
 };
 
 // ================================================================
-// 7. WEBP IMAGE COMPRESSION ENGINE (CANVAS BASED)
+// 7. WEBP & MULTI-FORMAT IMAGE COMPRESSION ENGINE (CANVAS BASED)
 // ================================================================
 
-function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
+function compressImageFile(file, targetKb = 80, maxWidth = 1200, mimeType = 'image/webp') {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -196,7 +196,7 @@ function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
                 let width = img.width;
                 let height = img.height;
 
-                if (width > maxWidth) {
+                if (maxWidth && width > maxWidth) {
                     height = Math.round((height * maxWidth) / width);
                     width = maxWidth;
                 }
@@ -204,29 +204,40 @@ function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
                 const canvas = document.createElement('canvas');
                 canvas.width = width;
                 canvas.height = height;
-                const ctx = canvas.getContext('2d');
+                const ctx = canvas.getContext('2d', { alpha: mimeType === 'image/webp' || mimeType === 'image/png' });
+                
+                if (mimeType === 'image/jpeg') {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                }
                 ctx.drawImage(img, 0, 0, width, height);
 
                 // Multi-pass binary search for target quality
-                let minQ = 0.1, maxQ = 0.95, bestDataUrl = null, bestSize = Infinity;
+                let minQ = 0.05, maxQ = 0.98, bestDataUrl = null, bestSize = Infinity;
                 
-                for (let i = 0; i < 5; i++) {
-                    const midQ = (minQ + maxQ) / 2;
-                    const dataUrl = canvas.toDataURL('image/webp', midQ);
-                    const sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
-
-                    if (sizeKb <= targetKb) {
-                        bestDataUrl = dataUrl;
-                        bestSize = sizeKb;
-                        minQ = midQ;
-                    } else {
-                        maxQ = midQ;
-                    }
-                }
-
-                if (!bestDataUrl) {
-                    bestDataUrl = canvas.toDataURL('image/webp', 0.2);
+                if (mimeType === 'image/png') {
+                    // PNG does not support quality parameter in toDataURL, direct encode
+                    bestDataUrl = canvas.toDataURL('image/png');
                     bestSize = Math.round((bestDataUrl.length * 3) / 4 / 1024);
+                } else {
+                    for (let i = 0; i < 7; i++) {
+                        const midQ = (minQ + maxQ) / 2;
+                        const dataUrl = canvas.toDataURL(mimeType, midQ);
+                        const sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
+
+                        if (sizeKb <= targetKb) {
+                            bestDataUrl = dataUrl;
+                            bestSize = sizeKb;
+                            minQ = midQ; // try to get better quality while staying under target
+                        } else {
+                            maxQ = midQ; // reduce quality
+                        }
+                    }
+
+                    if (!bestDataUrl) {
+                        bestDataUrl = canvas.toDataURL(mimeType, 0.1);
+                        bestSize = Math.round((bestDataUrl.length * 3) / 4 / 1024);
+                    }
                 }
 
                 resolve({
@@ -234,7 +245,9 @@ function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
                     sizeKb: bestSize,
                     origSizeKb: Math.round(file.size / 1024),
                     width,
-                    height
+                    height,
+                    mimeType,
+                    fileName: file.name
                 });
             };
             img.onerror = reject;
@@ -245,43 +258,79 @@ function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
     });
 }
 
+// Editor Preset Helpers
+window.setEditorTargetKb = function(kb) {
+    const input = document.getElementById('editorCustomKbInput');
+    if (input) {
+        input.value = kb;
+        if (currentCompressedFile) recompressEditorImage();
+    }
+};
+
+window.setStandaloneTargetKb = function(kb) {
+    const input = document.getElementById('standaloneCustomKbInput');
+    if (input) {
+        input.value = kb;
+        if (currentStandaloneFile) recompressStandaloneImage();
+    }
+};
+
 // Editor Inline Image Handler
 window.handleEditorImageUpload = async function(event) {
     const file = event.target.files?.[0];
     if (!file) return;
     currentCompressedFile = file;
 
+    const label = document.getElementById('editorFileBtnLabel');
+    if (label) label.textContent = file.name.length > 18 ? file.name.slice(0, 15) + '...' : file.name;
+
     const statusEl = document.getElementById('editorImgStatus');
-    if (statusEl) statusEl.textContent = 'Compressing to WebP...';
+    if (statusEl) statusEl.textContent = `Selected: ${file.name} (${Math.round(file.size/1024)} KB)`;
 
     await recompressEditorImage();
 };
 
 window.recompressEditorImage = async function() {
-    if (!currentCompressedFile) return;
-    const targetKb = parseInt(document.getElementById('editorTargetKbSelect').value, 10) || 80;
+    if (!currentCompressedFile) {
+        alert('Please select an image file first.');
+        return;
+    }
+
+    const targetKb = parseInt(document.getElementById('editorCustomKbInput').value, 10) || 80;
+    const maxWidth = parseInt(document.getElementById('editorMaxWidthSelect').value, 10) || 1200;
+    const mimeType = document.getElementById('editorFormatSelect').value || 'image/webp';
+
+    const statusEl = document.getElementById('editorImgStatus');
+    if (statusEl) statusEl.textContent = '⚡ Converting to WebP...';
 
     try {
-        const res = await compressImageFile(currentCompressedFile, targetKb, 1200);
+        const res = await compressImageFile(currentCompressedFile, targetKb, maxWidth, mimeType);
         currentCompressedDataUrl = res.dataUrl;
 
         const previewStrip = document.getElementById('editorImagePreviewStrip');
         const previewImg = document.getElementById('editorImagePreviewImg');
         const statsEl = document.getElementById('editorImgStats');
+        const savingsBadge = document.getElementById('editorImgSavingsBadge');
         const dimEl = document.getElementById('editorImgDim');
-        const statusEl = document.getElementById('editorImgStatus');
 
         if (previewStrip) {
             previewStrip.classList.remove('hidden');
             previewStrip.classList.add('flex');
         }
         if (previewImg) previewImg.src = res.dataUrl;
-        if (statsEl) statsEl.textContent = `${res.sizeKb} KB (Orig: ${res.origSizeKb} KB)`;
-        if (dimEl) dimEl.textContent = `${res.width} x ${res.height} px • WebP`;
-        if (statusEl) statusEl.textContent = '✓ Ready';
+        
+        const formatName = mimeType.split('/')[1].toUpperCase();
+        if (statsEl) statsEl.textContent = `${res.sizeKb} KB (${formatName})`;
+        
+        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / Math.max(1, res.origSizeKb)) * 100));
+        if (savingsBadge) {
+            savingsBadge.textContent = `-${savings}% Size`;
+        }
 
-        document.getElementById('btnSetFeatured').disabled = false;
-        document.getElementById('btnInsertProse').disabled = false;
+        if (dimEl) dimEl.textContent = `${res.width} × ${res.height} px • Original: ${res.origSizeKb} KB`;
+        if (statusEl) statusEl.textContent = `✓ Converted to ${formatName} (${res.sizeKb} KB)`;
+
+        showToast(`✓ Image converted to ${formatName} (${res.sizeKb} KB)`);
     } catch (err) {
         console.error("Compression error:", err);
         showToast('✕ Image compression failed');
@@ -300,7 +349,7 @@ window.applyCompressedAsFeatured = function() {
 
 window.insertCompressedIntoProse = function() {
     if (!currentCompressedDataUrl) return;
-    const imgHtml = `<figure class="my-6 space-y-2"><img src="${currentCompressedDataUrl}" alt="Story Illustration" class="w-full rounded-xl border theme-border object-cover"><figcaption class="text-center text-xs theme-muted">Illustration</figcaption></figure><p></p>`;
+    const imgHtml = `<figure class="my-6 space-y-2"><img src="${currentCompressedDataUrl}" alt="Story Illustration" class="w-full rounded-xl border theme-border object-cover shadow-sm"><figcaption class="text-center text-xs theme-muted">Illustration</figcaption></figure><p></p>`;
     
     if (isHtmlMode) {
         const raw = document.getElementById('rawHtmlEditor');
@@ -314,6 +363,15 @@ window.insertCompressedIntoProse = function() {
     showToast('✓ Image inserted into article body!');
 };
 
+window.downloadEditorCompressedImg = function() {
+    if (!currentCompressedDataUrl) return;
+    const a = document.createElement('a');
+    a.href = currentCompressedDataUrl;
+    const ext = (document.getElementById('editorFormatSelect').value || 'image/webp').split('/')[1];
+    a.download = `optimized-image-${Date.now()}.${ext}`;
+    a.click();
+};
+
 // Standalone WebP Studio Handler
 window.handleStandaloneImageUpload = async function(event) {
     const file = event.target.files?.[0];
@@ -323,12 +381,17 @@ window.handleStandaloneImageUpload = async function(event) {
 };
 
 window.recompressStandaloneImage = async function() {
-    if (!currentStandaloneFile) return;
-    const targetKb = parseInt(document.getElementById('standaloneTargetKb').value, 10) || 100;
+    if (!currentStandaloneFile) {
+        alert('Please select an image file first.');
+        return;
+    }
+
+    const targetKb = parseInt(document.getElementById('standaloneCustomKbInput').value, 10) || 100;
     const maxWidth = parseInt(document.getElementById('standaloneMaxWidth').value, 10) || 1200;
+    const mimeType = document.getElementById('standaloneFormatSelect').value || 'image/webp';
 
     try {
-        const res = await compressImageFile(currentStandaloneFile, targetKb, maxWidth);
+        const res = await compressImageFile(currentStandaloneFile, targetKb, maxWidth, mimeType);
         currentStandaloneDataUrl = res.dataUrl;
 
         document.getElementById('standaloneEmptyMsg').classList.add('hidden');
@@ -338,17 +401,19 @@ window.recompressStandaloneImage = async function() {
         document.getElementById('resOrigSize').textContent = `${res.origSizeKb} KB`;
         document.getElementById('resCompSize').textContent = `${res.sizeKb} KB`;
 
-        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / res.origSizeKb) * 100));
+        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / Math.max(1, res.origSizeKb)) * 100));
         document.getElementById('resSavings').textContent = `${savings}%`;
+        showToast(`✓ Converted to ${mimeType.split('/')[1].toUpperCase()} (${res.sizeKb} KB)`);
     } catch (err) {
         console.error(err);
+        showToast('✕ Conversion failed');
     }
 };
 
 window.copyStandaloneDataUrl = function() {
     if (!currentStandaloneDataUrl) return;
     navigator.clipboard.writeText(currentStandaloneDataUrl).then(() => {
-        showToast('✓ WebP Data URL copied to clipboard!');
+        showToast('✓ Image Data URL copied to clipboard!');
     });
 };
 
@@ -360,7 +425,7 @@ window.sendStandaloneToEditor = function() {
         window.updateCoverPreview(currentStandaloneDataUrl);
     }
     window.switchAdminTab('editorTab');
-    showToast('✓ Transferred to Story Editor as Featured Image!');
+    showToast('✓ Transferred to Story Editor as Featured Cover!');
 };
 
 // ================================================================
