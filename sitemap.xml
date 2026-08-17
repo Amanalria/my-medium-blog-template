@@ -38,12 +38,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hivecloud.in/articles</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://hivecloud.in/agentic-ai-coding-guide-2026</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
