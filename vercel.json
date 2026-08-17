@@ -1,5 +1,5 @@
 {
-  "cleanUrls": false,
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -11,13 +11,12 @@
     }
   ],
   "rewrites": [
-    { "source": "/admin/?", "destination": "/admin.html" },
-    { "source": "/admin.html", "destination": "/admin.html" },
-    { "source": "/about/?", "destination": "/about.html" },
-    { "source": "/contact/?", "destination": "/contact.html" },
-    { "source": "/privacy/?", "destination": "/privacy.html" },
-    { "source": "/terms/?", "destination": "/terms.html" },
-    { "source": "/disclaimer/?", "destination": "/disclaimer.html" },
-    { "source": "/:slug((?!styles|app|admin|post|supabase-client|assets|favicon|.*\\..*).*)", "destination": "/post.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/disclaimer", "destination": "/disclaimer.html" },
+    { "source": "/:slug((?!admin|about|contact|privacy|terms|disclaimer|styles|app|post|supabase-client|assets|favicon|.*\\..*).*)", "destination": "/post.html" }
   ]
 }
