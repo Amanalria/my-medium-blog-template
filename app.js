@@ -273,15 +273,30 @@ function renderWhoToFollow(list) {
     }).join('');
 }
 
+const defaultCategories = [
+    { id: 'agentic-ai', label: 'Agentic AI' },
+    { id: 'ai-architecture', label: 'AI Architecture' },
+    { id: 'machine-learning', label: 'Machine Learning' },
+    { id: 'deep-learning', label: 'Deep Learning' },
+    { id: 'prompt-engineering', label: 'Prompt Engineering' },
+    { id: 'software-engineering', label: 'Software Engineering' },
+    { id: 'autonomous-agents', label: 'Autonomous Agents' }
+];
+
 // 6. Category Selection & Dynamic Render
 window.selectCategory = function(catId) {
     activeTopic = catId;
-    renderDynamicCategories(globalSettings.categories || []);
+    renderDynamicCategories(globalSettings.categories && globalSettings.categories.length > 0 ? globalSettings.categories : defaultCategories);
 
     if (catId === 'all') {
         renderStoriesFeed(mediumStories);
     } else {
-        const filtered = mediumStories.filter(s => (s.category || '').toLowerCase() === catId.toLowerCase());
+        const normalizedTarget = catId.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const filtered = mediumStories.filter(s => {
+            const catNorm = (s.category || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            const tagNorm = (s.tags || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            return catNorm === normalizedTarget || catNorm.includes(normalizedTarget) || tagNorm.includes(normalizedTarget);
+        });
         renderStoriesFeed(filtered);
     }
 };
@@ -289,17 +304,16 @@ window.selectCategory = function(catId) {
 function renderDynamicCategories(categories) {
     const topicBar = document.getElementById('topicFilterBar');
     const pillsContainer = document.getElementById('sidebarCategoryPills');
+    const catsToUse = (categories && categories.length > 0) ? categories : defaultCategories;
 
     let tabsHtml = `<button class="topic-tab ${activeTopic === 'all' ? 'active' : ''}" data-cat="all" onclick="selectCategory('all')">For you</button>`;
-    let pillsHtml = `<button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${activeTopic === 'all' ? 'active-pill' : ''}">All Topics</button>`;
+    let pillsHtml = `<button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 ${activeTopic === 'all' ? 'active-pill' : ''}">All Topics</button>`;
 
-    if (categories && categories.length > 0) {
-        categories.forEach(c => {
-            const isSel = activeTopic === c.id;
-            tabsHtml += `<button class="topic-tab ${isSel ? 'active' : ''}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>`;
-            pillsHtml += `<button type="button" onclick="selectCategory('${c.id}')" data-cat-pill="${c.id}" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all ${isSel ? 'active-pill' : ''}">${c.label}</button>`;
-        });
-    }
+    catsToUse.forEach(c => {
+        const isSel = activeTopic === c.id;
+        tabsHtml += `<button class="topic-tab ${isSel ? 'active' : ''}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>`;
+        pillsHtml += `<button type="button" onclick="selectCategory('${c.id}')" data-cat-pill="${c.id}" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 ${isSel ? 'active-pill' : ''}">${c.label}</button>`;
+    });
 
     if (topicBar) topicBar.innerHTML = tabsHtml;
     if (pillsContainer) pillsContainer.innerHTML = pillsHtml;

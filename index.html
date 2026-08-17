@@ -8,17 +8,8 @@
     <link rel="canonical" href="https://my-me-olive.vercel.app/">
 
     <!-- DNS Prefetch & Preconnect for Super Fast Handshakes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://okpyphrqudeeoboesdzz.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://okpyphrqudeeoboesdzz.supabase.co">
-
-    <!-- Non-blocking Optimized Google Fonts (Swap) -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" media="print" onload="this.media='all'" crossorigin>
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap">
-    </noscript>
 
     <!-- 0ms Zero-CLS Instant Synchronous Settings & Theme Hydration -->
     <script>
@@ -67,7 +58,7 @@
 
     <!-- Pristine Zero-Dependency Ultra Fast Inlined CSS (0ms Instant First Contentful Paint) -->
     <style>
-:root{--bg-primary:#ffffff;--bg-card:#ffffff;--bg-search:#f9f9f9;--bg-hero:#f7f4ed;--text-primary:#242424;--text-muted:#6b6b6b;--border-color:#f2f2f2;--accent-green:#1a8917;--accent-hover:#156d12;--font-serif:'Merriweather',Charter,Georgia,Cambria,serif;--font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace}
+:root{--bg-primary:#ffffff;--bg-card:#ffffff;--bg-search:#f9f9f9;--bg-hero:#f7f4ed;--text-primary:#242424;--text-muted:#6b6b6b;--border-color:#f2f2f2;--accent-green:#1a8917;--accent-hover:#156d12;--font-serif:Charter,'Bitstream Charter','Sitka Text',Cambria,Georgia,serif;--font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
 html.dark{--bg-primary:#121212;--bg-card:#1e1e1e;--bg-search:#1a1a1a;--bg-hero:#161616;--text-primary:#f2f2f2;--text-muted:#a0a0a0;--border-color:#242424;--accent-green:#24a120;--accent-hover:#1a8917}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;tab-size:4;scroll-behavior:smooth}
@@ -76,7 +67,7 @@ a{color:inherit;text-decoration:none}
 button{background:transparent;border:none;cursor:pointer;font-family:inherit;color:inherit}
 input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 img,svg{display:block;vertical-align:middle;max-width:100%}
-.theme-bg{background-color:var(--bg-primary)}.theme-card{background-color:var(--bg-card)}.theme-search-bg{background-color:var(--bg-search)}.theme-hero-bg{background-color:var(--bg-hero)}.theme-text{color:var(--text-primary)}.theme-muted{color:var(--text-muted)}.theme-border{border-color:var(--border-color)}.theme-accent{color:var(--accent-green)}
+.theme-bg{background-color:var(--bg-primary)!important}.theme-card{background-color:var(--bg-card)}.theme-search-bg{background-color:var(--bg-search)}.theme-hero-bg{background-color:var(--bg-hero)}.theme-text{color:var(--text-primary)}.theme-muted{color:var(--text-muted)}.theme-border{border-color:var(--border-color)}.theme-accent{color:var(--accent-green)}
 .font-serif{font-family:var(--font-serif)}.font-sans{font-family:var(--font-sans)}.font-mono{font-family:var(--font-mono)}
 .text-xs{font-size:0.75rem;line-height:1rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1.15}.text-6xl{font-size:3.75rem;line-height:1.1}.text-7xl{font-size:4.5rem;line-height:1.05}.text-\[9px\]{font-size:9px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}
 .font-normal{font-weight:400}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.font-black{font-weight:900}
@@ -117,7 +108,7 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
     <div id="scrollProgress" class="fixed top-0 left-0 h-[3px] bg-emerald-600 z-50" style="width: 0%;"></div>
 
     <!-- 1. Header Navigation Bar -->
-    <header class="w-full border-b theme-border sticky top-0 z-40 theme-bg/95 backdrop-blur-md px-4 sm:px-8 py-2.5">
+    <header class="w-full border-b theme-border sticky top-0 z-50 theme-bg px-4 sm:px-8 py-2.5">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
             <!-- Left: Wordmark Logo + Search Input (Zero-CLS) -->
@@ -396,71 +387,37 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                 </div>
             </div>
 
-            <!-- Recommended Topics Section -->
+            <!-- Recommended Topics Section (All Categories) -->
             <div class="space-y-3 border-t theme-border pt-6">
                 <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
                     Recommended topics
                 </h3>
                 <div class="flex flex-wrap gap-2 pt-1" id="sidebarCategoryPills">
-                    <button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all active-pill">
+                    <button type="button" onclick="selectCategory('all')" data-cat-pill="all" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 active-pill">
                         All Topics
                     </button>
-                    <button type="button" onclick="selectCategory('ai-architecture')" data-cat-pill="ai-architecture" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
+                    <button type="button" onclick="selectCategory('agentic-ai')" data-cat-pill="agentic-ai" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
+                        Agentic AI
+                    </button>
+                    <button type="button" onclick="selectCategory('ai-architecture')" data-cat-pill="ai-architecture" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
                         AI Architecture
                     </button>
-                    <button type="button" onclick="selectCategory('machine-learning')" data-cat-pill="machine-learning" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400 transition-all">
+                    <button type="button" onclick="selectCategory('machine-learning')" data-cat-pill="machine-learning" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
                         Machine Learning
                     </button>
-                </div>
-            </div>
-
-            <!-- Who to Follow -->
-            <div class="space-y-4 border-t theme-border pt-6">
-                <h3 class="text-xs font-bold uppercase tracking-wider theme-text">
-                    Who to follow
-                </h3>
-                <div class="space-y-3 text-xs" id="whoToFollowList">
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">A</div>
-                            <div>
-                                <h4 class="font-bold theme-text">Aman Alria</h4>
-                                <p class="text-[11px] theme-muted">AI Research & Engineering</p>
-                            </div>
-                        </div>
-                        <button type="button" class="px-3 py-1 rounded-full border theme-border theme-text text-xs font-medium hover:border-zinc-400 transition-all">Follow</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reading List Box -->
-            <div class="p-5 rounded-2xl theme-search-bg border theme-border space-y-2.5">
-                <h4 class="text-sm font-serif font-bold theme-text">Reading list</h4>
-                <p class="text-xs theme-muted">Click the bookmark icon on any story to easily add it to your reading list.</p>
-            </div>
-
-            <!-- Newsletter Subscription Box -->
-            <div class="p-5 rounded-2xl theme-search-bg border theme-border space-y-3">
-                <h4 class="text-sm font-serif font-bold theme-text">Join the newsletter</h4>
-                <p class="text-xs theme-muted">Get top stories delivered directly to your inbox weekly.</p>
-                <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" class="space-y-2 pt-1">
-                    <input type="email" id="newsletterEmail" required placeholder="Enter your email" class="w-full theme-bg border theme-border theme-text text-xs p-2.5 rounded-xl focus:outline-none focus:border-zinc-400">
-                    <button type="submit" class="w-full py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-xs hover:opacity-90 transition-all">
-                        Subscribe
+                    <button type="button" onclick="selectCategory('deep-learning')" data-cat-pill="deep-learning" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
+                        Deep Learning
                     </button>
-                </form>
-                <div id="newsletterMsg" class="text-[11px] text-emerald-600 hidden font-medium">✓ Subscribed successfully!</div>
-            </div>
-
-            <!-- Medium Footer Minimal Links -->
-            <div class="pt-4 border-t theme-border flex flex-wrap gap-x-3 gap-y-1.5 text-[11px] theme-muted font-sans">
-                <a href="/about" class="hover:theme-text">Help</a>
-                <a href="/about" class="hover:theme-text">Status</a>
-                <a href="/about" class="hover:theme-text">About</a>
-                <a href="/about" class="hover:theme-text">Careers</a>
-                <a href="/privacy" class="hover:theme-text">Privacy</a>
-                <a href="/terms" class="hover:theme-text">Terms</a>
-                <a href="/contact" class="hover:theme-text">Contact</a>
+                    <button type="button" onclick="selectCategory('prompt-engineering')" data-cat-pill="prompt-engineering" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
+                        Prompt Engineering
+                    </button>
+                    <button type="button" onclick="selectCategory('software-engineering')" data-cat-pill="software-engineering" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
+                        Software Engineering
+                    </button>
+                    <button type="button" onclick="selectCategory('autonomous-agents')" data-cat-pill="autonomous-agents" class="cat-pill framer-tap px-3.5 py-1.5 rounded-full text-xs font-medium theme-search-bg theme-border border hover:theme-text hover:border-zinc-400">
+                        Autonomous Agents
+                    </button>
+                </div>
             </div>
 
         </aside>
