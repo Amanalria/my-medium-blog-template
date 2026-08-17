@@ -1174,3 +1174,4 @@ updateThemeIcons();
 loadManageStories();
 loadGlobalSettings();
 updateWordAndCharCount();
+window.switchAdminTab('editorTab');

@@ -110,7 +110,28 @@ function renderStoriesFeed(list) {
     });
 
     storiesFeed.innerHTML = html;
+    renderSidebarLatestPosts(mediumStories);
     if (animationsOn) initScrollObserver();
+}
+
+function renderSidebarLatestPosts(list) {
+    const container = document.getElementById('sidebarLatestPosts');
+    if (!container) return;
+    if (!list || list.length === 0) {
+        container.innerHTML = `<p class="text-xs theme-muted">No stories published yet.</p>`;
+        return;
+    }
+    const latest = list.slice(0, 5);
+    container.innerHTML = latest.map(s => `
+        <a href="/${s.slug}" class="block space-y-1 group">
+            <div class="flex items-center gap-2 theme-muted text-[11px] font-mono">
+                <span>${s.author}</span>
+                <span>•</span>
+                <span>${s.date}</span>
+            </div>
+            <h4 class="font-bold theme-text group-hover:underline leading-snug">${s.title}</h4>
+        </a>
+    `).join('');
 }
 
 // 5. Scroll-Driven IntersectionObserver

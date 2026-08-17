@@ -130,35 +130,33 @@
         <!-- Story Title & Subtitle -->
         <header class="space-y-4">
             <h1 id="storyTitle" class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold theme-text leading-[1.15] tracking-tight">
-                Parallel Multi-Agent DAG Architectures & Zero-Latency Execution
+                Loading story...
             </h1>
-            <p id="storySubtitle" class="text-lg sm:text-xl theme-muted font-sans font-normal leading-relaxed">
-                Why serial chain-of-thought is giving way to directed acyclic graphs of specialized reasoning agents in autonomous coding engines.
-            </p>
+            <p id="storySubtitle" class="text-lg sm:text-xl theme-muted font-sans font-normal leading-relaxed"></p>
         </header>
 
-        <!-- Author Card & Share / Dynamic Response Stats (No Handshake) -->
+        <!-- Author Card & Share / Dynamic Response Stats -->
         <div class="flex items-center justify-between border-y theme-border py-4 font-sans text-xs">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-xs" id="storyAuthorAvatar">
-                    KV
+                    AU
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="font-bold theme-text" id="storyAuthor">Dr. Kaelen Vance</span>
+                        <span class="font-bold theme-text" id="storyAuthor">Author</span>
                         <button id="followAuthorBtn" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-600 border border-emerald-600/30 hover:bg-emerald-600/10 transition-colors">
                             Follow
                         </button>
                     </div>
                     <div class="flex items-center gap-2 theme-muted text-[11px] pt-0.5">
-                        <span id="storyReadTime">7 min read</span>
+                        <span id="storyReadTime">1 min read</span>
                         <span>•</span>
-                        <span id="storyDate">Aug 17, 2026</span>
+                        <span id="storyDate">Today</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Top Share & Dynamic Comments Badge (Exact Count) -->
+            <!-- Top Share & Dynamic Comments Badge -->
             <div class="flex items-center gap-3">
                 <button type="button" onclick="window.shareCurrentStory()" class="framer-tap flex items-center gap-1.5 px-3 py-1.5 rounded-full theme-search-bg theme-border border text-xs font-semibold theme-text hover:border-zinc-400 transition-colors cursor-pointer" title="Share Story">
                     <svg class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -175,50 +173,23 @@
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
-                    <span id="topCommentsBadge" class="text-xs font-mono font-bold theme-text">2</span>
+                    <span id="topCommentsBadge" class="text-xs font-mono font-bold theme-text">0</span>
                 </a>
             </div>
         </div>
 
         <!-- Featured High-Res Header Image -->
-        <figure class="space-y-2">
-            <img id="storyHeroImage" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80" alt="Cover Artwork" class="w-full h-64 sm:h-96 object-cover rounded-xl border theme-border shadow-sm">
-            <figcaption class="text-[11px] text-center theme-muted font-sans">
-                Neural graph dispatch visualization across isolated agent sandboxes. Photo by DeepMind Lab.
-            </figcaption>
+        <figure id="heroFigure" class="space-y-2 hidden">
+            <img id="storyHeroImage" src="" alt="Cover Artwork" class="w-full h-64 sm:h-96 object-cover rounded-xl border theme-border shadow-sm">
         </figure>
 
         <!-- Article Prose Body (Medium Editorial Typography) -->
         <article class="medium-prose font-serif">
-            <p>
-                When building large-scale software synthesis systems with foundation models, single-turn prompting and linear chain-of-thought reasoning quickly hit strict context and latency ceilings. As tasks scale from single-file bugfixes to multi-tier microservice refactors, human engineering teams do not operate in a single thread—they branch into specialized roles.
-            </p>
-
-            <h2>The Multi-Agent DAG Topology</h2>
-            <p>
-                By representing a development milestone as a directed acyclic graph (DAG), independent worker agents can research documentation, scaffold backend models, and write frontend styling tokens concurrently in isolated memory branches.
-            </p>
-
-            <blockquote>
-                "True autonomy is not about generating code in a loop; it is about establishing verifiable consensus across specialized verification gates before execution."
-            </blockquote>
-
-            <p>
-                Below is a conceptual architecture for non-blocking subagent delegation across our persistent agent engine:
-            </p>
-
-            <pre><code>def dispatch_parallel_fleet(tasks: list[Task]) -> FleetResult:
-    # 1. Scrutinize prompt & extract dependency graph
-    graph = TaskDAG.build_from_specs(tasks)
-    
-    # 2. Spawn concurrent worker nodes in async event loop
-    futures = [
-        agent_pool.execute_async(node) 
-        for node in graph.independent_nodes
-    ]
-    return await asyncio.gather(*futures)</code></pre>
-
-            </p>
+            <div class="py-12 space-y-4 animate-pulse">
+                <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-3/4"></div>
+                <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-full"></div>
+                <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-5/6"></div>
+            </div>
         </article>
 
         <!-- Article Tags Container -->
@@ -271,16 +242,13 @@
             <div class="p-6 rounded-2xl theme-card border theme-border space-y-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-sm" id="authorCardAvatar">
-                        KV
+                        AU
                     </div>
                     <div>
-                        <h4 class="font-bold theme-text" id="authorCardName">Written by Dr. Kaelen Vance</h4>
-                        <span class="text-xs theme-muted">Principal Architect, Autonomous AI Lab</span>
+                        <h4 class="font-bold theme-text" id="authorCardName">Written by Author</h4>
+                        <span class="text-xs theme-muted">Writer & Contributor</span>
                     </div>
                 </div>
-                <p class="text-xs theme-muted leading-relaxed font-sans">
-                    Writing about autonomous multi-agent pipelines, database performance engineering, and the frontier of AI reasoning systems.
-                </p>
             </div>
         </footer>
 
