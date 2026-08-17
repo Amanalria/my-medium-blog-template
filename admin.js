@@ -1,9 +1,14 @@
 // ================================================================
-// MEDIUM CMS STUDIO PRO ENGINE (PRISTINE & 100% DYNAMIC)
+// MEDIUM CMS STUDIO PRO ENGINE (FULL FEATURES + WEBP STUDIO)
 // ================================================================
 
 let allAdminStories = [];
 let isHtmlMode = false;
+let currentCompressedDataUrl = null;
+let currentCompressedFile = null;
+let currentStandaloneDataUrl = null;
+let currentStandaloneFile = null;
+
 let globalSettings = {
     site_name: "Medium",
     site_tagline: "Where good ideas find you.",
@@ -37,7 +42,7 @@ function showToast(msg) {
 
 // 2. Tab Navigation
 window.switchAdminTab = function(tabId) {
-    const tabs = ['editorTab', 'storiesTab', 'categoryTab', 'supabaseTab', 'siteTab', 'seoTab', 'adsTab'];
+    const tabs = ['editorTab', 'imageStudioTab', 'storiesTab', 'categoryTab', 'supabaseTab', 'siteTab', 'seoTab', 'adsTab'];
     
     tabs.forEach(t => {
         const el = document.getElementById(t);
@@ -110,6 +115,13 @@ window.insertLinkPrompt = function() {
     if (url) window.formatDoc('createLink', url);
 };
 
+window.insertImagePrompt = function() {
+    const url = prompt('Enter image URL (or use Quick Compressor above):');
+    if (url) {
+        window.formatDoc('insertHTML', `<img src="${url}" alt="Story Image" class="my-6 rounded-xl border theme-border w-full">`);
+    }
+};
+
 window.toggleHtmlMode = function() {
     const wysiwyg = document.getElementById('wysiwygEditor');
     const raw = document.getElementById('rawHtmlEditor');
@@ -143,6 +155,13 @@ function updateWordAndCharCount() {
     const cEl = document.getElementById('charCount');
     if (wEl) wEl.textContent = words.toString();
     if (cEl) cEl.textContent = chars.toString();
+
+    // Auto-calc reading time (approx 200 wpm)
+    const minutes = Math.max(1, Math.ceil(words / 200));
+    const rtInput = document.getElementById('editStoryReadTime');
+    if (rtInput && !rtInput.dataset.manual) {
+        rtInput.value = `${minutes} min read`;
+    }
 }
 
 const editorEl = document.getElementById('wysiwygEditor');
@@ -150,7 +169,204 @@ if (editorEl) {
     editorEl.addEventListener('input', updateWordAndCharCount);
 }
 
-// 6. Reset & Save Story Form
+// 6. Cover Image Preview
+window.updateCoverPreview = function(url) {
+    const box = document.getElementById('coverImgPreviewContainer');
+    const img = document.getElementById('coverImgPreviewEl');
+    if (!box || !img) return;
+
+    if (url && url.trim()) {
+        img.src = url.trim();
+        box.classList.remove('hidden');
+    } else {
+        box.classList.add('hidden');
+    }
+};
+
+// ================================================================
+// 7. WEBP IMAGE COMPRESSION ENGINE (CANVAS BASED)
+// ================================================================
+
+function compressImageFile(file, targetKb = 80, maxWidth = 1200) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Multi-pass binary search for target quality
+                let minQ = 0.1, maxQ = 0.95, bestDataUrl = null, bestSize = Infinity;
+                
+                for (let i = 0; i < 5; i++) {
+                    const midQ = (minQ + maxQ) / 2;
+                    const dataUrl = canvas.toDataURL('image/webp', midQ);
+                    const sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
+
+                    if (sizeKb <= targetKb) {
+                        bestDataUrl = dataUrl;
+                        bestSize = sizeKb;
+                        minQ = midQ;
+                    } else {
+                        maxQ = midQ;
+                    }
+                }
+
+                if (!bestDataUrl) {
+                    bestDataUrl = canvas.toDataURL('image/webp', 0.2);
+                    bestSize = Math.round((bestDataUrl.length * 3) / 4 / 1024);
+                }
+
+                resolve({
+                    dataUrl: bestDataUrl,
+                    sizeKb: bestSize,
+                    origSizeKb: Math.round(file.size / 1024),
+                    width,
+                    height
+                });
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Editor Inline Image Handler
+window.handleEditorImageUpload = async function(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    currentCompressedFile = file;
+
+    const statusEl = document.getElementById('editorImgStatus');
+    if (statusEl) statusEl.textContent = 'Compressing to WebP...';
+
+    await recompressEditorImage();
+};
+
+window.recompressEditorImage = async function() {
+    if (!currentCompressedFile) return;
+    const targetKb = parseInt(document.getElementById('editorTargetKbSelect').value, 10) || 80;
+
+    try {
+        const res = await compressImageFile(currentCompressedFile, targetKb, 1200);
+        currentCompressedDataUrl = res.dataUrl;
+
+        const previewStrip = document.getElementById('editorImagePreviewStrip');
+        const previewImg = document.getElementById('editorImagePreviewImg');
+        const statsEl = document.getElementById('editorImgStats');
+        const dimEl = document.getElementById('editorImgDim');
+        const statusEl = document.getElementById('editorImgStatus');
+
+        if (previewStrip) {
+            previewStrip.classList.remove('hidden');
+            previewStrip.classList.add('flex');
+        }
+        if (previewImg) previewImg.src = res.dataUrl;
+        if (statsEl) statsEl.textContent = `${res.sizeKb} KB (Orig: ${res.origSizeKb} KB)`;
+        if (dimEl) dimEl.textContent = `${res.width} x ${res.height} px • WebP`;
+        if (statusEl) statusEl.textContent = '✓ Ready';
+
+        document.getElementById('btnSetFeatured').disabled = false;
+        document.getElementById('btnInsertProse').disabled = false;
+    } catch (err) {
+        console.error("Compression error:", err);
+        showToast('✕ Image compression failed');
+    }
+};
+
+window.applyCompressedAsFeatured = function() {
+    if (!currentCompressedDataUrl) return;
+    const imgInput = document.getElementById('editStoryImage');
+    if (imgInput) {
+        imgInput.value = currentCompressedDataUrl;
+        window.updateCoverPreview(currentCompressedDataUrl);
+        showToast('✓ Set as Featured Cover Image!');
+    }
+};
+
+window.insertCompressedIntoProse = function() {
+    if (!currentCompressedDataUrl) return;
+    const imgHtml = `<figure class="my-6 space-y-2"><img src="${currentCompressedDataUrl}" alt="Story Illustration" class="w-full rounded-xl border theme-border object-cover"><figcaption class="text-center text-xs theme-muted">Illustration</figcaption></figure><p></p>`;
+    
+    if (isHtmlMode) {
+        const raw = document.getElementById('rawHtmlEditor');
+        raw.value += imgHtml;
+    } else {
+        const editor = document.getElementById('wysiwygEditor');
+        editor.focus();
+        document.execCommand('insertHTML', false, imgHtml);
+    }
+    updateWordAndCharCount();
+    showToast('✓ Image inserted into article body!');
+};
+
+// Standalone WebP Studio Handler
+window.handleStandaloneImageUpload = async function(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    currentStandaloneFile = file;
+    await recompressStandaloneImage();
+};
+
+window.recompressStandaloneImage = async function() {
+    if (!currentStandaloneFile) return;
+    const targetKb = parseInt(document.getElementById('standaloneTargetKb').value, 10) || 100;
+    const maxWidth = parseInt(document.getElementById('standaloneMaxWidth').value, 10) || 1200;
+
+    try {
+        const res = await compressImageFile(currentStandaloneFile, targetKb, maxWidth);
+        currentStandaloneDataUrl = res.dataUrl;
+
+        document.getElementById('standaloneEmptyMsg').classList.add('hidden');
+        document.getElementById('standaloneActiveResult').classList.remove('hidden');
+
+        document.getElementById('standalonePreviewImg').src = res.dataUrl;
+        document.getElementById('resOrigSize').textContent = `${res.origSizeKb} KB`;
+        document.getElementById('resCompSize').textContent = `${res.sizeKb} KB`;
+
+        const savings = Math.max(0, Math.round(((res.origSizeKb - res.sizeKb) / res.origSizeKb) * 100));
+        document.getElementById('resSavings').textContent = `${savings}%`;
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+window.copyStandaloneDataUrl = function() {
+    if (!currentStandaloneDataUrl) return;
+    navigator.clipboard.writeText(currentStandaloneDataUrl).then(() => {
+        showToast('✓ WebP Data URL copied to clipboard!');
+    });
+};
+
+window.sendStandaloneToEditor = function() {
+    if (!currentStandaloneDataUrl) return;
+    const imgInput = document.getElementById('editStoryImage');
+    if (imgInput) {
+        imgInput.value = currentStandaloneDataUrl;
+        window.updateCoverPreview(currentStandaloneDataUrl);
+    }
+    window.switchAdminTab('editorTab');
+    showToast('✓ Transferred to Story Editor as Featured Image!');
+};
+
+// ================================================================
+// 8. RESET & SAVE STORY FORM
+// ================================================================
+
 window.resetEditorForm = function() {
     document.getElementById('editStoryId').value = '';
     document.getElementById('editStoryTitle').value = '';
@@ -161,6 +377,15 @@ window.resetEditorForm = function() {
     document.getElementById('editStoryAuthor').value = '';
     document.getElementById('editStoryImage').value = '';
     document.getElementById('editStoryReadTime').value = '5 min read';
+
+    window.updateCoverPreview('');
+    const previewStrip = document.getElementById('editorImagePreviewStrip');
+    if (previewStrip) {
+        previewStrip.classList.add('hidden');
+        previewStrip.classList.remove('flex');
+    }
+    currentCompressedDataUrl = null;
+    currentCompressedFile = null;
 
     const editor = document.getElementById('wysiwygEditor');
     if (editor) editor.innerHTML = '<p>Start writing your story here...</p>';
@@ -237,7 +462,10 @@ window.saveStory = async function(status = 'published') {
     }
 };
 
-// 7. Manage Stories List
+// ================================================================
+// 9. MANAGE STORIES LIST
+// ================================================================
+
 async function loadManageStories() {
     const tbody = document.getElementById('manageStoriesTbody');
     if (!tbody) return;
@@ -303,6 +531,21 @@ function renderManageTable(list) {
     `).join('');
 }
 
+window.filterStoriesTable = function(q) {
+    const query = (q || '').toLowerCase().trim();
+    if (!query) {
+        renderManageTable(allAdminStories);
+        return;
+    }
+    const filtered = allAdminStories.filter(s => 
+        (s.title && s.title.toLowerCase().includes(query)) ||
+        (s.slug && s.slug.toLowerCase().includes(query)) ||
+        (s.author && s.author.toLowerCase().includes(query)) ||
+        (s.category && s.category.toLowerCase().includes(query))
+    );
+    renderManageTable(filtered);
+};
+
 window.editStoryFromTable = function(id) {
     const s = allAdminStories.find(item => item.id === id);
     if (!s) return;
@@ -317,6 +560,8 @@ window.editStoryFromTable = function(id) {
     document.getElementById('editStoryAuthor').value = s.author;
     document.getElementById('editStoryImage').value = s.image || '';
     document.getElementById('editStoryReadTime').value = s.readTime || '5 min read';
+
+    window.updateCoverPreview(s.image || '');
 
     const editor = document.getElementById('wysiwygEditor');
     if (editor) editor.innerHTML = s.bodyHtml || '<p></p>';
@@ -340,7 +585,10 @@ window.deleteStoryFromTable = async function(id) {
     }
 };
 
-// 8. Categories Manager
+// ================================================================
+// 10. CATEGORIES MANAGER
+// ================================================================
+
 window.addNewCategoryFromForm = function() {
     const labelInput = document.getElementById('newCategoryLabel');
     const idInput = document.getElementById('newCategoryId');
@@ -412,7 +660,10 @@ function populateCategoryDropdowns(categories) {
     catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
 }
 
-// 9. Supabase Connection Settings
+// ================================================================
+// 11. SUPABASE CONNECTION SETTINGS
+// ================================================================
+
 window.saveSupabaseSettings = function() {
     const url = document.getElementById('supabaseUrlInput').value.trim();
     const key = document.getElementById('supabaseAnonKeyInput').value.trim();
@@ -465,10 +716,14 @@ window.testSupabaseConnection = async function() {
     }
 };
 
-// 10. Settings Management (Site Branding, SEO, Ads)
+// ================================================================
+// 12. SETTINGS MANAGEMENT (Site Branding, SEO, Ads)
+// ================================================================
+
 window.saveSiteBrandingSettings = function() {
     globalSettings.site_name = document.getElementById('siteNameInput').value.trim();
     globalSettings.site_tagline = document.getElementById('siteTaglineInput').value.trim();
+    globalSettings.brand_color = document.getElementById('brandColorInput').value.trim() || "#1a8917";
     globalSettings.footer_copyright = document.getElementById('footerCopyrightInput').value.trim();
     pushSettingsToServer(globalSettings);
 };
@@ -531,6 +786,9 @@ function populateSettingsToUI() {
     }
     if (document.getElementById('siteTaglineInput')) {
         document.getElementById('siteTaglineInput').value = globalSettings.site_tagline || '';
+    }
+    if (document.getElementById('brandColorInput')) {
+        document.getElementById('brandColorInput').value = globalSettings.brand_color || '#1a8917';
     }
     if (document.getElementById('footerCopyrightInput')) {
         document.getElementById('footerCopyrightInput').value = globalSettings.footer_copyright || '';

@@ -22,7 +22,7 @@
       "dest": "/index.html"
     },
     {
-      "src": "^/admin/?$",
+      "src": "^/aman/?$",
       "headers": {
         "Cache-Control": "no-cache, no-store, must-revalidate"
       },

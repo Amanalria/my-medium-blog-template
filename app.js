@@ -130,8 +130,7 @@ function renderStoriesFeed(list) {
         feed.innerHTML = `
             <div class="py-16 text-center text-xs theme-muted space-y-3">
                 <p class="text-sm font-medium theme-text">No stories found.</p>
-                <p class="text-xs">Write and publish articles directly from the Admin Studio.</p>
-                <a href="/admin" class="inline-block mt-2 px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold text-xs">Open Admin Studio</a>
+                <p class="text-xs">Stay tuned for upcoming stories and articles.</p>
             </div>
         `;
         renderSidebarLatestPosts([]);
