@@ -26,30 +26,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hivecloud.in/ai-reasoning-test-time-compute</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hivecloud.in/autonomous-ai-agents-production-guide</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hivecloud.in/multi-agent-orchestration-mcp-guide</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hivecloud.in/context-engineering-dynamic-memory-guide</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://hivecloud.in/agentic-ai-news-august</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -62,7 +38,37 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://hivecloud.in/ai-reasoning-test-time</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/ai-reasoning-test-time-compute</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/autonomous-ai-agents-production-guide</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/context-engineering-dynamic-memory-guide</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hivecloud.in/latest-agentic-ai-news-august</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/multi-agent-orchestration-mcp-guide</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

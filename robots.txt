@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /aman
+Disallow: /aman/
+Disallow: /articles
+Disallow: /articles/
 
 Sitemap: https://hivecloud.in/sitemap.xml
