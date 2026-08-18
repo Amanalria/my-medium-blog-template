@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Automated Perpetual Sitemap Engine for Hive Cloud (hivecloud.in)
-- Guaranteed Additive Merging: Existing published URLs are NEVER deleted.
+- Guaranteed Additive Merging: Existing published URLs and static pages are NEVER deleted.
+- Full Static Page Coverage: Home, About Us, Contact Us, Privacy Policy, Terms & Conditions, Disclaimer.
 - Automatic Ingestion: Reads articles_data.json and Supabase 'articles' table.
 - Strict Exclusions: Permanently blocks /articles, /articles/, /aman, and admin paths.
 - Compliant XML Output: Generates valid sitemaps.org 0.9 XML.
@@ -21,11 +22,14 @@ JSON_PATH = os.path.join(REPO_DIR, "articles_data.json")
 SUPABASE_URL = "https://okpyphrqudeeoboesdzz.supabase.co/rest/v1/articles?select=slug,status,date"
 ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcHlwaHJxdWRlZW9ib2VzZHp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NjYxNDUsImV4cCI6MjEwMjU0MjE0NX0.jyg2OqFSx_qtfkkPHU0E_VINxJgtYSK_70UpFLd_X2k"
 
-# Base default pages (Always present)
+# Base default pages (Always present in sitemap)
 BASE_PAGES = [
     {"loc": "https://hivecloud.in/", "priority": "1.0", "changefreq": "daily"},
     {"loc": "https://hivecloud.in/about", "priority": "0.7", "changefreq": "monthly"},
     {"loc": "https://hivecloud.in/contact", "priority": "0.7", "changefreq": "monthly"},
+    {"loc": "https://hivecloud.in/privacy", "priority": "0.5", "changefreq": "monthly"},
+    {"loc": "https://hivecloud.in/terms", "priority": "0.5", "changefreq": "monthly"},
+    {"loc": "https://hivecloud.in/disclaimer", "priority": "0.5", "changefreq": "monthly"},
 ]
 
 # Explicitly Forbidden URLs (Must never appear in sitemap)
@@ -74,11 +78,11 @@ def parse_existing_sitemap():
     return url_map
 
 def sync_sitemap():
-    print("🔄 Starting Automated Sitemap Synchronization...")
+    print("🔄 Starting Automated Sitemap Synchronization with all static & article pages...")
     url_map = parse_existing_sitemap()
     today = datetime.now().strftime("%Y-%m-%d")
 
-    # 1. Add/Preserve Base Pages
+    # 1. Add/Preserve All Core Static Pages
     for bp in BASE_PAGES:
         loc = bp["loc"]
         if loc not in url_map:
@@ -88,6 +92,10 @@ def sync_sitemap():
                 "changefreq": bp["changefreq"],
                 "priority": bp["priority"]
             }
+        else:
+            # Keep official priority/changefreq
+            url_map[loc]["priority"] = bp["priority"]
+            url_map[loc]["changefreq"] = bp["changefreq"]
 
     # 2. Ingest from local articles_data.json
     if os.path.exists(JSON_PATH):
@@ -135,15 +143,22 @@ def sync_sitemap():
     except Exception as e:
         print(f"⚠️ Supabase sitemap sync note: {e}")
 
-    # 4. Generate clean, sorted sitemap.xml
-    # Sort order: Home page first, then base pages, then articles
+    # 4. Generate clean, organized sitemap.xml
+    # Order: Home -> Main Static Pages -> Legal Pages -> Articles
+    order_map = {
+        "https://hivecloud.in/": 0,
+        "https://hivecloud.in/about": 1,
+        "https://hivecloud.in/contact": 2,
+        "https://hivecloud.in/privacy": 3,
+        "https://hivecloud.in/terms": 4,
+        "https://hivecloud.in/disclaimer": 5,
+    }
+
     def sort_key(item):
         loc = item["loc"]
-        if loc == "https://hivecloud.in/":
-            return (0, loc)
-        if loc in ["https://hivecloud.in/about", "https://hivecloud.in/contact"]:
-            return (1, loc)
-        return (2, loc)
+        if loc in order_map:
+            return (0, order_map[loc])
+        return (1, loc)
 
     sorted_urls = sorted(url_map.values(), key=sort_key)
 
@@ -168,8 +183,11 @@ def sync_sitemap():
     with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
         f.write("\n".join(xml_lines))
 
-    print(f"✅ Successfully wrote {len(sorted_urls)} URLs to {SITEMAP_PATH}")
-    print("🔒 Confirmed: /articles, /articles/, and /aman are excluded.")
+    print(f"✅ Successfully updated {len(sorted_urls)} URLs in {SITEMAP_PATH}")
+    print("📋 Included Static Pages:")
+    for bp in BASE_PAGES:
+        print(f"   • {bp['loc']} (priority: {bp['priority']})")
+    print("🔒 Blocked URLs: /articles, /articles/, /aman")
     return len(sorted_urls)
 
 if __name__ == "__main__":

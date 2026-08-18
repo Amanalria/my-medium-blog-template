@@ -20,6 +20,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://hivecloud.in/privacy</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/terms</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hivecloud.in/disclaimer</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://hivecloud.in/agentic-ai-coding-guide-2026</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
