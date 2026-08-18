@@ -21,14 +21,15 @@ const defaultGoogleServiceAccount = {
 };
 
 let globalSettings = {
-    site_name: "Medium",
-    site_tagline: "Where good ideas find you.",
-    footer_copyright: "© 2026 Medium. All rights reserved.",
+    site_name: "Hive Cloud",
+    site_tagline: "Agentic AI News & Autonomous Systems",
+    footer_copyright: "© 2026 Hive Cloud. All rights reserved.",
     brand_color: "#1a8917",
     categories: [],
     seo: {
-        meta_title: "Medium – Where good ideas find you.",
-        meta_description: "Discover stories, thinking, and expertise.",
+        meta_title: "Hive Cloud | Agentic AI News & Autonomous Systems",
+        meta_description: "Read latest agentic AI news, autonomous engineering architectures, and multi-agent system benchmarks. Discover real production guides and framework analyses.",
+        meta_keywords: "agentic ai news, ai agents news, latest agentic ai news august, autonomous ai agents, multi agent systems, langgraph production, crewai vs langgraph, ai coding agents, sovereign ai, test time compute, enterprise ai architecture, agentic workflows, software engineering ai, ai reasoning models, hive cloud",
         canonical_url: "https://hivecloud.in/"
     },
     indexing: {
