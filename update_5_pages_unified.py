@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Update 5 Static Pages with:
-1. Exact Homepage Header & Footer Navigation.
-2. Removed subtitle metadata lines under <h1> on all 5 pages.
-3. Removed the contact form from contact.html (kept clean direct contact cards).
+1. Exact Homepage Header Navbar (with Search, Theme Toggle & Mobile Hamburger Menu).
+2. Working Mobile Drawer Menu.
+3. Spacing & border divider under <h1> on all 5 pages.
 4. Official Email amanalria3@gmail.com on all 5 pages.
 5. 600-650 words each, 100% Humanizer compliant.
 """
@@ -70,18 +70,26 @@ HEADER_TEMPLATE = """<!DOCTYPE html>
     <header class="w-full border-b theme-border sticky top-0 z-50 theme-bg px-4 sm:px-8 py-2.5">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
-            <!-- Left: Wordmark Logo -->
+            <!-- Left: Wordmark Logo + Search Input -->
             <div class="flex items-center gap-6">
                 <a href="/" class="flex items-center gap-2 group shrink-0" aria-label="Homepage">
                     <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Hive Cloud':'Hive Cloud');}catch(e){document.write('Hive Cloud');}})();</script></span>
                 </a>
+
+                <!-- Search Bar -->
+                <div class="hidden sm:flex items-center relative">
+                    <svg class="w-4 h-4 absolute left-3 theme-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" onclick="window.location.href='/'" onfocus="window.location.href='/'" placeholder="Search stories..." aria-label="Search stories" class="pl-9 pr-4 py-2 rounded-full theme-search-bg text-xs theme-text border theme-border focus:border-zinc-400 outline-none w-48 lg:w-64 cursor-pointer transition-all">
+                </div>
             </div>
 
             <!-- Right Navigation & Controls -->
             <div class="flex items-center gap-4 text-xs font-sans">
                 <nav class="hidden md:flex items-center gap-6 theme-muted font-medium">
-                    <a href="/" class="hover:theme-text transition-colors">Home</a>
-                    <a href="/about" class="hover:theme-text transition-colors">Our story</a>
+                    <a href="/about" class="hover:theme-text transition-colors">About Us</a>
                     <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
                     <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
                     <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
@@ -103,6 +111,15 @@ HEADER_TEMPLATE = """<!DOCTYPE html>
                     </svg>
                     <svg class="themeMoonSvg w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <!-- Mobile Hamburger Menu Button -->
+                <button type="button" onclick="window.openMobileDrawer()" class="flex md:hidden framer-tap p-2 rounded-lg theme-muted hover:theme-text cursor-pointer" aria-label="Open navigation menu">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
             </div>
@@ -131,6 +148,57 @@ FOOTER_TEMPLATE = """
         </div>
     </footer>
 
+    <!-- 6. Mobile Side-Drawer Navigation -->
+    <div id="mobileDrawer" style="display: none;" class="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-md flex justify-end" onclick="window.closeMobileDrawer()">
+        <div class="drawer-content-animate theme-card border-l theme-border w-full max-w-xs h-full p-6 space-y-6 flex flex-col justify-between shadow-2xl overflow-y-auto" onclick="event.stopPropagation()">
+            
+            <div class="space-y-6">
+                <!-- Top Header in Drawer -->
+                <div class="flex items-center justify-between border-b theme-border pb-4">
+                    <span class="font-serif font-black text-2xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Hive Cloud':'Hive Cloud');}catch(e){document.write('Hive Cloud');}})();</script></span>
+                    <button type="button" onclick="window.closeMobileDrawer()" class="framer-tap p-1.5 text-zinc-400 hover:theme-text cursor-pointer" aria-label="Close menu">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Theme Toggle Inside Drawer -->
+                <div class="space-y-2">
+                    <label class="text-[11px] font-mono uppercase tracking-wider theme-muted">Appearance</label>
+                    <button type="button" onclick="window.toggleTheme()" class="w-full flex items-center justify-between p-3 rounded-xl theme-bg border theme-border hover:border-zinc-400 transition-colors cursor-pointer text-xs font-semibold theme-text">
+                        <span class="flex items-center gap-2">
+                            <span>Toggle Theme</span>
+                        </span>
+                        <span class="text-[11px] font-mono text-emerald-500 uppercase" id="currentThemeBadge">Light</span>
+                    </button>
+                </div>
+
+                <!-- Important Pages Links -->
+                <div class="space-y-2">
+                    <label class="text-[11px] font-mono uppercase tracking-wider theme-muted">Navigation</label>
+                    <nav class="space-y-1 text-sm font-medium">
+                        <a href="/" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors font-bold text-emerald-600">Home Feed</a>
+                        <a href="/about" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors">About Us</a>
+                        <a href="/contact" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors">Contact</a>
+                        <a href="/privacy" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors">Privacy Policy</a>
+                        <a href="/terms" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors">Terms of Service</a>
+                        <a href="/disclaimer" class="block p-2.5 rounded-lg theme-text hover:theme-search-bg transition-colors">Disclaimer</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Drawer Bottom CTA -->
+            <div class="pt-4 border-t theme-border space-y-3">
+                <a href="/" class="block text-center py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-xs shadow-sm">
+                    Back to Feed
+                </a>
+            </div>
+
+        </div>
+    </div>
+
     <script>
         window.toggleTheme = function() {
             const isDark = document.documentElement.classList.toggle('dark');
@@ -141,7 +209,20 @@ FOOTER_TEMPLATE = """
             const isDark = document.documentElement.classList.contains('dark');
             document.querySelectorAll('.themeSunSvg').forEach(el => el.classList.toggle('hidden', !isDark));
             document.querySelectorAll('.themeMoonSvg').forEach(el => el.classList.toggle('hidden', isDark));
+            const badge = document.getElementById('currentThemeBadge');
+            if (badge) badge.innerText = isDark ? 'Dark' : 'Light';
         }
+        window.openMobileDrawer = function() {
+            const drawer = document.getElementById('mobileDrawer');
+            if (drawer) drawer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            updateThemeIcons();
+        };
+        window.closeMobileDrawer = function() {
+            const drawer = document.getElementById('mobileDrawer');
+            if (drawer) drawer.style.display = 'none';
+            document.body.style.overflow = '';
+        };
         document.addEventListener('DOMContentLoaded', updateThemeIcons);
     </script>
 </body>
@@ -149,11 +230,13 @@ FOOTER_TEMPLATE = """
 """
 
 # ==============================================================================
-# 1. ABOUT US BODY (Clean H1 Title without metadata subtitle)
+# 1. ABOUT US BODY (With Spacing Under H1)
 # ==============================================================================
 ABOUT_BODY = """
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text mb-6">About Us</h1>
+    <div class="mb-10 pb-4 border-b theme-border">
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">About Us</h1>
+    </div>
 
     <article class="legal-prose font-serif">
         <p>Welcome to Hive Cloud. We are an independent software engineering publication and technical research hub founded in 2026. Our primary focus centers on the practical implementation of agentic artificial intelligence, autonomous coding fleets, multi-agent state machines, and distributed system architectures.</p>
@@ -201,11 +284,13 @@ ABOUT_BODY = """
 """
 
 # ==============================================================================
-# 2. CONTACT US BODY (Direct Contact Cards without Form - 620+ Words)
+# 2. CONTACT US BODY (With Spacing Under H1 & Direct Contact Cards)
 # ==============================================================================
 CONTACT_BODY = """
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text mb-6">Contact Us</h1>
+    <div class="mb-10 pb-4 border-b theme-border">
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">Contact Us</h1>
+    </div>
 
     <article class="legal-prose font-serif">
         <p>We welcome communications from our global readership, software engineers, research scientists, and industry technology partners. Whether you have an inquiry regarding our published benchmarks, a technical correction, a guest contribution proposal, or an advertising question, our team is directly accessible via official email channels.</p>
@@ -272,11 +357,13 @@ CONTACT_BODY = """
 """
 
 # ==============================================================================
-# 3. PRIVACY POLICY BODY (Clean H1 Title without metadata subtitle)
+# 3. PRIVACY POLICY BODY (With Spacing Under H1)
 # ==============================================================================
 PRIVACY_BODY = """
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text mb-6">Privacy Policy</h1>
+    <div class="mb-10 pb-4 border-b theme-border">
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">Privacy Policy</h1>
+    </div>
 
     <article class="legal-prose font-serif">
         <p>At Hive Cloud (accessible from <strong>https://hivecloud.in</strong>), protecting visitor privacy is one of our primary operational commitments. This Privacy Policy outlines the types of information collected and recorded by Hive Cloud and how we handle it in compliance with international privacy standards, including the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).</p>
@@ -326,11 +413,13 @@ PRIVACY_BODY = """
 """
 
 # ==============================================================================
-# 4. TERMS OF SERVICE BODY (Clean H1 Title without metadata subtitle)
+# 4. TERMS OF SERVICE BODY (With Spacing Under H1)
 # ==============================================================================
 TERMS_BODY = """
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text mb-6">Terms of Service</h1>
+    <div class="mb-10 pb-4 border-b theme-border">
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">Terms of Service</h1>
+    </div>
 
     <article class="legal-prose font-serif">
         <p>Welcome to Hive Cloud. These terms and conditions outline the rules and regulations for the use of the Hive Cloud Website, located at <strong>https://hivecloud.in</strong>. By accessing this website, we assume you accept these terms of service in full. Do not continue to use Hive Cloud if you do not agree to take all of the terms and conditions stated on this page.</p>
@@ -383,11 +472,13 @@ TERMS_BODY = """
 """
 
 # ==============================================================================
-# 5. DISCLAIMER BODY (Clean H1 Title without metadata subtitle)
+# 5. DISCLAIMER BODY (With Spacing Under H1)
 # ==============================================================================
 DISCLAIMER_BODY = """
 <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
-    <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text mb-6">Disclaimer</h1>
+    <div class="mb-10 pb-4 border-b theme-border">
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">Disclaimer</h1>
+    </div>
 
     <article class="legal-prose font-serif">
         <p>The information provided by Hive Cloud ("we", "us", or "our") on <strong>https://hivecloud.in</strong> (the "Site") is for general educational, technical research, and informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any technical information, code sample, or benchmark on the Site.</p>
@@ -436,7 +527,7 @@ PAGES = [
 ]
 
 def main():
-    print("🚀 Updating 5 static pages with unified homepage navbar/footer & clean H1 headers...")
+    print("🚀 Updating 5 static pages with unified homepage navbar, hamburger drawer, and clean title spacing...")
 
     for filename, title, slug, body in PAGES:
         cleaned_body = humanizer.clean_ai_patterns(body).strip()
@@ -450,7 +541,7 @@ def main():
         with open(target_file, "w", encoding="utf-8") as f:
             f.write(full_html)
 
-        print(f"📊 Updated {filename}: {words} words (Clean header/footer synced, email amanalria3@gmail.com included)")
+        print(f"📊 Updated {filename}: {words} words (Clean title spacing, mobile hamburger drawer synced)")
 
 if __name__ == "__main__":
     main()
