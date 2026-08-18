@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disclaimer</title>
+    <title>Disclaimer | Hive Cloud</title>
+    <meta name="description" content="Disclaimer for Hive Cloud. Independent engineering publication focused on agentic AI, software architecture, and multi-agent systems.">
     <link rel="canonical" href="https://hivecloud.in/disclaimer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -14,12 +18,10 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
-
             try {
                 const raw = localStorage.getItem('cached_settings');
                 if (raw) {
                     const s = JSON.parse(raw);
-                    if (s.site_name) document.title = `Disclaimer – ${s.site_name}`;
                     if (s.brand_color) document.documentElement.style.setProperty('--accent-green', s.brand_color);
                     if (s.favicon_url) {
                         let link = document.querySelector("link[rel~='icon']");
@@ -31,26 +33,90 @@
         })();
     </script>
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        .legal-prose p { margin-bottom: 1.25rem; line-height: 1.75; font-size: 1rem; color: inherit; opacity: 0.9; }
+        .legal-prose h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; color: inherit; }
+        .legal-prose h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: inherit; }
+        .legal-prose ul, .legal-prose ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+        .legal-prose li { margin-bottom: 0.5rem; line-height: 1.6; list-style-type: disc; }
+        .legal-prose strong { font-weight: 700; color: inherit; }
+        .contact-box { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 1rem; padding: 1.25rem; margin: 1.5rem 0; }
+    </style>
 </head>
 <body class="theme-bg theme-text font-sans antialiased min-h-screen flex flex-col justify-between">
     <header class="w-full border-b theme-border px-4 sm:px-8 py-3.5 sticky top-0 theme-bg/95 backdrop-blur-md z-40">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="/" class="font-serif font-black text-2xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Medium':'Medium');}catch(e){document.write('Medium');}})();</script></a>
-            <div class="flex items-center gap-4 text-xs">
-                <a href="/" class="theme-muted hover:theme-text">Home</a>
-            </div>
+            <a href="/" class="font-serif font-black text-2xl tracking-tighter theme-text site-logo-text flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">H</span>
+                <span>Hive Cloud</span>
+            </a>
+            <nav class="flex items-center gap-5 text-xs font-medium theme-muted">
+                <a href="/" class="hover:theme-text transition-colors">Home</a>
+                <a href="/about" class="hover:theme-text transition-colors ">About</a>
+                <a href="/contact" class="hover:theme-text transition-colors ">Contact</a>
+                <a href="/privacy" class="hover:theme-text transition-colors ">Privacy</a>
+                <a href="/terms" class="hover:theme-text transition-colors ">Terms</a>
+                <a href="/disclaimer" class="hover:theme-text transition-colors theme-text font-bold">Disclaimer</a>
+            </nav>
         </div>
     </header>
+<main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full">
+ <div class="space-y-2 border-b theme-border pb-6 mb-8">
+ <div class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 uppercase tracking-wider">Legal Notices & Transparency</div>
+ <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight theme-text">Disclaimer</h1>
+ <p class="text-sm theme-muted">Last Updated: August 18, 2026 &bull; Effective Date: August 18, 2026 &bull; Official Contact: amanalria3@gmail.com</p>
+ </div>
 
-    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-6 flex-1">
-        <h1 class="text-3xl sm:text-4xl font-serif font-bold tracking-tight theme-text">Disclaimer</h1>
-        <div class="medium-prose font-serif">
-            <p>The views and opinions expressed in articles published on this platform belong solely to the respective authors and do not necessarily reflect the official policy or position of the platform.</p>
+ <article class="legal-prose font-serif">
+ <p>The information provided by Hive Cloud ("we", "us", or "our") on <strong>https://hivecloud.in</strong> (the "Site") is for general educational, technical research, and informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any technical information, code sample, or benchmark on the Site.</p>
+
+ <p>Under no circumstance shall we have any liability to you for any loss or damage of any kind incurred as a result of the use of the site or reliance on any information provided on the site. Your use of the site and your reliance on any information on the site is solely at your own risk.</p>
+
+ <h2>Professional Engineering and Technical Disclaimer</h2>
+ <p>The Site cannot and does not contain formal legal, financial, or certified engineering consultancy advice. The technical content, architectural patterns, multi-agent workflows, and server deployment configurations are provided solely for educational and research exploration.</p>
+
+ <p>Before implementing automated code execution tools, deploying database migrations, or configuring production servers based on information found on this Site, you should thoroughly test code in isolated sandbox environments and consult with qualified software engineers and infrastructure architects.</p>
+
+ <h2>External Links and Third-Party Resources Disclaimer</h2>
+ <p>The Site may contain (or you may be sent through the Site) links to other websites or content belonging to or originating from third parties or links to websites and features in banners or other advertising. Such external links are not investigated, monitored, or checked for accuracy, adequacy, validity, reliability, availability, or completeness by us.</p>
+
+ <p>We do not warrant, endorse, guarantee, or assume responsibility for the accuracy or reliability of any information offered by third-party websites linked through the site or any website or feature linked in any banner or other advertising. We will not be a party to or in any way be responsible for monitoring any transaction between you and third-party providers of products or services.</p>
+
+ <h2>Advertising, Affiliate, and Sponsorship Disclosures</h2>
+ <p>Hive Cloud may display online advertisements served by Google AdSense and other advertising networks to offset server, domain, and compute operational expenses. These advertisements are clearly identified by their respective advertising platform labels.</p>
+
+ <p>We maintain full editorial independence. The inclusion of an advertisement or an external link on Hive Cloud does not constitute an endorsement, recommendation, or warranty of the advertised service, software framework, or business entity.</p>
+
+ <h2>Fair Use and Trademark Acknowledgements</h2>
+ <p>All product names, logos, trademarks, and registered trademarks mentioned on Hive Cloud (such as LangChain, CrewAI, Python, PostgreSQL, Docker, and Google) are property of their respective owners. All company, product, and service names used on this website are for identification and educational purposes only. Use of these names, trademarks, and brands does not imply endorsement or affiliation.</p>
+
+ <h2>Errors and Omissions Notice</h2>
+ <p>While we have made every attempt to ensure that the information contained in this site has been obtained from reliable sources, Hive Cloud is not responsible for any errors or omissions, or for the results obtained from the use of this information. In no event will Hive Cloud, its founder Aman Alria, or its contributors be liable for any decision made or action taken in reliance on the information in this Site.</p>
+
+ <div class="contact-box font-sans">
+ <h3 class="text-sm font-bold theme-text mb-1">Feedback, Queries, or DMCA Notices</h3>
+ <p class="text-xs theme-muted">If you have any questions regarding this disclaimer, or if you believe any content infringes upon your copyright, please notify our team directly at:</p>
+ <p class="text-xs font-mono font-semibold text-emerald-600 mt-1">Email: <a href="mailto:amanalria3@gmail.com" class="underline">amanalria3@gmail.com</a> &bull; Attention: Legal & Editorial Review</p>
+ </div>
+ </article>
+</main>
+    <footer class="border-t theme-border theme-hero-bg w-full py-10 px-4 sm:px-8 text-xs theme-muted">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+                <p class="font-semibold theme-text">Hive Cloud — Independent Agentic AI & Engineering Journal</p>
+                <p class="text-[11px] mt-1">Official Editorial Contact: <a href="mailto:amanalria3@gmail.com" class="text-emerald-600 underline">amanalria3@gmail.com</a></p>
+            </div>
+            <div class="flex items-center gap-4 flex-wrap justify-center text-[11px]">
+                <a href="/about" class="hover:theme-text">About</a>
+                <a href="/contact" class="hover:theme-text">Contact</a>
+                <a href="/privacy" class="hover:theme-text">Privacy Policy</a>
+                <a href="/terms" class="hover:theme-text">Terms</a>
+                <a href="/disclaimer" class="hover:theme-text">Disclaimer</a>
+            </div>
         </div>
-    </main>
-
-    <footer class="border-t theme-border theme-hero-bg w-full py-8 px-4 sm:px-8 text-xs theme-muted text-center site-copyright-text">
-        <script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).footer_copyright||'© 2026. All rights reserved.':'© 2026. All rights reserved.');}catch(e){document.write('© 2026. All rights reserved.');}})();</script>
+        <div class="max-w-7xl mx-auto mt-6 pt-4 border-t theme-border/40 text-center text-[11px] opacity-75">
+            &copy; 2026 Hive Cloud. All rights reserved. Founded and operated by Aman Alria.
+        </div>
     </footer>
 </body>
 </html>
