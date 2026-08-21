@@ -1147,7 +1147,7 @@ function appendIndexingLog(status, url, message, engine = 'Google') {
 
 window.submitSingleUrlIndexing = async function() {
     const urlInput = document.getElementById('manualIndexUrlInput');
-    const targetUrl = (urlInput ? urlInput.value.trim() : '') || 'https://hivecloud.in/agentic-ai-coding-guide-2026';
+    const targetUrl = (urlInput ? urlInput.value.trim() : '') || 'https://hivecloud.in/agentic-ai-coding';
     const actionType = document.getElementById('manualIndexActionType').value || 'URL_UPDATED';
     const engine = document.getElementById('manualIndexEngine').value || 'both';
     const btn = document.getElementById('btnSingleIndex');
@@ -1217,11 +1217,11 @@ window.submitSingleUrlIndexing = async function() {
 window.submitBatchIndexing = async function() {
     const btn = document.getElementById('btnBatchIndex');
     const urlsToSubmit = [
-        'https://hivecloud.in/agentic-ai-coding-guide-2026',
-        'https://hivecloud.in/ai-reasoning-test-time-compute',
-        'https://hivecloud.in/autonomous-ai-agents-production-guide',
-        'https://hivecloud.in/multi-agent-orchestration-mcp-guide',
-        'https://hivecloud.in/context-engineering-dynamic-memory-guide'
+        'https://hivecloud.in/agentic-ai-coding',
+        'https://hivecloud.in/ai-reasoning-compute',
+        'https://hivecloud.in/autonomous-ai-production',
+        'https://hivecloud.in/multi-agent-orchestration',
+        'https://hivecloud.in/context-engineering-memory'
     ];
 
     if (btn) {
