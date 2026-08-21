@@ -196,7 +196,7 @@ function renderStoriesFeed(list) {
                     </div>
 
                     ${s.image ? `
-                        <div class="w-24 h-20 sm:w-36 sm:h-28 shrink-0 rounded-lg overflow-hidden border theme-border bg-zinc-100 dark:bg-zinc-800 shadow-xs">
+                        <div class="w-20 h-16 sm:w-36 sm:h-28 shrink-0 rounded-xl overflow-hidden border theme-border bg-zinc-100 dark:bg-zinc-800 shadow-xs">
                             <img src="${s.image}" alt="${s.imageAlt || s.title}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                         </div>
                     ` : ''}
