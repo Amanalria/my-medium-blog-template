@@ -284,9 +284,9 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                                 if (tagContainer) {
                                     const tags = s.tags.split(',').map(x => x.trim()).filter(Boolean);
                                     tagContainer.innerHTML = tags.map(tag => `
-                                        <a href="/?cat=${encodeURIComponent(tag)}" class="framer-tap px-3 py-1.5 rounded-full theme-search-bg theme-border border text-[11px] font-sans font-medium theme-text hover:border-zinc-400 transition-colors">
+                                        <span class="px-3 py-1.5 rounded-full theme-search-bg theme-border border text-[11px] font-sans font-medium theme-text">
                                             ${tag}
-                                        </a>
+                                        </span>
                                     `).join('');
                                 }
                             }

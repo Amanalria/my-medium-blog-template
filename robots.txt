@@ -1,8 +1,46 @@
 User-agent: *
-Allow: /
+Allow: /$
+Allow: /*$
+
+# Disallow Dynamic Query Parameters & Search Filter URLs
+Disallow: /*?*
+Disallow: /*?cat=*
+Disallow: /*?role=*
+Disallow: /*?tag=*
+Disallow: /*?id=*
+Disallow: /*?slug=*
+
+# Disallow Legacy PHP Endpoints (404/Redirect Errors)
+Disallow: /*.php$
+Disallow: /*.php?*
+Disallow: /register.php
+Disallow: /login.php
+Disallow: /terms.php
+
+# Disallow Admin & Auth Portals
 Disallow: /aman
 Disallow: /aman/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /login/
+Disallow: /register
+Disallow: /register/
 Disallow: /articles
 Disallow: /articles/
 
+# Disallow Utility & Legal Pages
+Disallow: /about
+Disallow: /about/
+Disallow: /terms
+Disallow: /terms/
+Disallow: /privacy
+Disallow: /privacy/
+Disallow: /disclaimer
+Disallow: /disclaimer/
+Disallow: /contact
+Disallow: /contact/
+
+# Canonical Sitemap
 Sitemap: https://hivecloud.in/sitemap.xml
+

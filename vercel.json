@@ -15,6 +15,20 @@
       "dest": "/$1"
     },
     {
+      "src": "^/(register|login|terms)\\.php.*$",
+      "status": 301,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
+      "src": "^/.*\\.php.*$",
+      "status": 301,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
       "src": "^/$",
       "headers": {
         "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=86400"
