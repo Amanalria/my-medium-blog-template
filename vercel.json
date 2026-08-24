@@ -8,7 +8,7 @@
       "dest": "/$1"
     },
     {
-      "src": "^/(styles\\.css|app\\.js|post\\.js|articles-preload\\.js|robots\\.txt|sitemap\\.xml|sitemap\\.xsl|ads\\.txt)$",
+      "src": "^/(styles\\.css|app\\.js|post\\.js|articles-preload\\.js|robots\\.txt|sitemap\\.xml|sitemap\\.xsl|ads\\.txt|404\\.html)$",
       "headers": {
         "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
       },

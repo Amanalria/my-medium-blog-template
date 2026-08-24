@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – Page Not Found | Hive Cloud</title>
+    <meta name="description" content="The requested page or article could not be found on Hive Cloud.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://hivecloud.in/404">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            try {
+                const raw = localStorage.getItem('cached_settings');
+                if (raw) {
+                    const s = JSON.parse(raw);
+                    if (s.brand_color) document.documentElement.style.setProperty('--accent-green', s.brand_color);
+                    if (s.favicon_url) {
+                        let link = document.querySelector("link[rel~='icon']");
+                        if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+                        link.href = s.favicon_url;
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .error-num { font-size: clamp(5rem, 15vw, 9rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; background: linear-gradient(135deg, #059669 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="theme-bg theme-text font-sans antialiased overflow-x-hidden w-full min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="w-full border-b theme-border sticky top-0 z-50 theme-bg px-4 sm:px-8 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-6">
+                <a href="/" class="flex items-center gap-2 group shrink-0" aria-label="Homepage">
+                    <span class="font-serif font-black text-2xl sm:text-3xl tracking-tighter theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Hive Cloud':'Hive Cloud');}catch(e){document.write('Hive Cloud');}})();</script></span>
+                </a>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-sans">
+                <a href="/" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition-all shadow-xs">
+                    Explore Stories
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main 404 Hero Container -->
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center space-y-6 flex-1 w-full flex flex-col items-center justify-center">
+        <div class="space-y-2">
+            <div class="error-num font-serif select-none">404</div>
+            <h1 class="text-2xl sm:text-3xl font-serif font-bold theme-text tracking-tight">
+                Page Not Found
+            </h1>
+            <p class="text-sm sm:text-base theme-muted max-w-md mx-auto leading-relaxed">
+                The article, guide, or URL you requested does not exist, was renamed, or has moved to a new canonical address.
+            </p>
+        </div>
+
+        <div class="pt-4 flex flex-wrap items-center justify-center gap-3">
+            <a href="/" class="px-6 py-3 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-xs sm:text-sm hover:opacity-90 transition-all shadow-sm">
+                Return to Homepage
+            </a>
+            <a href="/#feedSection" class="px-6 py-3 rounded-full theme-search-bg theme-border border text-xs sm:text-sm font-semibold theme-text hover:border-zinc-400 transition-all">
+                Browse Latest Stories
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t theme-border theme-hero-bg w-full py-8 px-4 sm:px-8 mt-12 font-sans text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <a href="/" class="font-serif font-black text-lg theme-text site-logo-text"><script>(function(){try{const c=localStorage.getItem('cached_settings');document.write(c?JSON.parse(c).site_name||'Hive Cloud':'Hive Cloud');}catch(e){document.write('Hive Cloud');}})();</script></a>
+                <span class="theme-muted">• © 2026 Hive Cloud. All rights reserved.</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 theme-muted text-xs font-medium">
+                <a href="/" class="hover:theme-text transition-colors">Home</a>
+                <a href="/about" class="hover:theme-text transition-colors">About Us</a>
+                <a href="/contact" class="hover:theme-text transition-colors">Contact</a>
+                <a href="/privacy" class="hover:theme-text transition-colors">Privacy</a>
+                <a href="/terms" class="hover:theme-text transition-colors">Terms</a>
+                <a href="/disclaimer" class="hover:theme-text transition-colors">Disclaimer</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

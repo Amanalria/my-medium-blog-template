@@ -233,7 +233,7 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
             </div>
         </article>
 
-        <!-- 0ms Zero-CLS Synchronous Hydration: Renders Title, Subtitle, Author, and Prose Before First Paint -->
+        <!-- 0ms Zero-CLS Synchronous Hydration: Renders Title, Subtitle, Author, Prose, or Clean 404 Before First Paint -->
         <script>
             (function() {
                 try {
@@ -249,13 +249,12 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                         if (raw) list = JSON.parse(raw);
                     }
                     if (list && list.length > 0) {
-                        let s = list.find(x => x.slug === slug);
+                        let s = slug ? list.find(x => x.slug === slug) : null;
                         if (!s && slug) {
-                            s = list.find(x => x.slug.startsWith(slug) || slug.startsWith(x.slug));
+                            s = list.find(x => x.slug && (x.slug.startsWith(slug) || slug.startsWith(x.slug)));
                         }
-                        if (!s) s = list[0];
                         if (s) {
-                            document.title = `${s.title} – Medium`;
+                            document.title = `${s.title} – Hive Cloud`;
                             const cTag = document.getElementById('canonicalTag');
                             if (cTag) cTag.href = `https://hivecloud.in/${s.slug}`;
                             const t = document.getElementById('storyTitle');
@@ -272,7 +271,7 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                             const cardName = document.getElementById('authorCardName');
                             if (cardName) cardName.textContent = `Written by ${s.author}`;
                             const d = document.getElementById('storyDate');
-                            if (d) d.textContent = s.date || 'Aug 17, 2026';
+                            if (d) d.textContent = s.date || 'Aug 25, 2026';
                             const rt = document.getElementById('storyReadTime');
                             if (rt) rt.textContent = s.readTime || '5 min read';
                             const prose = document.querySelector('.medium-prose');
@@ -291,6 +290,25 @@ img,svg{display:block;vertical-align:middle;max-width:100%}
                                 }
                             }
                             window.__LAST_RENDERED_STORY_ID__ = (s.id || s.slug || '') + '_' + (s.title || '');
+                        } else if (slug) {
+                            document.title = "404 Page Not Found – Hive Cloud";
+                            const authBar = document.getElementById('authorTopBar');
+                            if (authBar) authBar.style.display = 'none';
+                            const t = document.getElementById('storyTitle');
+                            if (t) t.textContent = "404 – Page Not Found";
+                            const sub = document.getElementById('storySubtitle');
+                            if (sub) sub.textContent = "The requested article or URL could not be found.";
+                            const prose = document.querySelector('.medium-prose');
+                            if (prose) {
+                                prose.innerHTML = `
+                                    <div class="py-12 text-center space-y-4">
+                                        <p class="theme-muted text-base">The story you are looking for does not exist or has been moved.</p>
+                                        <a href="/" class="inline-block px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors">
+                                            Return to Homepage
+                                        </a>
+                                    </div>
+                                `;
+                            }
                         }
                     }
                 } catch(e){}
