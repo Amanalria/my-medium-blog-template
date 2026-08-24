@@ -1,6 +1,6 @@
 User-agent: *
-Allow: /$
-Allow: /*$
+Allow: /
+
 
 # Disallow Dynamic Query Parameters & Search Filter URLs
 Disallow: /*?*
