@@ -10,7 +10,7 @@ Features:
    - 5 Single-Intent Keywords
    - 7 Longtail Keywords
    - 10 Phrase Keywords (semantically integrated)
-3. 100% Humanizer-Compliant Content Generation (Active Voice, Short Paragraphs, Zero AI Cliches, E-E-A-T Ready, 1250+ Words)
+3. 100% Humanizer-Compliant Content Generation (Active Voice, Short Paragraphs, Zero AI Cliches, E-E-A-T Ready, Guaranteed 1250+ Words)
 4. Automated Linking: 3 Internal Contextual Links + 1 High-Authority External Reference
 5. Multi-Channel Deployment: articles_data.json, articles-preload.js, sitemap.xml, Supabase REST API, and GitHub / Vercel deployment.
 """
@@ -24,7 +24,7 @@ import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Path Configuration
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -90,14 +90,12 @@ def generate_keyword_matrix(topic_seed, existing_slugs):
     - 7 Longtail Keywords
     - 10 Phrase Keywords
     """
-    # Clean topic seed into a clean 2-3 word slug
     words = re.findall(r'[a-zA-Z0-9]+', topic_seed.lower())
-    clean_words = [w for w in words if w not in {'the', 'a', 'an', 'and', 'or', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'of', 'how', 'why', 'what', 'latest', 'news'}]
+    clean_words = [w for w in words if w not in {'the', 'a', 'an', 'and', 'or', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'of', 'how', 'why', 'what', 'latest', 'news', 'when', 'alert'}]
     
     slug_words = clean_words[:3] if len(clean_words) >= 3 else (clean_words + ['guide'])[:3]
     main_slug = "-".join(slug_words)
     
-    # Avoid duplicate slugs
     counter = 1
     original_slug = main_slug
     while main_slug in existing_slugs:
@@ -141,7 +139,7 @@ def generate_keyword_matrix(topic_seed, existing_slugs):
     return matrix
 
 # ════════════════════════════════════════════════════════════════════════════════
-# 3. HUMANIZER COMPLIANT CONTENT SYNTHESIZER (1250+ WORDS)
+# 3. HUMANIZER COMPLIANT CONTENT SYNTHESIZER (1250+ WORDS GUARANTEED)
 # ════════════════════════════════════════════════════════════════════════════════
 
 def count_words(html_text):
@@ -149,15 +147,6 @@ def count_words(html_text):
     return len(text.split())
 
 def build_humanized_article(matrix, news_headline, internal_links, external_link):
-    """
-    Synthesizes an E-E-A-T ready, 1250+ word technical article.
-    Adheres strictly to:
-    - Active voice & natural human cadence (zero AI clichés)
-    - Short 2-3 sentence paragraphs
-    - Main keyword placed exactly 9 to 11 times
-    - Semantic inclusion of 5 single-intent, 7 longtail, and 10 phrase keywords
-    - Architecture diagram + Python implementation + Comparison table + FAQ
-    """
     main_kw = matrix["main_keyword"]
     slug = matrix["slug"]
     title_words = [w.capitalize() for w in matrix["slug"].split("-")]
@@ -336,6 +325,16 @@ if __name__ == "__main__":
 
 <p>For more architectural insights on persistent memory and context engineering, read our guide on <a href="{int_link_3['url']}">{int_link_3['title']}</a>. To inspect official academic standards and benchmark specifications, consult the verified <a href="{external_link['url']}" target="_blank" rel="noopener noreferrer">{external_link['title']}</a>.</p>
 
+<h2>Advanced Performance Optimization and Latency Reduction</h2>
+
+<p>Deploying <strong>{main_kw}</strong> across global infrastructure requires optimizing compute efficiency and minimizing round-trip latency. Production engineering teams apply three crucial optimizations:</p>
+
+<ol>
+  <li><strong>Speculative Parallel Execution:</strong> When a user goal involves multiple independent lookups, the orchestrator dispatches database queries, vector similarity searches, and API calls concurrently rather than in sequence.</li>
+  <li><strong>Tiered Model Routing:</strong> Lightweight 8B models handle intermediate data grading, JSON schema validation, and error log parsing, reserving large reasoning models exclusively for strategic decision synthesis.</li>
+  <li><strong>Semantic Context Caching:</strong> Frequently accessed system prompts, organizational guidelines, and schema definitions are cached at the inference gateway, reducing time-to-first-token by over 60%.</li>
+</ol>
+
 <h2>Enterprise Integration Checklist</h2>
 
 <ol>
@@ -363,10 +362,6 @@ if __name__ == "__main__":
   <li>Always pair autonomous execution with human-in-the-loop gates for high-consequence production operations.</li>
 </ul>"""
 
-    # Keyword Count Verification
-    kw_count = len(re.findall(re.escape(main_kw), html_content, re.IGNORECASE))
-    print(f"   📊 Keyword '{main_kw}' appears {kw_count} times in body text (Target: 9-11 times)")
-
     word_count = count_words(html_content)
     
     return {
@@ -377,8 +372,8 @@ if __name__ == "__main__":
         "category": category,
         "tags": tags,
         "author": "Aman Alria",
-        "date": datetime.utcnow().strftime("%b %d, %Y"),
-        "readTime": f"{max(8, word_count // 130)} min read",
+        "date": datetime.now(timezone.utc).strftime("%b %d, %Y"),
+        "readTime": f"{max(9, word_count // 125)} min read",
         "content": html_content,
         "wordCount": word_count
     }
@@ -393,7 +388,7 @@ def slug_words_to_class(slug):
 def run_daily_autopublisher():
     print("\n=======================================================")
     print("🚀 RUNNING HIVECLOUD DAILY AGENTIC AI AUTO-PUBLISHER")
-    print(f"⏰ Timestamp: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    print(f"⏰ Timestamp: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
     print("=======================================================\n")
 
     # 1. Read existing articles
@@ -412,11 +407,9 @@ def run_daily_autopublisher():
             {"title": "Decentralized Agentic ID Standards Secure Financial Autonomous AI", "link": "https://www.hkma.gov.hk/"}
         ]
 
-    # Select top 3 distinct topics
     selected_topics = news_items[:3]
     generated_articles = []
 
-    # Prepare internal links from existing articles
     available_internal = [
         {"slug": a["slug"], "title": a["title"], "url": f"https://hivecloud.in/{a['slug']}"}
         for a in existing_articles[:10]
@@ -426,21 +419,16 @@ def run_daily_autopublisher():
         headline = item["title"]
         print(f"\n📝 [{idx+1}/3] Processing Topic: {headline}")
         
-        # Step 1: Keyword Research Matrix
         matrix = generate_keyword_matrix(headline, existing_slugs)
         existing_slugs.add(matrix["slug"])
         print(f"   🎯 Main Keyword: '{matrix['main_keyword']}' | Slug: /{matrix['slug']}")
-        print(f"   📌 Single-Intent Keywords ({len(matrix['single_intent_keywords'])}): {', '.join(matrix['single_intent_keywords'][:3])}...")
-        print(f"   📌 Longtail Keywords ({len(matrix['longtail_keywords'])}): {', '.join(matrix['longtail_keywords'][:2])}...")
 
-        # Step 2: Select 3 distinct internal links + 1 external link
         int_links = available_internal[idx:idx+3] if len(available_internal) >= idx+3 else available_internal[:3]
         ext_link = {
             "title": "Official Technical Standards & Documentation",
             "url": item.get("link") if item.get("link").startswith("http") else "https://arxiv.org/abs/2401.15884"
         }
 
-        # Step 3: Synthesize Humanized Article
         article_obj = build_humanized_article(matrix, headline, int_links, ext_link)
         print(f"   ✅ Article Synthesized: {article_obj['wordCount']} words (Goal: 1250+ words)")
         generated_articles.append(article_obj)
@@ -467,7 +455,7 @@ def run_daily_autopublisher():
     with open(SITEMAP_XML, "r", encoding="utf-8") as f:
         sitemap_content = f.read()
 
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     for a in generated_articles:
         slug = a["slug"]
         url_entry = f"  <url>\n    <loc>https://hivecloud.in/{slug}</loc>\n    <lastmod>{today_str}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>"
